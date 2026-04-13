@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminanfrage erhalten | GreenCareers</title>
+  <style>
+    :root {
+      --green-dark: #1a5c1a;
+      --green-main: #2d7a2d;
+      --green-light: #4caf50;
+      --green-pale: #e8f5e9;
+      --text-dark: #1a2b1b;
+      --text-gray: #546e5a;
+      --border: #c8e6c9;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(27,94,32,0.10);
+      --gold: #b7860d;
+      --gold-bg: #fef9e7;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f7f1; color: var(--text-dark);
+      min-height: 100vh; line-height: 1.55; font-size: 16px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(155deg, #0e3a0e, var(--green-main));
+      color: #fff; padding: 28px 20px; text-align: center;
+    }
+    .logo-row {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .logo-icon { width: 38px; height: 38px; background: #81c784; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .logo-text { font-size: 1.1rem; font-weight: 800; color: #fff; }
+
+    /* ── MAIN ── */
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; }
+
+    /* ── CONFIRMATION ── */
+    .confirm-card {
+      background: #fff; border-radius: var(--radius);
+      padding: 36px 28px; box-shadow: var(--shadow);
+      text-align: center; margin-bottom: 28px;
+    }
+    .check-wrap {
+      width: 72px; height: 72px;
+      background: var(--green-pale);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2.2rem;
+      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .confirm-card h1 { font-size: clamp(1.4rem, 4vw, 1.8rem); font-weight: 900; margin-bottom: 12px; color: var(--green-dark); line-height: 1.2; }
+    .confirm-card p  { font-size: 0.95rem; color: var(--text-gray); max-width: 420px; margin: 0 auto; line-height: 1.6; }
+    .confirm-detail {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green-pale); color: var(--green-dark);
+      font-size: 0.82rem; font-weight: 700;
+      padding: 8px 16px; border-radius: 20px; margin-top: 16px;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex; align-items: center; gap: 14px;
+      margin: 4px 0 24px; color: var(--text-gray); font-size: 0.8rem;
+    }
+    .section-divider::before,
+    .section-divider::after { content:''; flex:1; height:1px; background: var(--border); }
+
+    /* ── UPSELL CARD ── */
+    .upsell-card {
+      background: #fff; border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .upsell-header {
+      background: linear-gradient(135deg, #7b5e00, var(--gold));
+      color: #fff; padding: 22px 24px;
+      position: relative; overflow: hidden;
+    }
+    .upsell-header::after {
+      content: '⭐';
+      position: absolute; right: 20px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem; opacity: 0.15;
+    }
+    .upsell-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.2);
+      font-size: 0.74rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 4px 11px; border-radius: 20px; margin-bottom: 10px;
+    }
+    .upsell-header h2 { font-size: clamp(1.1rem, 3.5vw, 1.35rem); font-weight: 900; line-height: 1.25; margin-bottom: 6px; }
+    .upsell-header p  { font-size: 0.85rem; opacity: 0.88; }
+    .price-row {
+      display: flex; align-items: baseline; gap: 10px; margin-top: 14px;
+    }
+    .price-main { font-size: 2rem; font-weight: 900; }
+    .price-old  { font-size: 1rem; opacity: 0.6; text-decoration: line-through; }
+    .price-label{ font-size: 0.8rem; opacity: 0.8; }
+
+    .upsell-body { padding: 24px 24px 28px; }
+
+    /* What's included */
+    .includes-list { list-style: none; margin-bottom: 24px; }
+    .includes-list li {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 8px 0; border-bottom: 1px solid #eef3ee;
+      font-size: 0.88rem; color: var(--text-dark); line-height: 1.45;
+    }
+    .includes-list li:last-child { border-bottom: none; }
+    .inc-icon { color: var(--green-main); font-size: 0.95rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── STEPS ── */
+    .steps-row {
+      display: flex; gap: 0; margin-bottom: 24px;
+      background: #f8fcf8; border-radius: 12px; overflow: hidden;
+    }
+    .step {
+      flex: 1; padding: 12px 10px; text-align: center;
+      font-size: 0.75rem; color: var(--text-gray);
+      border-right: 1px solid var(--border); position: relative;
+    }
+    .step:last-child { border-right: none; }
+    .step .s-num {
+      display: block; width: 24px; height: 24px;
+      background: #ddd; color: #888; border-radius: 50%;
+      font-size: 0.72rem; font-weight: 800;
+      line-height: 24px; margin: 0 auto 5px;
+    }
+    .step.active .s-num { background: var(--green-main); color: #fff; }
+    .step.active { color: var(--green-dark); font-weight: 600; }
+
+    /* ── STRATEGY FORM ── */
+    .strategy-form { display: block; }
+    .field-group { margin-bottom: 14px; }
+    .field-group label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      color: var(--text-gray); margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .field-group select,
+    .field-group textarea,
+    .field-group input {
+      width: 100%; padding: 13px 15px; font-size: 16px;
+      border: 2px solid var(--border); border-radius: 12px;
+      outline: none; color: var(--text-dark); background: #fafcfa;
+      transition: border-color 0.2s; -webkit-appearance: none; appearance: none;
+      font-family: inherit;
+    }
+    .field-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23546e5a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      padding-right: 40px;
+    }
+    .field-group select:focus,
+    .field-group textarea:focus,
+    .field-group input:focus { border-color: var(--green-light); box-shadow: 0 0 0 3px rgba(76,175,80,0.12); }
+    .field-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+    /* Checkboxes */
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .check-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 10px 12px; border: 2px solid var(--border);
+      border-radius: 10px; cursor: pointer; font-size: 0.85rem;
+      transition: all 0.15s; user-select: none; background: #fafcfa;
+    }
+    .check-item:hover  { border-color: var(--green-light); background: var(--green-pale); }
+    .check-item.active { border-color: var(--green-light); background: var(--green-pale); }
+    .check-item input  { display: none; }
+    .check-item::before {
+      content: '';
+      width: 18px; height: 18px; flex-shrink: 0;
+      border: 2px solid #c8e6c9; border-radius: 5px;
+      background: #fff; transition: all 0.15s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .check-item.active::before {
+      background: var(--green-main); border-color: var(--green-main);
+      content: '✓'; color: #fff; font-size: 0.75rem; font-weight: 900;
+      display: inline-flex; align-items: center; justify-content: center;
+      line-height: 18px; text-align: center;
+    }
+
+    .form-error { display:none; color:#c0392b; font-size:0.82rem; font-weight:600; margin-bottom:10px; text-align:center; }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%; padding: 17px; border: none; border-radius: 50px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      min-height: 54px; -webkit-appearance: none;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #7b5e00, #d4a017);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(180,140,0,0.35);
+    }
+    .btn-gold:hover  { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(180,140,0,0.45); }
+    .btn-green {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(45,122,45,0.35);
+    }
+    .btn-green:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(45,122,45,0.45); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .privacy-note { font-size: 0.72rem; color: var(--text-gray); text-align: center; margin-top: 10px; line-height: 1.5; }
+    .privacy-note a { color: var(--green-main); }
+
+    /* ── PAYMENT SECTION (hidden by default) ── */
+    #paymentSection { display: none; }
+    .payment-box {
+      background: #f8fcf8; border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 22px 20px; margin-bottom: 16px;
+    }
+    .payment-box h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .card-row { display: flex; gap: 12px; }
+    .card-row .field-group { flex: 1; }
+    .secure-badges {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      margin-top: 14px; flex-wrap: wrap;
+    }
+    .sec-badge {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.74rem; color: var(--text-gray); font-weight: 600;
+    }
+
+    /* ── STRATEGY RESULT (hidden until paid) ── */
+    #strategyResult { display: none; }
+    .strategy-success {
+      background: var(--green-pale); border: 2px solid var(--green-light);
+      border-radius: var(--radius); padding: 20px 22px;
+      text-align: center; margin-bottom: 20px;
+    }
+    .strategy-success h3 { color: var(--green-dark); font-size: 1.05rem; font-weight: 900; margin-bottom: 4px; }
+    .strategy-success p  { font-size: 0.85rem; color: var(--text-gray); }
+
+    .strategy-section {
+      background: #fff; border-radius: var(--radius);
+      padding: 22px; box-shadow: var(--shadow); margin-bottom: 16px;
+    }
+    .ss-title { font-size: 0.97rem; font-weight: 800; color: var(--green-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .strategy-step {
+      display: flex; gap: 13px; align-items: flex-start;
+      padding: 12px 14px; background: #f8fcf8;
+      border-radius: 11px; border-left: 3px solid var(--green-light);
+      margin-bottom: 10px;
+    }
+    .strategy-step:last-child { margin-bottom: 0; }
+    .ss-num {
+      width: 28px; height: 28px; background: var(--green-main);
+      color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 800; flex-shrink: 0;
+    }
+    .ss-body { font-size: 0.87rem; line-height: 1.5; color: var(--text-dark); }
+    .ss-body strong { display: block; font-size: 0.9rem; margin-bottom: 3px; color: var(--green-dark); }
+
+    .insight-box-sm {
+      background: var(--green-pale); border-radius: 11px;
+      padding: 13px 15px; margin-bottom: 10px;
+    }
+    .insight-box-sm .ib-label { font-size: 0.72rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .insight-box-sm .ib-value { font-size: 0.92rem; font-weight: 700; color: var(--green-dark); }
+
+    .download-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--green-pale); color: var(--green-dark);
+      border: 2px solid var(--green-light);
+      border-radius: 50px; padding: 13px 28px;
+      font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      margin: 16px auto 0; width: fit-content;
+      transition: background 0.15s;
+    }
+    .download-btn:hover { background: #d4edda; }
+
+    /* Skip upsell */
+    .skip-link {
+      display: block; text-align: center;
+      font-size: 0.8rem; color: var(--text-gray);
+      margin-top: 16px; cursor: pointer;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .skip-link:hover { color: var(--green-main); }
+
+    /* Footer */
+    footer { text-align: center; padding: 28px 20px; color: var(--text-gray); font-size: 0.8rem; line-height: 1.6; }
+    footer a { color: var(--green-main); text-decoration: none; }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block; width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.4);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+
+    @media (max-width: 400px) {
+      .card-row { flex-direction: column; gap: 0; }
+      .check-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="https://www.green-careers.de" class="logo-row">
+    <div class="logo-icon">🌿</div>
+    <span class="logo-text">GreenCareers</span>
+  </a>
+</header>
+
+<main>
+
+  <!-- ── CONFIRMATION ── -->
+  <div class="confirm-card fade-up">
+    <div class="check-wrap">✅</div>
+    <h1>Vielen Dank, <span id="confirmName">!</span></h1>
+    <p>Wir haben Ihre Terminanfrage erhalten und melden uns innerhalb von <strong>24 Stunden</strong> per WhatsApp bei Ihnen zurück.</p>
+    <div class="confirm-detail">
+      📍 <span id="confirmFirma"></span>
+    </div>
+  </div>
+
+  <!-- ── DIVIDER ── -->
+  <div class="section-divider">Exklusives Angebot nur für Sie</div>
+
+  <!-- ── UPSELL ── -->
+  <div class="upsell-card fade-up">
+    <div class="upsell-header">
+      <div class="upsell-eyebrow">⭐ Limitiertes Angebot</div>
+      <h2>Ihre persönliche Recruiting-Strategie – maßgeschneidert für Ihren Betrieb</h2>
+      <p>Kein allgemeines Template. Eine echte Schritt-für-Schritt-Anleitung, die genau auf Ihre Situation passt.</p>
+      <div class="price-row">
+        <span class="price-main">19 €</span>
+        <span class="price-old">79 €</span>
+        <span class="price-label">einmalig, sofort verfügbar</span>
+      </div>
+    </div>
+
+    <div class="upsell-body">
+
+      <!-- What's included -->
+      <ul class="includes-list">
+        <li><span class="inc-icon">✅</span> Analyse Ihrer aktuellen Recruiting-Situation</li>
+        <li><span class="inc-icon">✅</span> 5-Schritte-Aktionsplan speziell für Ihre Betriebsgröße & Region</li>
+        <li><span class="inc-icon">✅</span> Konkrete Maßnahmen für die von Ihnen gesuchten Fachkräfte</li>
+        <li><span class="inc-icon">✅</span> Empfehlung der richtigen Kanäle & Botschaften für Ihren Fall</li>
+        <li><span class="inc-icon">✅</span> Zeitplan: Was Sie wann tun sollten</li>
+        <li><span class="inc-icon">✅</span> Sofort als PDF abrufbar – kein Warten</li>
+      </ul>
+
+      <!-- Steps indicator -->
+      <div class="steps-row" id="stepsRow">
+        <div class="step active" id="step1"><span class="s-num">1</span>Ihr Betrieb</div>
+        <div class="step" id="step2"><span class="s-num">2</span>Bezahlung</div>
+        <div class="step" id="step3"><span class="s-num">3</span>Ihre Strategie</div>
+      </div>
+
+      <!-- ── FORM: Step 1 – Company info ── -->
+      <div id="strategyForm">
+        <form id="companyForm" onsubmit="goToPayment(event)" novalidate>
+          <div class="field-group">
+            <label for="s_size">Wie viele Mitarbeiter hat Ihr Betrieb? *</label>
+            <select id="s_size" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="micro">1–5 Mitarbeiter</option>
+              <option value="small">6–15 Mitarbeiter</option>
+              <option value="medium">16–30 Mitarbeiter</option>
+              <option value="large">31–50 Mitarbeiter</option>
+              <option value="xlarge">51–100 Mitarbeiter</option>
+              <option value="enterprise">Mehr als 100 Mitarbeiter</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>Welche Fachkräfte suchen Sie? * (Mehrfachauswahl)</label>
+            <div class="check-grid" id="profCheckGrid">
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="facharbeiter"> 🌿 Facharbeiter GaLaBau</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="vorarbeiter">  👷 Vorarbeiter GaLaBau</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="bauleiter">   📋 Bauleiter GaLaBau</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="strassenbauer">🏗️ Straßenbauer</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="tiefbauer">   ⛏️ Tiefbauer</div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="s_problem">Was ist Ihre größte Herausforderung beim Recruiting? *</label>
+            <select id="s_problem" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="low_apps">Zu wenige Bewerbungen</option>
+              <option value="bad_quality">Unqualifizierte Bewerber</option>
+              <option value="churn">Hohe Fluktuation – Leute verlassen uns schnell</option>
+              <option value="slow">Stellen sind monatelang unbesetzt</option>
+              <option value="no_brand">Wir sind als Arbeitgeber zu unbekannt</option>
+              <option value="budget">Unser Recruiting-Budget ist begrenzt</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>Was haben Sie bisher versucht? (Mehrfachauswahl)</label>
+            <div class="check-grid" id="triedGrid">
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="portale"> Indeed / StepStone</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="social">  Social Media</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="agentur"> Personalvermittler</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="empfehlung">Mitarbeiterempfehlung</div>
+              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="nichts">  Noch nichts</div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="s_budget">Monatliches Budget für Recruiting *</label>
+            <select id="s_budget" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="low">Unter 500 €</option>
+              <option value="mid">500 – 1.500 €</option>
+              <option value="high">1.500 – 3.000 €</option>
+              <option value="premium">Über 3.000 €</option>
+            </select>
+          </div>
+
+          <div class="form-error" id="formError1">Bitte alle Pflichtfelder ausfüllen.</div>
+          <button type="submit" class="btn-primary btn-gold">Weiter zur Bezahlung →</button>
+          <p class="privacy-note">Einmalig 19 €. Kein Abo, keine versteckten Kosten.</p>
+        </form>
+        <span class="skip-link" onclick="skipUpsell()">Nein danke, ich benötige keine Strategie</span>
+      </div>
+
+      <!-- ── STEP 2: Payment ── -->
+      <div id="paymentSection">
+        <div class="payment-box">
+          <h4>🔒 Sichere Zahlung</h4>
+          <div class="field-group">
+            <label for="p_name">Name auf der Karte *</label>
+            <input type="text" id="p_name" placeholder="Max Muster">
+          </div>
+          <div class="field-group">
+            <label for="p_card">Kartennummer *</label>
+            <input type="text" id="p_card" placeholder="•••• •••• •••• ••••" maxlength="19" inputmode="numeric">
+          </div>
+          <div class="card-row">
+            <div class="field-group">
+              <label for="p_exp">Ablaufdatum *</label>
+              <input type="text" id="p_exp" placeholder="MM / JJ" maxlength="7">
+            </div>
+            <div class="field-group">
+              <label for="p_cvv">CVV *</label>
+              <input type="text" id="p_cvv" placeholder="•••" maxlength="4" inputmode="numeric">
+            </div>
+          </div>
+          <div class="secure-badges">
+            <span class="sec-badge">🔒 SSL-verschlüsselt</span>
+            <span class="sec-badge">💳 Visa / Mastercard</span>
+            <span class="sec-badge">✅ 100 % sicher</span>
+          </div>
+        </div>
+        <div class="form-error" id="formError2">Bitte alle Zahlungsfelder ausfüllen.</div>
+        <button class="btn-primary btn-gold" onclick="processPayment()">🔒 Jetzt für 19 € kaufen</button>
+        <p class="privacy-note">Mit dem Kauf stimmen Sie unseren <a href="#">AGB</a> zu. Sofortiger Zugang nach Zahlung.</p>
+        <span class="skip-link" onclick="skipUpsell()">Nein danke, kein Interesse</span>
+      </div>
+
+      <!-- ── STEP 3: Strategy Result ── -->
+      <div id="strategyResult">
+        <div class="strategy-success">
+          <h3>🎉 Ihre Strategie ist bereit!</h3>
+          <p>Personalisiert auf Basis Ihrer Angaben – sofort einsetzbar.</p>
+        </div>
+        <div id="strategyContent"></div>
+        <a class="download-btn" href="#" onclick="window.print(); return false;">⬇️ Als PDF speichern</a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2025 <a href="https://www.green-careers.de">GreenCareers</a> – Karriereplattform für die grüne Branche<br>
+  <span style="font-size:0.73rem">Bei Fragen: <a href="mailto:info@green-careers.de">info@green-careers.de</a></span>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// READ URL PARAMS
+// ══════════════════════════════════════
+
+const params = new URLSearchParams(window.location.search);
+const pName  = params.get('name')  || '';
+const pFirma = params.get('firma') || '';
+const pPlz   = params.get('plz')   || '';
+
+document.getElementById('confirmName').textContent = pName ? pName + '!' : '!';
+document.getElementById('confirmFirma').textContent = pFirma || 'Ihr Unternehmen';
+
+// ══════════════════════════════════════
+// CHECKBOX TOGGLE
+// ══════════════════════════════════════
+
+function toggleCheck(el) {
+  const cb = el.querySelector('input');
+  cb.checked = !cb.checked;
+  el.classList.toggle('active', cb.checked);
+}
+
+// ══════════════════════════════════════
+// STEP INDICATOR
+// ══════════════════════════════════════
+
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('step'+i);
+    el.classList.toggle('active', i <= n);
+    el.querySelector('.s-num').style.background = i <= n ? 'var(--green-main)' : '#ddd';
+    el.querySelector('.s-num').style.color      = i <= n ? '#fff' : '#888';
+  });
+}
+
+// ══════════════════════════════════════
+// COLLECT FORM DATA
+// ══════════════════════════════════════
+
+let _companyData = {};
+
+function goToPayment(e) {
+  e.preventDefault();
+  const errEl = document.getElementById('formError1');
+
+  const size    = document.getElementById('s_size').value;
+  const problem = document.getElementById('s_problem').value;
+  const budget  = document.getElementById('s_budget').value;
+  const profs   = [...document.querySelectorAll('#profCheckGrid input:checked')].map(c=>c.value);
+
+  if (!size || !problem || !budget || profs.length === 0) {
+    errEl.style.display = 'block'; return;
+  }
+  errEl.style.display = 'none';
+
+  const tried = [...document.querySelectorAll('#triedGrid input:checked')].map(c=>c.value);
+  _companyData = { size, problem, budget, profs, tried, plz: pPlz };
+
+  document.getElementById('strategyForm').style.display  = 'none';
+  document.getElementById('paymentSection').style.display = 'block';
+  setStep(2);
+  document.querySelector('.upsell-card').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ══════════════════════════════════════
+// PAYMENT (prototype – replace with Stripe)
+// ══════════════════════════════════════
+
+function processPayment() {
+  const errEl = document.getElementById('formError2');
+  const name  = document.getElementById('p_name').value.trim();
+  const card  = document.getElementById('p_card').value.replace(/\s/g,'');
+  const exp   = document.getElementById('p_exp').value.trim();
+  const cvv   = document.getElementById('p_cvv').value.trim();
+
+  if (!name || card.length < 12 || !exp || !cvv) {
+    errEl.style.display = 'block'; return;
+  }
+  errEl.style.display = 'none';
+
+  // Simulate loading
+  const btn = document.querySelector('#paymentSection .btn-gold');
+  btn.innerHTML = '<span class="spinner"></span>Zahlung wird verarbeitet…';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // → In production: call Stripe / payment provider here
+    // stripeCheckout.open({ amount: 4900, currency: 'eur', ... });
+    showStrategy();
+  }, 2200);
+}
+
+// ══════════════════════════════════════
+// GENERATE PERSONALIZED STRATEGY
+// ══════════════════════════════════════
+
+function showStrategy() {
+  document.getElementById('paymentSection').style.display = 'none';
+  document.getElementById('strategyResult').style.display = 'block';
+  setStep(3);
+
+  const d = _companyData;
+  const steps = buildStrategySteps(d);
+  const insights = buildInsights(d);
+
+  let html = `<div class="strategy-section fade-up">
+    <div class="ss-title">📋 Ihre Situation auf einen Blick</div>
+    ${insights.map(i=>`<div class="insight-box-sm"><div class="ib-label">${i.label}</div><div class="ib-value">${i.value}</div></div>`).join('')}
+  </div>
+  <div class="strategy-section fade-up">
+    <div class="ss-title">🎯 Ihr persönlicher 5-Schritte-Plan</div>
+    ${steps.map((s,i)=>`
+      <div class="strategy-step">
+        <div class="ss-num">${i+1}</div>
+        <div class="ss-body"><strong>${s.h}</strong>${s.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+  document.getElementById('strategyContent').innerHTML = html;
+  document.getElementById('strategyResult').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function buildInsights(d) {
+  const sizeMap = {micro:'1–5 Mitarbeiter', small:'6–15 Mitarbeiter', medium:'16–30 Mitarbeiter', large:'31–50 Mitarbeiter', xlarge:'51–100 Mitarbeiter', enterprise:'Über 100 Mitarbeiter'};
+  const probMap = {low_apps:'Zu wenige Bewerbungen', bad_quality:'Unqualifizierte Bewerber', churn:'Hohe Fluktuation', slow:'Lange Besetzungszeiten', no_brand:'Geringe Arbeitgeberbekanntheit', budget:'Begrenztes Budget'};
+  const budgetMap = {low:'Unter 500 €/Monat', mid:'500–1.500 €/Monat', high:'1.500–3.000 €/Monat', premium:'Über 3.000 €/Monat'};
+  const profNames = {facharbeiter:'Facharbeiter GaLaBau', vorarbeiter:'Vorarbeiter GaLaBau', bauleiter:'Bauleiter GaLaBau', strassenbauer:'Straßenbauer', tiefbauer:'Tiefbauer'};
+  return [
+    {label:'Betriebsgröße',        value: sizeMap[d.size] || d.size},
+    {label:'Hauptproblem',         value: probMap[d.problem] || d.problem},
+    {label:'Gesuchte Fachkräfte',  value: d.profs.map(p=>profNames[p]||p).join(', ')},
+    {label:'Recruiting-Budget',    value: budgetMap[d.budget] || d.budget},
+    {label:'Standort-PLZ',         value: d.plz || 'Nicht angegeben'},
+  ];
+}
+
+function buildStrategySteps(d) {
+  const steps = [];
+
+  // Step 1: Always – optimize job posting
+  steps.push({
+    h: 'Stellenanzeige mit echten Einblicken optimieren',
+    t: 'Ersetzen Sie klassische Anforderungslisten durch authentische Bilder und kurze Videos aus dem Arbeitsalltag. Kandidaten entscheiden in 8 Sekunden – zeigen Sie, wie das Leben im Team wirklich aussieht.'
+  });
+
+  // Step 2: based on problem
+  if (d.problem === 'low_apps' || d.problem === 'no_brand') {
+    steps.push({
+      h: 'Aktive Social-Media-Werbung schalten',
+      t: 'Klassische Jobportale erreichen nur aktiv Suchende (ca. 20 % des Marktes). Mit gezielten Facebook- und Instagram-Anzeigen über GreenCareers erreichen Sie auch die 80 %, die gerade nicht aktiv suchen, aber wechselbereit sind.'
+    });
+  } else if (d.problem === 'bad_quality') {
+    steps.push({
+      h: 'Vorqualifizierung im Bewerbungsprozess einbauen',
+      t: 'Nutzen Sie kurze Vorqualifizierungs-Fragen direkt in der Anzeige (z. B. Führerschein, Erfahrung, Region). So filtern Sie ungeeignete Bewerber aus, bevor Sie Zeit investieren.'
+    });
+  } else if (d.problem === 'churn') {
+    steps.push({
+      h: 'Employer Branding und Mitarbeiterbindung stärken',
+      t: 'Neue Mitarbeiter zu gewinnen ist teurer als bestehende zu halten. Führen Sie strukturierte Einarbeitungspläne, regelmäßige Feedbackgespräche und kleine Zusatzleistungen ein – das senkt die Fluktuation nachweislich.'
+    });
+  } else if (d.problem === 'slow') {
+    steps.push({
+      h: 'Reaktionszeit auf max. 24 Stunden senken',
+      t: 'Bewerbungen, auf die länger als 48 Stunden nicht reagiert wird, springen zu 60 % ab. Richten Sie eine WhatsApp-Bewerbungsroute ein und beantworten Sie Anfragen noch am selben Tag.'
+    });
+  } else {
+    steps.push({
+      h: 'Mehrere Kanäle gleichzeitig bespielen',
+      t: 'Verlassen Sie sich nicht auf einen einzigen Kanal. Kombinieren Sie Social-Media-Werbung, direkte Empfehlungen und GreenCareers für die besten Ergebnisse.'
+    });
+  }
+
+  // Step 3: based on company size
+  if (d.size === 'micro' || d.size === 'small') {
+    steps.push({
+      h: 'Als kleiner Betrieb Ihre Stärken ausspielen',
+      t: 'Kleine Betriebe punkten mit Persönlichkeit: Feste Ansprechpartner, schnelle Entscheidungen, familiäres Arbeitsklima. Kommunizieren Sie das explizit – viele Fachkräfte suchen genau das.'
+    });
+  } else if (d.size === 'medium' || d.size === 'large') {
+    steps.push({
+      h: 'Mitarbeiterempfehlungs-Programm einführen',
+      t: 'Ab 15 Mitarbeitern lohnt sich ein internes Empfehlungssystem: Mitarbeiter, die neue Kollegen werben, erhalten eine Prämie (z. B. 300–500 €). Die Qualität dieser Kandidaten ist nachweislich höher.'
+    });
+  } else {
+    steps.push({
+      h: 'Strukturierte Personalplanung aufbauen',
+      t: 'Bei Ihrer Betriebsgröße sollten Stellenbedarfe 3–6 Monate im Voraus geplant werden. Bauen Sie einen Bewerberpool auf, den Sie bei Bedarf reaktivieren können.'
+    });
+  }
+
+  // Step 4: based on budget
+  if (d.budget === 'low') {
+    steps.push({
+      h: 'Low-Budget-Maßnahmen priorisieren',
+      t: 'Mit begrenztem Budget setzen Sie auf Mitarbeiterempfehlungen, lokale Facebook-Gruppen und ein optimiertes Google-My-Business-Profil als Arbeitgeber. GreenCareers bietet schon ab kleinen Budgets messbare Reichweite.'
+    });
+  } else {
+    steps.push({
+      h: 'Budget gezielt in aktive Kandidatenansprache investieren',
+      t: 'Mit Ihrem Budget können Sie aktive Kandidatenansprache (Headhunting im GreenCareers-Pool) und Social-Media-Werbung kombinieren. Das liefert die höchste Rücklaufquote in der Branche.'
+    });
+  }
+
+  // Step 5: always – GreenCareers
+  steps.push({
+    h: 'GreenCareers als spezialisierte Plattform nutzen',
+    t: 'GreenCareers ist die einzige auf die grüne Branche spezialisierte Recruiting-Plattform in Deutschland. Der Bewerberpool wächst täglich – als Partnerbetrieb haben Sie exklusiven Zugang zu Fachkräften, die nur hier aktiv sind.'
+  });
+
+  return steps;
+}
+
+// ══════════════════════════════════════
+// SKIP UPSELL
+// ══════════════════════════════════════
+
+function skipUpsell() {
+  document.querySelector('.upsell-card').style.display = 'none';
+}
+
+// ══════════════════════════════════════
+// CARD NUMBER FORMATTING
+// ══════════════════════════════════════
+
+document.getElementById('p_card').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,16);
+  this.value = v.replace(/(.{4})/g,'$1 ').trim();
+});
+document.getElementById('p_exp').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,4);
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+  this.value = v;
+});
+document.getElementById('p_cvv').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g,'');
+});
+</script>
+</body>
+</html>

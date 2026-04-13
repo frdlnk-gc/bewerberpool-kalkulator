@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bewerberpool-Kalkulator | GreenCareers</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <style>
+    :root {
+      --green-dark: #1a5c1a;
+      --green-main: #2d7a2d;
+      --green-light: #4caf50;
+      --green-pale: #e8f5e9;
+      --score-gut: #1e8449;
+      --score-gut-bg: #e8f8ef;
+      --score-mittel: #b7770d;
+      --score-mittel-bg: #fef9e7;
+      --score-schwach: #c0392b;
+      --score-schwach-bg: #fdedec;
+      --text-dark: #1a2b1b;
+      --text-gray: #546e5a;
+      --border: #c8e6c9;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(27,94,32,0.10);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f7f1;
+      color: var(--text-dark);
+      min-height: 100vh;
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(155deg, #0e3a0e 0%, var(--green-main) 100%);
+      color: #fff;
+      padding: 40px 20px 36px;
+      text-align: center;
+    }
+    .logo-row {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none; margin-bottom: 20px;
+    }
+    .logo-icon {
+      width: 42px; height: 42px; background: #81c784;
+      border-radius: 11px; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .logo-text { font-size: 1.2rem; font-weight: 800; color: #fff; }
+    header h1  { font-size: clamp(1.7rem, 5vw, 2.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+    header p   { font-size: 0.97rem; opacity: 0.82; max-width: 520px; margin: 0 auto; }
+
+    /* ── MAIN ── */
+    main { max-width: 680px; margin: 0 auto; padding: 32px 16px 64px; }
+
+    /* ── CARD ── */
+    .card { background: #fff; border-radius: var(--radius); padding: 28px 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+    .card h2  { font-size: 1.2rem; color: var(--green-dark); font-weight: 800; margin-bottom: 4px; }
+    .card .sub { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 24px; }
+
+    /* ── PLZ INPUT ── */
+    .field-label {
+      display: block; font-size: 0.8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      color: var(--text-gray); margin-bottom: 8px;
+    }
+    .plz-input {
+      width: 100%; padding: 16px 20px;
+      font-size: 1.6rem; font-weight: 800; letter-spacing: 8px;
+      border: 2px solid var(--border); border-radius: 14px;
+      outline: none; color: var(--text-dark); background: #fafcfa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .plz-input:focus { border-color: var(--green-light); box-shadow: 0 0 0 3px rgba(76,175,80,0.15); }
+    .plz-input::placeholder { color: #bbb; font-weight: 400; letter-spacing: 4px; }
+    .error-msg { display: none; color: var(--score-schwach); font-size: 0.85rem; margin-top: 8px; font-weight: 500; }
+
+    /* ── PROFESSION CHECKS ── */
+    .section-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 6px; margin: 24px 0 12px;
+    }
+    .section-row .field-label { margin: 0; }
+    .toggle-all {
+      font-size: 0.8rem; color: var(--green-main); cursor: pointer;
+      font-weight: 600; background: none; border: none;
+      text-decoration: underline; text-underline-offset: 2px;
+      padding: 0; min-height: 44px;
+    }
+    .prof-grid { display: flex; flex-direction: column; gap: 10px; }
+    @media (min-width: 500px) { .prof-grid { display: grid; grid-template-columns: 1fr 1fr; } }
+    .prof-check {
+      display: flex; align-items: center; gap: 13px;
+      padding: 14px 16px; border: 2px solid var(--border);
+      border-radius: 13px; cursor: pointer;
+      transition: all 0.15s; user-select: none;
+      background: #fafcfa; min-height: 56px;
+    }
+    .prof-check:hover  { border-color: var(--green-light); background: var(--green-pale); }
+    .prof-check.active { border-color: var(--green-light); background: var(--green-pale); }
+    .prof-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--green-main); flex-shrink: 0; }
+    .prof-check .p-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .prof-check .p-name { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
+
+    /* ── BUTTON ── */
+    .btn-wrap { display: flex; justify-content: center; margin-top: 28px; }
+    .btn-calc {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+      color: #fff; border: none; padding: 18px 48px;
+      font-size: 1.05rem; font-weight: 800; border-radius: 50px;
+      cursor: pointer; box-shadow: 0 4px 18px rgba(45,122,45,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+      width: 100%; max-width: 380px; justify-content: center;
+      -webkit-appearance: none;
+    }
+    .btn-calc:hover  { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(45,122,45,0.45); }
+    .btn-calc:active { transform: translateY(0); }
+
+    /* ── RESULTS ── */
+    #results { display: none; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+
+    /* Region header */
+    .results-header {
+      background: linear-gradient(155deg, #0e3a0e, var(--green-main));
+      border-radius: var(--radius); padding: 24px 24px 22px;
+      color: #fff; margin-bottom: 16px;
+    }
+    .rh-label { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; margin-bottom: 4px; }
+    .rh-name  { font-size: clamp(1.3rem, 4vw, 1.7rem); font-weight: 900; line-height: 1.15; margin-bottom: 8px; }
+    .rh-meta  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .rh-bl    { display: inline-block; background: rgba(255,255,255,0.18); padding: 3px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .rh-plz   { font-size: 0.9rem; opacity: 0.5; font-weight: 700; letter-spacing: 2px; }
+
+    /* Overall score */
+    .overall-box {
+      border-radius: var(--radius); padding: 18px 20px; border-left: 5px solid;
+      display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px;
+    }
+    .ob-icon { font-size: 1.7rem; flex-shrink: 0; margin-top: 1px; }
+    .overall-box h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 3px; }
+    .overall-box p  { font-size: 0.88rem; opacity: 0.85; }
+
+    /* Teaser highlight (big number) */
+    .teaser-highlight {
+      background: #fff; border-radius: var(--radius);
+      padding: 24px 24px 20px; box-shadow: var(--shadow);
+      margin-bottom: 0; text-align: center;
+      border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+    }
+    .th-label  { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 4px; }
+    .th-number { font-size: clamp(3rem, 10vw, 4.5rem); font-weight: 900; color: var(--green-dark); line-height: 1; margin-bottom: 4px; }
+    .th-unit   { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 20px; }
+
+    /* ── LOCK PREVIEW SECTION ── */
+    /* Blurred peek strip – shows partial content fading out */
+    .lock-peek {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+      background: #fff;
+      /* no border-radius top to flow from teaser-highlight */
+    }
+    .lock-peek-inner {
+      filter: blur(5px);
+      padding: 16px 24px 0;
+      pointer-events: none;
+      user-select: none;
+      transform: scale(1.03); /* hide blur artifacts at edges */
+    }
+    /* gradient fade from transparent → page bg colour */
+    .lock-peek-fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0)  0%,
+        rgba(240,247,241,0.6) 40%,
+        rgba(240,247,241,1)  100%
+      );
+    }
+    /* Lock badge floating in the middle of the peek */
+    .lock-badge-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .lock-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: var(--green-dark);
+      font-size: 1rem; font-weight: 900;
+      padding: 11px 22px; border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(27,94,32,0.25);
+      border: 2px solid var(--border);
+    }
+    .lock-badge-sub {
+      font-size: 0.8rem; color: var(--text-gray);
+      font-weight: 600; text-align: center; line-height: 1.4;
+    }
+
+    /* ── GATE FORM CARD ── */
+    .gate-card {
+      background: #fff; border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: var(--shadow); padding: 24px 24px 28px;
+      margin-bottom: 20px;
+    }
+    .gate-header {
+      text-align: center; margin-bottom: 20px;
+      padding-top: 4px;
+    }
+    .gate-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green-pale); color: var(--green-dark);
+      font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 10px;
+    }
+    .gate-header h3 { font-size: 1.1rem; font-weight: 900; color: var(--text-dark); margin-bottom: 5px; line-height: 1.3; }
+    .gate-header p  { font-size: 0.85rem; color: var(--text-gray); }
+
+    /* Form fields */
+    .field-group { margin-bottom: 13px; }
+    .field-group label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      color: var(--text-gray); margin-bottom: 5px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .field-group input,
+    .field-group select {
+      width: 100%; padding: 14px 15px;
+      font-size: 16px; /* prevents iOS zoom */
+      border: 2px solid var(--border); border-radius: 12px;
+      outline: none; color: var(--text-dark); background: #fafcfa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .field-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23546e5a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      padding-right: 40px;
+    }
+    .field-group input:focus,
+    .field-group select:focus { border-color: var(--green-light); box-shadow: 0 0 0 3px rgba(76,175,80,0.12); }
+    .field-group input::placeholder { color: #bbb; }
+
+    .gate-error { display:none; color: var(--score-schwach); font-size:0.83rem; font-weight:600; margin-bottom:10px; text-align:center; }
+
+    .btn-gate {
+      width: 100%; padding: 17px;
+      background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+      color: #fff; border: none; border-radius: 50px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(45,122,45,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+      min-height: 54px; -webkit-appearance: none;
+      margin-top: 6px;
+    }
+    .btn-gate:hover  { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(45,122,45,0.45); }
+    .btn-gate:active { transform: translateY(0); }
+
+    .privacy-note {
+      font-size: 0.72rem; color: var(--text-gray);
+      text-align: center; margin-top: 10px; line-height: 1.5;
+    }
+    .privacy-note a { color: var(--green-main); }
+
+    /* ── FULL REPORT ── */
+    #fullReport { display: none; }
+
+    /* Profession cards */
+    .prof-results-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+    @media (min-width: 520px) { .prof-results-grid { display: grid; grid-template-columns: 1fr 1fr; } }
+
+    .prof-card {
+      background: #fff; border-radius: var(--radius);
+      padding: 20px 22px; box-shadow: 0 2px 12px rgba(27,94,32,0.08);
+      border-top: 4px solid #ccc;
+    }
+    .prof-card.gut    { border-top-color: var(--score-gut); }
+    .prof-card.mittel { border-top-color: #f39c12; }
+    .prof-card.schwach{ border-top-color: var(--score-schwach); }
+
+    .pc-icon   { font-size: 1.6rem; margin-bottom: 6px; }
+    .pc-title  { font-size: 0.78rem; color: var(--text-gray); margin-bottom: 2px; line-height: 1.4; }
+    .pc-number { font-size: clamp(2.2rem, 7vw, 3rem); font-weight: 900; color: var(--text-dark); line-height: 1; margin-bottom: 2px; }
+    .pc-unit   { font-size: 0.76rem; color: var(--text-gray); margin-bottom: 12px; }
+
+    .score-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 11px; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 12px;
+    }
+    .score-pill.gut    { background: var(--score-gut-bg);    color: var(--score-gut); }
+    .score-pill.mittel { background: var(--score-mittel-bg); color: var(--score-mittel); }
+    .score-pill.schwach{ background: var(--score-schwach-bg);color: var(--score-schwach); }
+
+    .comp-bar-label { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-gray); margin-bottom: 4px; }
+    .comp-bar-track { background: #ecf0ec; border-radius: 100px; height: 7px; overflow: hidden; position: relative; }
+    .comp-bar-national { position: absolute; top:0; bottom:0; width:3px; background:#b0bfb0; left:50%; }
+    .comp-bar-fill { height:100%; border-radius:100px; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
+    .gut    .comp-bar-fill { background: var(--score-gut); }
+    .mittel .comp-bar-fill { background: #f39c12; }
+    .schwach .comp-bar-fill { background: var(--score-schwach); }
+
+    .pc-compare { font-size: 0.76rem; font-weight: 700; margin: 5px 0; }
+    .pc-desc    { font-size: 0.79rem; color: #666; margin-top: 8px; line-height: 1.45; }
+
+    /* Report sections */
+    .report-section {
+      background: #fff; border-radius: var(--radius);
+      padding: 22px; box-shadow: 0 2px 12px rgba(27,94,32,0.07);
+      margin-bottom: 16px;
+    }
+    .rs-title { font-size: 0.97rem; font-weight: 800; color: var(--green-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    /* Insights */
+    .insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .insight-box { background: var(--green-pale); border-radius: 11px; padding: 13px 15px; }
+    .ib-label { font-size: 0.72rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .ib-value { font-size: 1rem; font-weight: 800; color: var(--green-dark); }
+
+    /* Strategy */
+    .strategy-grid { display: flex; flex-direction: column; gap: 10px; }
+    .strategy-item {
+      display: flex; gap: 13px; align-items: flex-start;
+      padding: 12px 14px; background: #f8fcf8;
+      border-radius: 11px; border-left: 3px solid var(--green-light);
+    }
+    .si-num {
+      width: 26px; height: 26px; background: var(--green-main);
+      color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; flex-shrink: 0;
+    }
+    .si-text { font-size: 0.87rem; color: var(--text-dark); line-height: 1.5; }
+    .si-text strong { display: block; font-size: 0.9rem; margin-bottom: 2px; color: var(--green-dark); }
+
+    /* Tips */
+    .tips-list { list-style: none; }
+    .tips-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 11px 0; border-bottom: 1px solid #eef3ee;
+      font-size: 0.87rem; color: var(--text-dark); line-height: 1.5;
+    }
+    .tips-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .tips-list .ti { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; }
+    .tl-row {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid #eef3ee;
+    }
+    .tl-row:last-child { border-bottom: none; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green-light); flex-shrink: 0; margin-top: 6px; }
+    .tl-label { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); }
+    .tl-sub   { font-size: 0.79rem; color: var(--text-gray); }
+
+    /* Disclaimer */
+    .disclaimer {
+      background: #f8fbf8; border: 1px solid var(--border);
+      border-radius: 12px; padding: 13px 16px;
+      font-size: 0.76rem; color: var(--text-gray); line-height: 1.5; margin-bottom: 16px;
+    }
+
+    /* CTA */
+    .cta-box {
+      background: linear-gradient(155deg, #0e3a0e, var(--green-main));
+      border-radius: var(--radius); padding: 32px 24px;
+      text-align: center; color: #fff; margin-bottom: 20px;
+    }
+    .cta-box h3 { font-size: 1.3rem; font-weight: 900; margin-bottom: 8px; }
+    .cta-box p  { opacity: 0.82; margin-bottom: 22px; font-size: 0.9rem; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: var(--green-dark);
+      font-weight: 900; padding: 15px 34px; border-radius: 50px;
+      text-decoration: none; font-size: 0.97rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.28); }
+
+    /* ── BOOKING MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(10,30,10,0.65);
+      backdrop-filter: blur(3px);
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 20px;
+      padding: 32px 28px; width: 100%; max-width: 460px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: fadeUp 0.3s ease forwards;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-close {
+      float: right; background: none; border: none;
+      font-size: 1.4rem; cursor: pointer; color: var(--text-gray);
+      line-height: 1; margin-top: -4px;
+    }
+    .modal-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green-pale); color: var(--green-dark);
+      font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 12px;
+    }
+    .modal-box h3 { font-size: 1.15rem; font-weight: 900; margin-bottom: 6px; line-height: 1.3; }
+    .modal-box .modal-sub { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 22px; }
+
+    /* Footer */
+    footer { text-align: center; padding: 28px 20px; color: var(--text-gray); font-size: 0.8rem; line-height: 1.6; }
+    footer a { color: var(--green-main); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="https://www.green-careers.de" class="logo-row">
+    <div class="logo-icon">🌿</div>
+    <span class="logo-text">GreenCareers</span>
+  </a>
+  <h1>Bewerberpool-Kalkulator</h1>
+  <p>Erfahren Sie, wie viele qualifizierte Fachkräfte in Ihrer Region erreichbar sind.</p>
+</header>
+
+<main>
+  <!-- ── INPUT ── -->
+  <div class="card">
+    <h2>Ihre Region analysieren</h2>
+    <p class="sub">PLZ eingeben und Berufsgruppe wählen – Ihr kostenloser Potenzial-Report wartet.</p>
+
+    <label class="field-label" for="plzInput">Postleitzahl Ihres Standorts</label>
+    <input type="text" id="plzInput" class="plz-input" placeholder="12345"
+           maxlength="5" inputmode="numeric" autocomplete="off">
+    <div class="error-msg" id="errorMsg">Bitte eine gültige 5-stellige PLZ eingeben.</div>
+
+    <div class="section-row">
+      <span class="field-label">Berufsgruppe wählen</span>
+      <button class="toggle-all" id="toggleAllBtn" onclick="toggleAll()">Alle auswählen</button>
+    </div>
+    <div class="prof-grid" id="profGrid"></div>
+
+    <div class="btn-wrap">
+      <button class="btn-calc" onclick="calculate()">🔍 Fachkräfte berechnen</button>
+    </div>
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div id="results"></div>
+</main>
+
+<!-- ── BOOKING MODAL ── -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-eyebrow">📅 Kostenlos & unverbindlich</div>
+    <h3>Beratungstermin sichern</h3>
+    <p class="modal-sub">Wir rufen Sie zurück und zeigen Ihnen, wie Sie mit GreenCareers die richtigen Fachkräfte finden.</p>
+    <form id="bookingForm" onsubmit="submitBooking(event)" novalidate>
+      <div class="field-group">
+        <label for="b_name">Vor- und Nachname *</label>
+        <input type="text" id="b_name" placeholder="Max Muster" required>
+      </div>
+      <div class="field-group">
+        <label for="b_firma">Unternehmensname *</label>
+        <input type="text" id="b_firma" placeholder="Muster GmbH" required>
+      </div>
+      <div class="field-group">
+        <label for="b_wa">WhatsApp-Nummer *</label>
+        <input type="tel" id="b_wa" placeholder="+49 0000 000000" required>
+      </div>
+      <div class="field-group">
+        <label for="b_email">E-Mail-Adresse *</label>
+        <input type="email" id="b_email" placeholder="max@muster.de" required>
+      </div>
+      <div class="field-group">
+        <label for="b_termin">Wann passt es Ihnen am besten? *</label>
+        <select id="b_termin" required>
+          <option value="" disabled selected>Bitte wählen…</option>
+          <option>So bald wie möglich</option>
+          <option>Diese Woche</option>
+          <option>Nächste Woche</option>
+          <option>In 2–3 Wochen</option>
+        </select>
+      </div>
+      <div class="gate-error" id="bookingError">Bitte alle Pflichtfelder ausfüllen.</div>
+      <button type="submit" class="btn-gate" style="margin-top:8px">📅 Beratungstermin jetzt sichern</button>
+      <p class="privacy-note">Kostenlos & unverbindlich. Wir melden uns innerhalb von 24 Stunden. <a href="https://www.green-careers.de/datenschutz" target="_blank">Datenschutz</a></p>
+    </form>
+  </div>
+</div>
+
+<footer>
+  © 2025 <a href="https://www.green-careers.de">GreenCareers</a> – Karriereplattform für die grüne Branche<br>
+  <span style="font-size:0.73rem">Schätzwerte basieren auf amtlichen Statistiken (Bundesagentur für Arbeit, Destatis, BGL). Keine Gewähr.</span>
+</footer>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+
+const DE_POP = 84000000;
+
+const PROFESSIONS = [
+  { id:'facharbeiter',  name:'Facharbeiter GaLaBau',  fullName:'Facharbeiter im Garten- und Landschaftsbau',  icon:'🌿', nat:55000, rate:0.18, thresh:{gut:50,mittel:20}, def:true  },
+  { id:'vorarbeiter',   name:'Vorarbeiter GaLaBau',   fullName:'Vorarbeiter im Garten- und Landschaftsbau',   icon:'👷', nat:18000, rate:0.15, thresh:{gut:15,mittel:6},  def:false },
+  { id:'bauleiter',     name:'Bauleiter GaLaBau',     fullName:'Bauleiter im Garten- und Landschaftsbau',     icon:'📋', nat:7500,  rate:0.12, thresh:{gut:5,mittel:2},   def:false },
+  { id:'strassenbauer', name:'Straßenbauer',           fullName:'Straßenbauer',                                icon:'🏗️', nat:70000, rate:0.16, thresh:{gut:55,mittel:22}, def:false },
+  { id:'tiefbauer',     name:'Tiefbauer',              fullName:'Tiefbauer',                                   icon:'⛏️', nat:50000, rate:0.16, thresh:{gut:40,mittel:16}, def:false },
+];
+
+const PLZ = {
+  '01':{name:'Dresden & Umgebung',          bl:'Sachsen',               pop:850000, type:'urban'},
+  '02':{name:'Bautzen / Görlitz',           bl:'Sachsen',               pop:420000, type:'rural'},
+  '03':{name:'Cottbus / Spree-Neiße',       bl:'Brandenburg',           pop:330000, type:'rural'},
+  '04':{name:'Leipzig',                     bl:'Sachsen',               pop:920000, type:'urban'},
+  '06':{name:'Halle / Saale-Unstrut',       bl:'Sachsen-Anhalt',        pop:780000, type:'mixed'},
+  '07':{name:'Gera / Jena',                 bl:'Thüringen',             pop:450000, type:'mixed'},
+  '08':{name:'Zwickau / Vogtland',          bl:'Sachsen',               pop:680000, type:'mixed'},
+  '09':{name:'Chemnitz',                    bl:'Sachsen',               pop:380000, type:'urban'},
+  '10':{name:'Berlin Mitte',                bl:'Berlin',                pop:900000, type:'urban'},
+  '12':{name:'Berlin Süd',                  bl:'Berlin',                pop:800000, type:'urban'},
+  '13':{name:'Berlin Nord',                 bl:'Berlin',                pop:700000, type:'urban'},
+  '14':{name:'Potsdam / Berlin Südwest',    bl:'Brandenburg',           pop:650000, type:'mixed'},
+  '15':{name:'Oder-Spree / Dahme',          bl:'Brandenburg',           pop:400000, type:'rural'},
+  '16':{name:'Oberhavel / Prignitz',        bl:'Brandenburg',           pop:320000, type:'rural'},
+  '17':{name:'Neustrelitz / Ostmecklenburg',bl:'Mecklenburg-Vorpommern',pop:280000, type:'rural'},
+  '18':{name:'Rostock / Stralsund',         bl:'Mecklenburg-Vorpommern',pop:480000, type:'mixed'},
+  '19':{name:'Schwerin / Westmecklenburg',  bl:'Mecklenburg-Vorpommern',pop:320000, type:'rural'},
+  '20':{name:'Hamburg City',                bl:'Hamburg',               pop:300000, type:'urban'},
+  '21':{name:'Hamburg Süd / Harburg',       bl:'Hamburg',               pop:650000, type:'urban'},
+  '22':{name:'Hamburg West / Nord',         bl:'Hamburg',               pop:800000, type:'urban'},
+  '23':{name:'Lübeck / Ostholstein',        bl:'Schleswig-Holstein',    pop:600000, type:'mixed'},
+  '24':{name:'Kiel / Flensburg',            bl:'Schleswig-Holstein',    pop:650000, type:'mixed'},
+  '25':{name:'Nordfriesland / Dithmarschen',bl:'Schleswig-Holstein',    pop:400000, type:'rural'},
+  '26':{name:'Oldenburg / Emden',           bl:'Niedersachsen',         pop:600000, type:'mixed'},
+  '27':{name:'Bremerhaven / Rotenburg',     bl:'Niedersachsen',         pop:380000, type:'mixed'},
+  '28':{name:'Bremen',                      bl:'Bremen',                pop:560000, type:'urban'},
+  '29':{name:'Lüneburg / Uelzen',           bl:'Niedersachsen',         pop:350000, type:'rural'},
+  '30':{name:'Hannover',                    bl:'Niedersachsen',         pop:650000, type:'urban'},
+  '31':{name:'Hildesheim / Hameln',         bl:'Niedersachsen',         pop:500000, type:'mixed'},
+  '32':{name:'Herford / Minden-Lübbecke',  bl:'Nordrhein-Westfalen',   pop:450000, type:'mixed'},
+  '33':{name:'Paderborn / Bielefeld',       bl:'Nordrhein-Westfalen',   pop:700000, type:'mixed'},
+  '34':{name:'Kassel',                      bl:'Hessen',                pop:580000, type:'mixed'},
+  '35':{name:'Marburg / Gießen',            bl:'Hessen',                pop:450000, type:'mixed'},
+  '36':{name:'Fulda / Vogelsberg',          bl:'Hessen',                pop:280000, type:'rural'},
+  '37':{name:'Göttingen / Northeim',        bl:'Niedersachsen',         pop:480000, type:'mixed'},
+  '38':{name:'Braunschweig / Wolfsburg',    bl:'Niedersachsen',         pop:720000, type:'urban'},
+  '39':{name:'Magdeburg / Börde',           bl:'Sachsen-Anhalt',        pop:480000, type:'mixed'},
+  '40':{name:'Düsseldorf',                  bl:'Nordrhein-Westfalen',   pop:800000, type:'urban'},
+  '41':{name:'Mönchengladbach / Neuss',     bl:'Nordrhein-Westfalen',   pop:650000, type:'urban'},
+  '42':{name:'Wuppertal / Solingen',        bl:'Nordrhein-Westfalen',   pop:700000, type:'urban'},
+  '44':{name:'Dortmund / Bochum',           bl:'Nordrhein-Westfalen',   pop:900000, type:'urban'},
+  '45':{name:'Essen / Gelsenkirchen',       bl:'Nordrhein-Westfalen',   pop:850000, type:'urban'},
+  '46':{name:'Duisburg / Oberhausen',       bl:'Nordrhein-Westfalen',   pop:700000, type:'urban'},
+  '47':{name:'Krefeld / Kleve',             bl:'Nordrhein-Westfalen',   pop:550000, type:'mixed'},
+  '48':{name:'Münster / Steinfurt',         bl:'Nordrhein-Westfalen',   pop:550000, type:'mixed'},
+  '49':{name:'Osnabrück / Emsland',         bl:'Niedersachsen',         pop:480000, type:'mixed'},
+  '50':{name:'Köln',                        bl:'Nordrhein-Westfalen',   pop:900000, type:'urban'},
+  '51':{name:'Köln Umland / Bergisches Land',bl:'Nordrhein-Westfalen',  pop:550000, type:'mixed'},
+  '52':{name:'Aachen / Heinsberg',          bl:'Nordrhein-Westfalen',   pop:550000, type:'urban'},
+  '53':{name:'Bonn / Rhein-Sieg',           bl:'Nordrhein-Westfalen',   pop:700000, type:'urban'},
+  '54':{name:'Trier / Eifel',               bl:'Rheinland-Pfalz',       pop:380000, type:'rural'},
+  '55':{name:'Mainz / Worms',               bl:'Rheinland-Pfalz',       pop:500000, type:'mixed'},
+  '56':{name:'Koblenz / Westerwald',        bl:'Rheinland-Pfalz',       pop:480000, type:'mixed'},
+  '57':{name:'Siegerland',                  bl:'Nordrhein-Westfalen',   pop:350000, type:'mixed'},
+  '58':{name:'Hagen / Iserlohn',            bl:'Nordrhein-Westfalen',   pop:450000, type:'urban'},
+  '59':{name:'Unna / Soest / Hamm',         bl:'Nordrhein-Westfalen',   pop:550000, type:'mixed'},
+  '60':{name:'Frankfurt am Main',           bl:'Hessen',                pop:500000, type:'urban'},
+  '61':{name:'Hochtaunus / Wetterau',       bl:'Hessen',                pop:400000, type:'mixed'},
+  '63':{name:'Offenbach / Dieburg',         bl:'Hessen',                pop:600000, type:'urban'},
+  '64':{name:'Darmstadt / Bergstraße',      bl:'Hessen',                pop:450000, type:'mixed'},
+  '65':{name:'Wiesbaden / Main-Taunus',     bl:'Hessen',                pop:450000, type:'urban'},
+  '66':{name:'Saarbrücken / Saarland',      bl:'Saarland',              pop:580000, type:'urban'},
+  '67':{name:'Neustadt / Kaiserslautern',   bl:'Rheinland-Pfalz',       pop:480000, type:'mixed'},
+  '68':{name:'Mannheim / Rhein-Neckar',     bl:'Baden-Württemberg',     pop:550000, type:'urban'},
+  '69':{name:'Heidelberg / Rhein-Neckar',   bl:'Baden-Württemberg',     pop:500000, type:'urban'},
+  '70':{name:'Stuttgart',                   bl:'Baden-Württemberg',     pop:700000, type:'urban'},
+  '71':{name:'Ludwigsburg / Böblingen',     bl:'Baden-Württemberg',     pop:600000, type:'urban'},
+  '72':{name:'Reutlingen / Tübingen',       bl:'Baden-Württemberg',     pop:500000, type:'mixed'},
+  '73':{name:'Göppingen / Esslingen',       bl:'Baden-Württemberg',     pop:500000, type:'mixed'},
+  '74':{name:'Heilbronn / Hohenlohe',       bl:'Baden-Württemberg',     pop:550000, type:'mixed'},
+  '75':{name:'Pforzheim / Enzkreis',        bl:'Baden-Württemberg',     pop:380000, type:'mixed'},
+  '76':{name:'Karlsruhe / Rastatt',         bl:'Baden-Württemberg',     pop:550000, type:'urban'},
+  '77':{name:'Offenburg / Ortenaukreis',    bl:'Baden-Württemberg',     pop:380000, type:'rural'},
+  '78':{name:'Konstanz / Schwarzwald-Baar', bl:'Baden-Württemberg',     pop:380000, type:'rural'},
+  '79':{name:'Freiburg / Breisgau',         bl:'Baden-Württemberg',     pop:500000, type:'mixed'},
+  '80':{name:'München Innenstadt',          bl:'Bayern',                pop:700000, type:'urban'},
+  '81':{name:'München Ost / Pasing',        bl:'Bayern',                pop:500000, type:'urban'},
+  '82':{name:'München Süd / Starnberg',     bl:'Bayern',                pop:450000, type:'mixed'},
+  '83':{name:'Rosenheim / Chiemsee',        bl:'Bayern',                pop:380000, type:'rural'},
+  '84':{name:'Landshut / Dingolfing',       bl:'Bayern',                pop:350000, type:'rural'},
+  '85':{name:'Ingolstadt / Freising',       bl:'Bayern',                pop:480000, type:'mixed'},
+  '86':{name:'Augsburg / Schwaben',         bl:'Bayern',                pop:550000, type:'urban'},
+  '87':{name:'Kempten / Allgäu',            bl:'Bayern',                pop:350000, type:'rural'},
+  '88':{name:'Ravensburg / Bodenseekreis',  bl:'Baden-Württemberg',     pop:380000, type:'rural'},
+  '89':{name:'Ulm / Günzburg',              bl:'Bayern',                pop:380000, type:'mixed'},
+  '90':{name:'Nürnberg',                    bl:'Bayern',                pop:650000, type:'urban'},
+  '91':{name:'Erlangen / Fürth / Ansbach',  bl:'Bayern',                pop:550000, type:'mixed'},
+  '92':{name:'Amberg / Weiden / Oberpfalz', bl:'Bayern',                pop:380000, type:'rural'},
+  '93':{name:'Regensburg',                  bl:'Bayern',                pop:420000, type:'mixed'},
+  '94':{name:'Passau / Deggendorf',         bl:'Bayern',                pop:380000, type:'rural'},
+  '95':{name:'Bayreuth / Hof',              bl:'Bayern',                pop:380000, type:'rural'},
+  '96':{name:'Bamberg / Kronach',           bl:'Bayern',                pop:350000, type:'rural'},
+  '97':{name:'Würzburg / Schweinfurt',      bl:'Bayern',                pop:550000, type:'mixed'},
+  '98':{name:'Suhl / Sonneberg',            bl:'Thüringen',             pop:250000, type:'rural'},
+  '99':{name:'Erfurt / Weimar',             bl:'Thüringen',             pop:550000, type:'mixed'},
+};
+
+// ═══════════════════════════════════════
+// BUILD CHECKBOXES
+// ═══════════════════════════════════════
+
+const profGrid = document.getElementById('profGrid');
+PROFESSIONS.forEach(p => {
+  const div = document.createElement('div');
+  div.className = 'prof-check' + (p.def ? ' active' : '');
+  div.dataset.id = p.id;
+  div.innerHTML = `
+    <input type="checkbox" id="chk_${p.id}" ${p.def ? 'checked' : ''}>
+    <span class="p-icon">${p.icon}</span>
+    <span class="p-name">${p.fullName}</span>`;
+  div.addEventListener('click', function(e) {
+    if (e.target.tagName !== 'INPUT') {
+      const cb = this.querySelector('input'); cb.checked = !cb.checked;
+    }
+    this.classList.toggle('active', this.querySelector('input').checked);
+    updateToggleBtn();
+  });
+  profGrid.appendChild(div);
+});
+
+function updateToggleBtn() {
+  const all = [...profGrid.querySelectorAll('input')];
+  document.getElementById('toggleAllBtn').textContent =
+    all.every(c => c.checked) ? 'Alle abwählen' : 'Alle auswählen';
+}
+function toggleAll() {
+  const all = [...profGrid.querySelectorAll('input')];
+  const allChecked = all.every(c => c.checked);
+  all.forEach(cb => { cb.checked = !allChecked; cb.closest('.prof-check').classList.toggle('active', !allChecked); });
+  updateToggleBtn();
+}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+
+const AVG_ZONES = 90;
+
+function getScore(v, t) { return v >= t.gut ? 'gut' : v >= t.mittel ? 'mittel' : 'schwach'; }
+function overallScore(scores) {
+  const c = {gut:0,mittel:0,schwach:0}; scores.forEach(s=>c[s]++);
+  const n = scores.length;
+  if (c.gut    >= Math.ceil(n*0.6)) return 'gut';
+  if (c.schwach >= Math.ceil(n*0.6)) return 'schwach';
+  return 'mittel';
+}
+
+const SCORE_ICON  = {gut:'✅', mittel:'⚠️', schwach:'⛔'};
+const SCORE_LABEL = {gut:'Gut', mittel:'Mittel', schwach:'Schwach'};
+const SCORE_COLOR = {gut:'var(--score-gut)', mittel:'#f39c12', schwach:'var(--score-schwach)'};
+const SCORE_BG    = {gut:'var(--score-gut-bg)', mittel:'var(--score-mittel-bg)', schwach:'var(--score-schwach-bg)'};
+
+const OVERALL_COPY = {
+  gut:    {h:'Sehr guter Standort für Personalgewinnung',       p:'Ihr Standort bietet überdurchschnittlich viele erreichbare Fachkräfte – die Chancen stehen sehr gut.'},
+  mittel: {h:'Solider Standort – mit der richtigen Strategie',   p:'Mit gezielter Ansprache lässt sich in Ihrer Region ein ausreichender Kandidatenpool erschließen.'},
+  schwach:{h:'Herausfordernder Standort – aktives Recruiting nötig', p:'Fachkräfte sind in Ihrer Region knapp. Überregionale Ansprache und aktives Recruiting sind wichtig.'},
+};
+
+const TYPE_LABELS = {urban:'🏙️ Urban', mixed:'🏘️ Gemischt', rural:'🌄 Ländlich'};
+const COMP_LABELS = {urban:'🔥 Hoch', mixed:'⚡ Mittel', rural:'✅ Gering'};
+
+function scoreText(s, r, n) {
+  return ({
+    gut:    `Gutes Potenzial: In ${r} befinden sich überdurchschnittlich viele ${n} im GreenCareers-Bewerberpool.`,
+    mittel: `Mittleres Potenzial: Im GreenCareers-Pool stehen für ${r} ausreichend ${n} zur Verfügung – mit gezielter Kampagne erreichbar.`,
+    schwach:`Begrenztes Potenzial: ${n} sind im GreenCareers-Pool für ${r} aktuell rar. Eine überregionale Kampagne erschließt weiteres Potenzial.`,
+  })[s];
+}
+
+function countUp(el, target, dur) {
+  let val = 0; const step = target / (dur/16);
+  const t = setInterval(()=>{
+    val = Math.min(val+step, target);
+    el.textContent = Math.round(val).toLocaleString('de-DE');
+    if (val>=target) clearInterval(t);
+  }, 16);
+}
+
+function getTips(region, selIds, overallS) {
+  const tips = [];
+  if (region.type==='urban') tips.push({i:'🏙️', t:'Großstadtregion: Hoher Wettbewerb um Talente. Schnelle Prozesse, Benefits und ein starkes Arbeitgeberprofil sind entscheidend.'});
+  else if (region.type==='rural') tips.push({i:'🌄', t:'Ländliche Region: Kandidaten sind lokal verwurzelt. Stabilität, Teamkultur und flexible Arbeitszeiten überzeugen am meisten.'});
+  else tips.push({i:'🏘️', t:'Gemischte Region: Work-Life-Balance und regionaler Bezug sind die stärksten Argumente für Kandidaten.'});
+  if (selIds.includes('facharbeiter')||selIds.includes('vorarbeiter'))
+    tips.push({i:'🎓', t:'Kooperationen mit Berufsschulen und dem BGL-Ausbildungsnetzwerk erhöhen Ihr Kandidatenpotenzial langfristig.'});
+  if (selIds.includes('bauleiter'))
+    tips.push({i:'📈', t:'Bauleiter wechseln fast nur auf deutlich bessere Konditionen. Gehalt und Entwicklungsperspektive klar benennen.'});
+  if (selIds.includes('strassenbauer')||selIds.includes('tiefbauer'))
+    tips.push({i:'🔧', t:'Im Straßen- und Tiefbau erhöhen klare Gehaltsangaben in der Anzeige die Bewerbungsrate nachweislich um bis zu 40 %.'});
+  if (overallS==='schwach')
+    tips.push({i:'🗺️', t:'Erweitern Sie Ihren Suchradius: Fachkräfte aus Nachbarregionen sind oft mobil und wechselbereit.'});
+  tips.push({i:'📱', t:'Der GreenCareers-Bewerberpool wächst täglich: Über Social-Media-Werbung kommen laufend neue, wechselbereite Fachkräfte hinzu – auch solche, die kein klassisches Jobportal nutzen.'});
+  return tips;
+}
+
+function getStrategy(region, selIds, overallS) {
+  const steps = [];
+  steps.push({h:'Attraktive Stellenanzeige erstellen', t:'Echte Einblicke in den Arbeitsalltag, Bilder und Mitarbeiterstimmen erhöhen die Bewerbungsrate um bis zu 60 %.'});
+  if (region.type==='urban') steps.push({h:'Reaktionszeit unter 24 Stunden', t:'In städtischen Märkten entscheiden Bewerber schnell – wer sofort antwortet, sichert sich den Kandidaten.'});
+  else steps.push({h:'Persönliche Ansprache betonen', t:'In ländlichen Regionen wirkt Direktkontakt und regionale Nähe. Nennen Sie konkrete Ansprechpartner.'});
+  steps.push({h:'Gehalt transparent kommunizieren', t:'Anzeigen mit Gehaltsangabe erhalten branchenübergreifend 3× mehr Bewerbungen.'});
+  if (overallS==='schwach') steps.push({h:'Überregionale Kampagne schalten', t:'Bei knappem lokalem Pool: GreenCareers-Anzeigen können gezielt in Nachbarregionen ausgespielt werden.'});
+  steps.push({h:'Employer Branding aufbauen', t:'Fachkräfte, die Ihren Namen kennen, bewerben sich eher – GreenCareers unterstützt Sie beim Aufbau.'});
+  return steps;
+}
+
+function getBesetzungsdauer(score, region) {
+  const base = score==='gut' ? 4 : score==='mittel' ? 8 : 14;
+  const adj  = region.type==='urban' ? -1 : region.type==='rural' ? 2 : 0;
+  return Math.max(2, base+adj);
+}
+
+// ═══════════════════════════════════════
+// CALCULATE
+// ═══════════════════════════════════════
+
+let _data = null;
+
+function calculate() {
+  const plzRaw = document.getElementById('plzInput').value.trim();
+  const errEl  = document.getElementById('errorMsg');
+
+  if (!/^\d{5}$/.test(plzRaw)) { errEl.textContent='Bitte eine gültige 5-stellige PLZ eingeben.'; errEl.style.display='block'; return; }
+  const prefix = plzRaw.substring(0,2);
+  const region = PLZ[prefix];
+  if (!region) { errEl.textContent=`PLZ ${plzRaw} konnte keiner Region zugeordnet werden.`; errEl.style.display='block'; return; }
+
+  const selIds = PROFESSIONS.filter(p=>document.getElementById('chk_'+p.id)?.checked).map(p=>p.id);
+  if (!selIds.length) { errEl.textContent='Bitte mindestens eine Berufsgruppe wählen.'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
+
+  const selProfs = PROFESSIONS.filter(p=>selIds.includes(p.id));
+  const results  = selProfs.map(p=>{
+    const avail  = Math.max(1, Math.round((region.pop/DE_POP)*p.nat*p.rate));
+    const natAvg = Math.round(p.nat*p.rate/AVG_ZONES);
+    const pct    = Math.round((avail/(natAvg||1))*100);
+    return {p, avail, natAvg, pct, score:getScore(avail,p.thresh)};
+  });
+
+  const overall = overallScore(results.map(r=>r.score));
+  const total   = results.reduce((s,r)=>s+r.avail, 0);
+  const dauer   = getBesetzungsdauer(overall, region);
+  _data = {plzRaw, region, results, overall, total, selIds, dauer};
+
+  const oc = OVERALL_COPY[overall];
+
+  // Quick blurred mini-cards for the peek strip
+  const peekCards = results.map(r => `
+    <div style="background:#fff;border-radius:12px;padding:14px 16px;border-top:4px solid ${SCORE_COLOR[r.score]};margin-bottom:10px">
+      <div style="font-size:1.4rem;margin-bottom:4px">${r.p.icon}</div>
+      <div style="font-size:0.75rem;color:#546e5a;margin-bottom:2px">${r.p.fullName}</div>
+      <div style="font-size:2rem;font-weight:900;line-height:1">${r.avail}</div>
+      <div style="font-size:0.72rem;color:#888;margin-bottom:8px">im GreenCareers-Bewerberpool</div>
+      <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:800;background:${SCORE_BG[r.score]};color:${SCORE_COLOR[r.score]}">${SCORE_ICON[r.score]} ${SCORE_LABEL[r.score]}</span>
+    </div>`).join('');
+
+  const resEl = document.getElementById('results');
+  resEl.innerHTML = `<div class="fade-up">
+
+    <!-- Region header -->
+    <div class="results-header">
+      <div class="rh-label">Analyse für PLZ</div>
+      <div class="rh-name">${region.name}</div>
+      <div class="rh-meta">
+        <span class="rh-bl">${region.bl}</span>
+        <span class="rh-plz">${plzRaw}</span>
+      </div>
+    </div>
+
+    <!-- Overall score -->
+    <div class="overall-box" style="background:${SCORE_BG[overall]};border-color:${SCORE_COLOR[overall]}">
+      <div class="ob-icon">${SCORE_ICON[overall]}</div>
+      <div>
+        <h3 style="color:${SCORE_COLOR[overall]}">${oc.h}</h3>
+        <p>${oc.p}</p>
+      </div>
+    </div>
+
+    <!-- Teaser: big number -->
+    <div class="teaser-highlight">
+      <div class="th-label">Im GreenCareers-Bewerberpool für ${region.name}</div>
+      <div class="th-number" id="teaserNum">–</div>
+      <div class="th-unit">Fachkräfte aus unserem Pool – exklusiv für Sie als Arbeitgeber verfügbar</div>
+    </div>
+
+    <!-- Lock peek: blurred mini-cards + lock overlay -->
+    <div class="lock-peek">
+      <div class="lock-peek-inner">${peekCards}${peekCards}</div>
+      <div class="lock-peek-fade"></div>
+      <div class="lock-badge-wrap">
+        <div class="lock-badge">🎁 Kostenlosen Report freischalten</div>
+        <div class="lock-badge-sub">Detailanalyse, Strategie & Besetzungsdauer<br>warten auf Sie – kostenlos freischalten</div>
+      </div>
+    </div>
+
+    <!-- Gate form (flows directly below peek) -->
+    <div class="gate-card">
+      <div class="gate-header">
+        <div class="gate-eyebrow">🔓 Kostenloser Report</div>
+        <h3>Vollständigen Fachkräfte-Report freischalten</h3>
+        <p>Nur 4 Felder – Ihr Report wird sofort freigeschaltet.</p>
+      </div>
+      <form id="leadForm" onsubmit="unlockReport(event)" novalidate>
+        <div class="field-group">
+          <label for="f_name">Vor- und Nachname *</label>
+          <input type="text" id="f_name" placeholder="Max Muster" required>
+        </div>
+        <div class="field-group">
+          <label for="f_firma">Unternehmensname *</label>
+          <input type="text" id="f_firma" placeholder="Muster GmbH" required>
+        </div>
+        <div class="field-group">
+          <label for="f_ma">Anzahl Mitarbeiter *</label>
+          <select id="f_ma" required>
+            <option value="" disabled selected>Bitte wählen…</option>
+            <option>1–5 Mitarbeiter</option>
+            <option>6–15 Mitarbeiter</option>
+            <option>16–30 Mitarbeiter</option>
+            <option>31–50 Mitarbeiter</option>
+            <option>51–100 Mitarbeiter</option>
+            <option>Mehr als 100 Mitarbeiter</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="f_wa">WhatsApp-Nummer *</label>
+          <input type="tel" id="f_wa" placeholder="+49 0000 000000" required>
+        </div>
+        <div class="gate-error" id="gateError">Bitte alle Felder ausfüllen.</div>
+        <button type="submit" class="btn-gate">🔓 Jetzt freischalten</button>
+        <p class="privacy-note">Mit dem Absenden stimmen Sie der Kontaktaufnahme durch GreenCareers zu. Keine Weitergabe an Dritte. <a href="https://www.green-careers.de/datenschutz" target="_blank">Datenschutz</a></p>
+      </form>
+    </div>
+
+    <!-- Full report (shown after unlock) -->
+    <div id="fullReport"></div>
+
+  </div>`;
+  resEl.style.display = 'block';
+
+  setTimeout(()=>{
+    const el = document.getElementById('teaserNum');
+    if (el) countUp(el, total, 900);
+    resEl.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 80);
+}
+
+// ═══════════════════════════════════════
+// BUILD FULL REPORT
+// ═══════════════════════════════════════
+
+function buildReport(data, animate) {
+  const {region, results, overall, selIds, dauer} = data;
+  const tips     = getTips(region, selIds, overall);
+  const strategy = getStrategy(region, selIds, overall);
+  const besetz   = overall==='gut' ? '🟢 Günstig' : overall==='mittel' ? '🟡 Moderat' : '🔴 Anspruchsvoll';
+  let html = '';
+
+  // Profession cards
+  html += `<div class="prof-results-grid">`;
+  results.forEach((r,i)=>{
+    const barW = Math.min(100, Math.max(5, r.pct));
+    const diff = r.pct-100;
+    const cc   = diff>=10 ? 'var(--score-gut)' : diff<=-10 ? 'var(--score-schwach)' : '#888';
+    const ct   = diff>=10 ? `+${diff} % über Ø` : diff<=-10 ? `${Math.abs(diff)} % unter Ø` : 'Ø Bundesdurchschnitt';
+    html += `
+      <div class="prof-card ${r.score}">
+        <div class="pc-icon">${r.p.icon}</div>
+        <div class="pc-title">${r.p.fullName}</div>
+        <div class="pc-number" ${animate?`id="rn_${i}"`:''}>${animate?'–':r.avail.toLocaleString('de-DE')}</div>
+        <div class="pc-unit">im GreenCareers-Bewerberpool verfügbar</div>
+        <span class="score-pill ${r.score}">${SCORE_ICON[r.score]} ${SCORE_LABEL[r.score]}</span>
+        <div class="comp-bar-label"><span>Lokal</span><span>Ø Bund</span><span>Top</span></div>
+        <div class="comp-bar-track">
+          <div class="comp-bar-national"></div>
+          <div class="comp-bar-fill" ${animate?`data-w="${barW}%" style="width:0%"`:`style="width:${barW}%"`}></div>
+        </div>
+        <div class="pc-compare" style="color:${cc}">${ct}</div>
+        <div class="pc-desc">${scoreText(r.score,region.name,r.p.name)}</div>
+      </div>`;
+  });
+  html += `</div>`;
+
+  // Regional analysis
+  html += `
+    <div class="report-section">
+      <div class="rs-title">📊 Regionale Marktanalyse</div>
+      <div class="insights-grid">
+        <div class="insight-box"><div class="ib-label">Einwohner PLZ-Gebiet</div><div class="ib-value">${region.pop.toLocaleString('de-DE')}</div></div>
+        <div class="insight-box"><div class="ib-label">Regionstyp</div><div class="ib-value">${TYPE_LABELS[region.type]}</div></div>
+        <div class="insight-box"><div class="ib-label">Wettbewerb um Talente</div><div class="ib-value">${COMP_LABELS[region.type]}</div></div>
+        <div class="insight-box"><div class="ib-label">Marktlage Recruiting</div><div class="ib-value">${besetz}</div></div>
+      </div>
+    </div>`;
+
+  // Timeline
+  html += `
+    <div class="report-section">
+      <div class="rs-title">⏱️ Besetzungsdauer in Ihrer Region</div>
+      <div class="timeline">
+        <div class="tl-row"><div class="tl-dot"></div><div><div class="tl-label">Stellenanzeige schalten</div><div class="tl-sub">Tag 1 – Aktive Social-Media-Werbung über GreenCareers</div></div></div>
+        <div class="tl-row"><div class="tl-dot"></div><div><div class="tl-label">Erste Bewerbungen</div><div class="tl-sub">Ø nach 3–7 Tagen (${region.name})</div></div></div>
+        <div class="tl-row"><div class="tl-dot"></div><div><div class="tl-label">Gesprächsrunde & Auswahl</div><div class="tl-sub">Woche 2–3 – Vorausgefilterte Kandidaten</div></div></div>
+        <div class="tl-row"><div class="tl-dot" style="background:${SCORE_COLOR[overall]}"></div><div>
+          <div class="tl-label" style="color:${SCORE_COLOR[overall]}">Ziel: Besetzung in ca. ${dauer} Wochen</div>
+          <div class="tl-sub">Basierend auf Standorttyp und Marktlage in ${region.name}</div>
+        </div></div>
+      </div>
+    </div>`;
+
+  // Strategy
+  html += `
+    <div class="report-section">
+      <div class="rs-title">🎯 Ihre Recruiting-Strategie in ${strategy.length} Schritten</div>
+      <div class="strategy-grid">
+        ${strategy.map((s,i)=>`
+          <div class="strategy-item">
+            <div class="si-num">${i+1}</div>
+            <div class="si-text"><strong>${s.h}</strong>${s.t}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  // Tips
+  html += `
+    <div class="report-section">
+      <div class="rs-title">💡 Empfehlungen für Ihren Standort</div>
+      <ul class="tips-list">
+        ${tips.map(t=>`<li><span class="ti">${t.i}</span><span>${t.t}</span></li>`).join('')}
+      </ul>
+    </div>`;
+
+  // Disclaimer
+  html += `<div class="disclaimer">ℹ️ <strong>Methodik:</strong> Schätzwerte auf Basis der Verteilung sozialversicherungspflichtig Beschäftigter (Bundesagentur für Arbeit / Destatis) proportional zur regionalen Einwohnerzahl. Als „erreichbar" gilt ein branchenüblicher Wechselbereitschaftsanteil von 12–18 % je Beruf.</div>`;
+
+  // CTA
+  html += `
+    <div class="cta-box">
+      <h3>Jetzt Stelle gezielt besetzen</h3>
+      <p>GreenCareers – spezialisierte Karriereplattform für die grüne Branche. Aktive Social-Media-Werbung, KI-Filterung, direkte Kandidatenansprache.</p>
+      <button onclick="openModal()" class="btn-cta" style="border:none;cursor:pointer">📅 Beratungstermin sichern</button>
+    </div>`;
+
+  return html;
+}
+
+// ═══════════════════════════════════════
+// UNLOCK
+// ═══════════════════════════════════════
+
+function unlockReport(e) {
+  e.preventDefault();
+  const errEl = document.getElementById('gateError');
+  const req   = ['f_name','f_firma','f_ma','f_wa'];
+  if (req.some(id=>!document.getElementById(id)?.value.trim())) {
+    errEl.style.display='block'; return;
+  }
+  errEl.style.display='none';
+
+  // → Send lead data to your backend/CRM here
+  // const payload = { name: ..., firma: ..., mitarbeiter: ..., whatsapp: ..., plz: _data.plzRaw };
+  // fetch('/api/leads', { method:'POST', body: JSON.stringify(payload) });
+
+  // Hide gate
+  const lockPeek = document.querySelector('.lock-peek');
+  const gateCard = document.querySelector('.gate-card');
+  if (lockPeek) lockPeek.style.display='none';
+  if (gateCard) gateCard.style.display='none';
+
+  // Show full report
+  const frEl = document.getElementById('fullReport');
+  frEl.innerHTML = `<div class="fade-up">${buildReport(_data, true)}</div>`;
+  frEl.style.display = 'block';
+
+  setTimeout(()=>{
+    _data.results.forEach((r,i)=>{
+      const el = document.getElementById('rn_'+i);
+      if (el) countUp(el, r.avail, 800);
+    });
+    document.querySelectorAll('#fullReport .comp-bar-fill').forEach(bar=>{
+      const w = bar.dataset.w;
+      if (w) setTimeout(()=>bar.style.width=w, 200);
+    });
+    frEl.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 80);
+}
+
+// ═══════════════════════════════════════
+// BOOKING MODAL
+// ═══════════════════════════════════════
+
+function openModal() {
+  document.getElementById('bookingModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('bookingModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('bookingModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function submitBooking(e) {
+  e.preventDefault();
+  const errEl = document.getElementById('bookingError');
+  const req   = ['b_name','b_firma','b_wa','b_email','b_termin'];
+  if (req.some(id => !document.getElementById(id)?.value.trim())) {
+    errEl.style.display = 'block'; return;
+  }
+  errEl.style.display = 'none';
+
+  const name  = document.getElementById('b_name').value.trim();
+  const firma = document.getElementById('b_firma').value.trim();
+  const wa    = document.getElementById('b_wa').value.trim();
+  const email = document.getElementById('b_email').value.trim();
+  const termin= document.getElementById('b_termin').value;
+  const plz   = _data ? _data.plzRaw : '';
+
+  // → Hier Backend/CRM-Übergabe einfügen
+  // fetch('/api/booking', { method:'POST', body: JSON.stringify({name,firma,wa,email,termin,plz}) });
+
+  window.location.replace('beratungstermin-danke.html');
+}
+
+// ═══════════════════════════════════════
+// PLZ INPUT
+// ═══════════════════════════════════════
+const plzInput = document.getElementById('plzInput');
+plzInput.addEventListener('keydown', e=>{ if(e.key==='Enter') calculate(); });
+plzInput.addEventListener('input', function(){ this.value=this.value.replace(/\D/g,''); });
+</script>
+</body>
+</html>
