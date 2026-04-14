@@ -558,7 +558,7 @@
           </button>
           <p style="font-size:0.78rem;color:var(--text-gray);margin-top:16px;line-height:1.5">
             Ihr Report wurde zusätzlich an <strong id="strategyEmail">Ihre E-Mail</strong> gesendet.<br>
-            Bei Fragen: <a href="mailto:info@green-careers.de" style="color:var(--green-main)">info@green-careers.de</a>
+            Bei Fragen: <a href="mailto:hello@green-careers.de" style="color:var(--green-main)">hello@green-careers.de</a>
           </p>
         </div>
       </div>
@@ -570,7 +570,7 @@
 
 <footer>
   © 2025 <a href="https://www.green-careers.de">GreenCareers</a> – Karriereplattform für die grüne Branche<br>
-  <span style="font-size:0.73rem">Bei Fragen: <a href="mailto:info@green-careers.de">info@green-careers.de</a></span>
+  <span style="font-size:0.73rem">Bei Fragen: <a href="mailto:hello@green-careers.de">hello@green-careers.de</a></span>
 </footer>
 
 <script>
@@ -658,7 +658,7 @@ if (params.get('paid') === 'true') {
                 Vielen Dank für Ihren Kauf. Ihre personalisierte Recruiting-Strategie senden wir Ihnen innerhalb von 24 Stunden per E-Mail zu.
               </p>
               <p style="font-size:0.85rem;color:var(--text-gray)">
-                Bei Fragen erreichen Sie uns unter <a href="mailto:info@green-careers.de" style="color:var(--green-main)">info@green-careers.de</a>
+                Bei Fragen erreichen Sie uns unter <a href="mailto:hello@green-careers.de" style="color:var(--green-main)">hello@green-careers.de</a>
               </p>
             </div>`;
         }
@@ -982,12 +982,36 @@ function skipUpsell() {
 // BRANDED PDF REPORT GENERATION
 // ══════════════════════════════════════
 
-function downloadPDF() {
+// Load logo as base64 for embedding in PDF
+let _logoBase64 = null;
+async function loadLogoForPDF() {
+  if (_logoBase64) return _logoBase64;
+  try {
+    const response = await fetch('logo-white.png');
+    const blob = await response.blob();
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        _logoBase64 = reader.result;
+        resolve(_logoBase64);
+      };
+      reader.readAsDataURL(blob);
+    });
+  } catch(e) {
+    console.log('Logo konnte nicht geladen werden:', e);
+    return null;
+  }
+}
+// Preload logo
+loadLogoForPDF();
+
+async function downloadPDF() {
   if (!window.jspdf) {
     alert('PDF-Bibliothek wird geladen. Bitte versuchen Sie es in wenigen Sekunden erneut.');
     return;
   }
   const { jsPDF } = window.jspdf;
+  const logoImg = await loadLogoForPDF();
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageW = 210;
   const pageH = 297;
@@ -1033,15 +1057,21 @@ function downloadPDF() {
   setColor('fill', COLORS.greenLight);
   doc.circle(20, 90, 25, 'F');
 
-  // Brand / logo area
-  setColor('text', [255, 255, 255]);
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text('GREENCAREERS', margin, 28);
+  // Brand / logo area — actual GreenCareers logo
+  if (logoImg) {
+    try {
+      doc.addImage(logoImg, 'PNG', margin, 18, 55, 22, undefined, 'FAST');
+    } catch(e) { console.log('Logo add failed:', e); }
+  } else {
+    setColor('text', [255, 255, 255]);
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text('GREENCAREERS', margin, 32);
+  }
+  setColor('text', [200, 230, 201]);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(200, 230, 201);
-  doc.text('Die grüne Karriereplattform', margin, 34);
+  doc.text('Die grüne Karriereplattform', margin, 45);
 
   // Report label
   doc.setFontSize(9);
@@ -1374,38 +1404,151 @@ function downloadPDF() {
     y += 20;
   });
 
-  y += 8;
+  y += 10;
 
-  // CTA Box
-  if (y > pageH - 80) {
+  // ── TIME COMPARISON SECTION ──
+  if (y > pageH - 120) {
     doc.addPage();
-    y = drawPageHeader(doc, COLORS, margin, pageW, doc.internal.getNumberOfPages(), 'So unterstützt GreenCareers Sie');
+    y = drawPageHeader(doc, COLORS, margin, pageW, doc.internal.getNumberOfPages(), 'Zeit-Vergleich');
     y += 5;
   }
 
-  setColor('fill', COLORS.greenDark);
-  doc.roundedRect(margin, y, contentW, 55, 4, 4, 'F');
+  // Calculate times based on company situation
+  let aloneDays = 75; // baseline
+  if (_companyData.hiringProcess === 'langsam' || _companyData.hiringProcess === 'kein') aloneDays += 20;
+  if (_companyData.socialPresence === 'selten' || _companyData.socialPresence === 'kein_profil') aloneDays += 15;
+  if (_companyData.websiteCareers === 'nein_web' || _companyData.websiteCareers === 'keine_website') aloneDays += 10;
+  if (_companyData.employerBrand === 'schwach' || _companyData.employerBrand === 'aufbau') aloneDays += 10;
+  aloneDays = Math.min(aloneDays, 120);
 
-  // Decorative accent
-  setColor('fill', COLORS.greenLight);
-  doc.circle(pageW - 30, y + 28, 18, 'F');
+  const withUsDays = Math.max(14, Math.round(aloneDays * 0.3));
+  const savedDays = aloneDays - withUsDays;
 
-  setColor('text', [255, 255, 255]);
+  setColor('text', COLORS.greenDark);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.text('Bereit für qualifizierte Bewerbungen?', margin + 8, y + 14);
+  doc.text('Allein oder mit Unterstützung?', margin, y);
+  setColor('draw', COLORS.greenLight);
+  doc.setLineWidth(1);
+  doc.line(margin, y + 2, margin + 18, y + 2);
+  y += 10;
 
-  setColor('text', [230, 240, 220]);
+  setColor('text', COLORS.textGray);
   doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');
-  const ctaText = 'GreenCareers ist Deutschlands spezialisierte Recruiting-Plattform für die grüne Branche. Ihr persönlicher Ansprechpartner meldet sich innerhalb von 24 Stunden bei Ihnen zurück und bespricht die Umsetzung mit Ihnen.';
-  const ctaLines = doc.splitTextToSize(ctaText, contentW - 45);
-  doc.text(ctaLines, margin + 8, y + 22);
+  const introLines = doc.splitTextToSize('Sie können diesen Maßnahmenplan vollständig allein umsetzen. Erfahrungsgemäß dauert die Umsetzung dann allerdings länger, weil Recruiting neben dem Tagesgeschäft läuft.', contentW);
+  doc.text(introLines, margin, y);
+  y += introLines.length * 5 + 8;
+
+  // Two comparison boxes side by side
+  const compHalfW = (contentW - 5) / 2;
+  const compH = 52;
+
+  // Left: Alone
+  setColor('fill', [245, 247, 240]);
+  doc.roundedRect(margin, y, compHalfW, compH, 4, 4, 'F');
+  setColor('draw', COLORS.border);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(margin, y, compHalfW, compH, 4, 4, 'S');
+
+  setColor('text', COLORS.textGray);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('IN EIGENREGIE', margin + 6, y + 8);
+
+  setColor('text', COLORS.textDark);
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  doc.text('~' + aloneDays, margin + 6, y + 22);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Tage bis zur Besetzung', margin + 6, y + 30);
+
+  setColor('text', COLORS.textGray);
+  doc.setFontSize(8);
+  doc.text('Umsetzung neben dem', margin + 6, y + 40);
+  doc.text('Tagesgeschäft', margin + 6, y + 45);
+
+  // Right: With GreenCareers
+  setColor('fill', COLORS.greenDark);
+  doc.roundedRect(margin + compHalfW + 5, y, compHalfW, compH, 4, 4, 'F');
+
+  setColor('text', [200, 230, 201]);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('MIT GREENCAREERS', margin + compHalfW + 11, y + 8);
 
   setColor('text', [255, 255, 255]);
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  doc.text('~' + withUsDays, margin + compHalfW + 11, y + 22);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Tage bis zur Besetzung', margin + compHalfW + 11, y + 30);
+
+  setColor('text', [200, 230, 201]);
+  doc.setFontSize(8);
+  doc.text('Aktive Kampagnen +', margin + compHalfW + 11, y + 40);
+  doc.text('Bewerberpool-Zugriff', margin + compHalfW + 11, y + 45);
+
+  y += compH + 10;
+
+  // Savings highlight
+  setColor('fill', COLORS.greenPale);
+  doc.roundedRect(margin, y, contentW, 24, 4, 4, 'F');
+
+  setColor('text', COLORS.greenDark);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.text('www.green-careers.de', margin + 8, y + 48);
+  doc.text('Ihre Zeit-Ersparnis:', margin + 8, y + 10);
+
+  setColor('text', COLORS.greenMain);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text(savedDays + ' Tage', margin + 55, y + 10);
+
+  setColor('text', COLORS.textDark);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  const savingsText = 'Das sind ' + savedDays + ' Tage, in denen Ihre offene Stelle besetzt ist statt Umsatz zu kosten – und Sie sich auf Ihr Kerngeschäft konzentrieren können.';
+  const savingsLines = doc.splitTextToSize(savingsText, contentW - 16);
+  doc.text(savingsLines, margin + 8, y + 18);
+
+  y += 32;
+
+  // Unverbindliche Kontaktaufnahme Box
+  if (y > pageH - 60) {
+    doc.addPage();
+    y = drawPageHeader(doc, COLORS, margin, pageW, doc.internal.getNumberOfPages(), 'Ihr nächster Schritt');
+    y += 5;
+  }
+
+  setColor('fill', COLORS.bgLight);
+  doc.roundedRect(margin, y, contentW, 50, 4, 4, 'F');
+  setColor('draw', COLORS.greenLight);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(margin, y, contentW, 50, 4, 4, 'S');
+
+  // Green accent bar on left
+  setColor('fill', COLORS.greenMain);
+  doc.roundedRect(margin, y, 3, 50, 2, 2, 'F');
+
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Kein Druck, nur eine Einladung', margin + 10, y + 11);
+
+  setColor('text', COLORS.textDark);
+  doc.setFontSize(9.5);
+  doc.setFont('helvetica', 'normal');
+  const unvText = `Falls Sie möchten, melden wir uns innerhalb von 24–48 Stunden unverbindlich bei Ihnen. In einem kurzen Gespräch schauen wir gemeinsam, wie Sie Ihre offenen Stellen in rund ${withUsDays} Tagen besetzen können – mit oder ohne unsere Unterstützung. Die Entscheidung liegt bei Ihnen.`;
+  const unvLines = doc.splitTextToSize(unvText, contentW - 16);
+  doc.text(unvLines, margin + 10, y + 20);
+
+  setColor('text', COLORS.greenMain);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('www.green-careers.de  ·  hello@green-careers.de', margin + 10, y + 45);
 
   // ── Add footers to all pages ──
   const totalPages = doc.internal.getNumberOfPages();
@@ -1425,19 +1568,32 @@ function drawPageHeader(doc, COLORS, margin, pageW, pageNum, sectionTitle) {
   doc.setFillColor(...COLORS.greenDark);
   doc.rect(0, 0, pageW, 22, 'F');
 
+  // Logo on left (small version)
+  if (_logoBase64) {
+    try {
+      doc.addImage(_logoBase64, 'PNG', margin, 5, 32, 13, undefined, 'FAST');
+    } catch(e) {
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.text('GREENCAREERS', margin, 10);
+    }
+  } else {
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('GREENCAREERS', margin, 10);
+  }
+
+  // Section title on right
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
-  doc.text('GREENCAREERS', margin, 10);
+  doc.text(sectionTitle, pageW - margin, 11, { align: 'right' });
   doc.setFontSize(7);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(200, 230, 201);
-  doc.text('Recruiting-Strategie 2026', margin, 15);
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.text(sectionTitle, pageW - margin, 12, { align: 'right' });
+  doc.text('Recruiting-Strategie 2026', pageW - margin, 16, { align: 'right' });
 
   return 35; // Return start Y for content
 }
