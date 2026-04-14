@@ -547,12 +547,20 @@
 
       <!-- ── STEP 3: Strategy Result ── -->
       <div id="strategyResult">
-        <div class="strategy-success">
-          <h3>🎉 Ihre Strategie ist bereit!</h3>
-          <p>Personalisiert auf Basis Ihrer Angaben – sofort einsetzbar.</p>
+        <div style="text-align:center;padding:32px 20px 8px">
+          <div style="width:80px;height:80px;background:var(--green-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:2.4rem;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards">🎉</div>
+          <h3 style="font-size:1.35rem;font-weight:900;color:var(--green-dark);margin-bottom:10px;line-height:1.25">Ihre Strategie ist fertig!</h3>
+          <p style="font-size:0.95rem;color:var(--text-gray);line-height:1.55;max-width:380px;margin:0 auto 24px">
+            Wir haben alles für Sie zusammengefasst. Laden Sie jetzt Ihren individuellen Recruiting-Report als PDF herunter.
+          </p>
+          <button onclick="downloadPDF()" class="btn-primary btn-green" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;min-height:auto;width:auto;font-size:0.98rem">
+            📥 Report jetzt herunterladen
+          </button>
+          <p style="font-size:0.78rem;color:var(--text-gray);margin-top:16px;line-height:1.5">
+            Ihr Report wurde zusätzlich an <strong id="strategyEmail">Ihre E-Mail</strong> gesendet.<br>
+            Bei Fragen: <a href="mailto:info@green-careers.de" style="color:var(--green-main)">info@green-careers.de</a>
+          </p>
         </div>
-        <div id="strategyContent"></div>
-        <a class="download-btn" href="#" onclick="window.print(); return false;">⬇️ Als PDF speichern</a>
       </div>
 
     </div>
@@ -803,24 +811,12 @@ function showStrategy() {
   document.getElementById('strategyResult').style.display = 'block';
   setStep(3);
 
-  const d = _companyData;
-  const steps = buildStrategySteps(d);
-  const insights = buildInsights(d);
+  // Show user's email in the confirmation (if available)
+  const emailEl = document.getElementById('strategyEmail');
+  if (emailEl && leadData.email) {
+    emailEl.textContent = leadData.email;
+  }
 
-  let html = `<div class="strategy-section fade-up">
-    <div class="ss-title">📋 Ihre Situation auf einen Blick</div>
-    ${insights.map(i=>`<div class="insight-box-sm"><div class="ib-label">${i.label}</div><div class="ib-value">${i.value}</div></div>`).join('')}
-  </div>
-  <div class="strategy-section fade-up">
-    <div class="ss-title">🎯 Ihr persönlicher 5-Schritte-Plan</div>
-    ${steps.map((s,i)=>`
-      <div class="strategy-step">
-        <div class="ss-num">${i+1}</div>
-        <div class="ss-body"><strong>${s.h}</strong>${s.t}</div>
-      </div>`).join('')}
-  </div>`;
-
-  document.getElementById('strategyContent').innerHTML = html;
   document.getElementById('strategyResult').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
@@ -976,22 +972,483 @@ function skipUpsell() {
   document.querySelector('.upsell-card').style.display = 'none';
 }
 
+</script>
+
+<!-- jsPDF Library for branded PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
 // ══════════════════════════════════════
-// CARD NUMBER FORMATTING
+// BRANDED PDF REPORT GENERATION
 // ══════════════════════════════════════
 
-document.getElementById('p_card').addEventListener('input', function() {
-  let v = this.value.replace(/\D/g,'').substring(0,16);
-  this.value = v.replace(/(.{4})/g,'$1 ').trim();
-});
-document.getElementById('p_exp').addEventListener('input', function() {
-  let v = this.value.replace(/\D/g,'').substring(0,4);
-  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
-  this.value = v;
-});
-document.getElementById('p_cvv').addEventListener('input', function() {
-  this.value = this.value.replace(/\D/g,'');
-});
+function downloadPDF() {
+  if (!window.jspdf) {
+    alert('PDF-Bibliothek wird geladen. Bitte versuchen Sie es in wenigen Sekunden erneut.');
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const pageW = 210;
+  const pageH = 297;
+  const margin = 20;
+  const contentW = pageW - margin * 2;
+
+  // ── Brand colors ──
+  const COLORS = {
+    greenDark: [26, 92, 26],
+    greenMain: [45, 122, 45],
+    greenLight: [76, 175, 80],
+    greenPale: [232, 245, 233],
+    gold: [183, 134, 13],
+    goldPale: [254, 249, 231],
+    textDark: [30, 43, 27],
+    textGray: [100, 110, 100],
+    bgLight: [248, 252, 248],
+    border: [200, 230, 201],
+    red: [192, 57, 43],
+    redPale: [253, 237, 236]
+  };
+
+  function setColor(type, [r, g, b]) {
+    if (type === 'fill') doc.setFillColor(r, g, b);
+    else if (type === 'text') doc.setTextColor(r, g, b);
+    else if (type === 'draw') doc.setDrawColor(r, g, b);
+  }
+
+  const insights = buildInsights(_companyData);
+  const steps = buildStrategySteps(_companyData);
+
+  // ══════════════════════════════════════
+  // PAGE 1 — COVER
+  // ══════════════════════════════════════
+
+  // Full green background top
+  setColor('fill', COLORS.greenDark);
+  doc.rect(0, 0, pageW, 115, 'F');
+
+  // Decorative leaf circles
+  setColor('fill', COLORS.greenMain);
+  doc.circle(180, 25, 40, 'F');
+  setColor('fill', COLORS.greenLight);
+  doc.circle(20, 90, 25, 'F');
+
+  // Brand / logo area
+  setColor('text', [255, 255, 255]);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text('GREENCAREERS', margin, 28);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(200, 230, 201);
+  doc.text('Die grüne Karriereplattform', margin, 34);
+
+  // Report label
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text('INDIVIDUELLER REPORT', margin, 62);
+
+  // Main title
+  doc.setFontSize(28);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Recruiting-', margin, 78);
+  doc.text('Strategie 2026', margin, 90);
+
+  // Subtitle
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(230, 240, 220);
+  const subtitleText = 'Maßgeschneidert für ' + (leadData.firma || 'Ihr Unternehmen');
+  doc.text(subtitleText, margin, 102);
+
+  // White content area below
+  let y = 135;
+
+  // Recipient info box
+  setColor('fill', COLORS.bgLight);
+  doc.roundedRect(margin, y, contentW, 38, 4, 4, 'F');
+  setColor('draw', COLORS.border);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(margin, y, contentW, 38, 4, 4, 'S');
+
+  setColor('text', COLORS.textGray);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.text('ERSTELLT FÜR', margin + 6, y + 8);
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text((leadData.anrede && leadData.nachname ? leadData.anrede + ' ' + leadData.nachname : leadData.vorname + ' ' + leadData.nachname).trim() || 'Ihr Ansprechpartner', margin + 6, y + 15);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  setColor('text', COLORS.textDark);
+  doc.text(leadData.firma || 'Ihr Unternehmen', margin + 6, y + 22);
+  setColor('text', COLORS.textGray);
+  doc.setFontSize(9);
+  doc.text('Region: PLZ ' + (leadData.plz || 'k.A.') + ' — ' + (leadData.region || ''), margin + 6, y + 29);
+  doc.text('Erstellt am: ' + new Date().toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' }), margin + 6, y + 35);
+
+  y += 50;
+
+  // Executive summary
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Zusammenfassung', margin, y);
+
+  // Decorative line
+  setColor('draw', COLORS.greenLight);
+  doc.setLineWidth(1);
+  doc.line(margin, y + 2, margin + 18, y + 2);
+
+  y += 10;
+
+  setColor('text', COLORS.textDark);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  const probMap = {low_apps:'zu wenigen Bewerbungen', bad_quality:'unqualifizierten Bewerbern', churn:'hoher Fluktuation', slow:'langen Besetzungszeiten', no_brand:'geringer Arbeitgeberbekanntheit', budget:'begrenztem Recruiting-Budget'};
+  const summaryText = `${leadData.firma || 'Ihr Unternehmen'} steht aktuell vor der Herausforderung von ${probMap[_companyData.problem] || 'Recruiting-Schwierigkeiten'}. Basierend auf Ihren Angaben zu Betriebsgröße, Standort, Budget und bisherigen Maßnahmen haben wir einen konkreten Maßnahmenplan mit ${steps.length} Handlungsschritten für Sie entwickelt. Dieser Report ist speziell auf Ihre Situation zugeschnitten und sofort umsetzbar.`;
+  const summaryLines = doc.splitTextToSize(summaryText, contentW);
+  doc.text(summaryLines, margin, y);
+  y += summaryLines.length * 5 + 12;
+
+  // Quick stats row
+  setColor('fill', COLORS.greenPale);
+  doc.roundedRect(margin, y, contentW, 30, 4, 4, 'F');
+
+  const statWidth = contentW / 3;
+  const stats = [
+    { num: String(steps.length), label: 'MASSNAHMEN' },
+    { num: '30', label: 'TAGE PLAN' },
+    { num: leadData.plz || '—', label: 'PLZ-REGION' }
+  ];
+  stats.forEach((s, i) => {
+    const x = margin + (i * statWidth) + statWidth / 2;
+    setColor('text', COLORS.greenDark);
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s.num, x, y + 14, { align: 'center' });
+    setColor('text', COLORS.textGray);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s.label, x, y + 22, { align: 'center' });
+  });
+
+  // ══════════════════════════════════════
+  // PAGE 2 — SITUATION ANALYSIS + SCORE
+  // ══════════════════════════════════════
+  doc.addPage();
+  y = drawPageHeader(doc, COLORS, margin, pageW, 2, 'Ihre Situation im Detail');
+
+  // Insights in 2-column grid
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Fakten zu Ihrem Betrieb', margin, y);
+  setColor('draw', COLORS.greenLight);
+  doc.setLineWidth(1);
+  doc.line(margin, y + 2, margin + 18, y + 2);
+  y += 10;
+
+  const colW = (contentW - 5) / 2;
+  let leftY = y, rightY = y;
+  insights.forEach((ins, idx) => {
+    const col = idx % 2;
+    const x = margin + (col * (colW + 5));
+    const curY = col === 0 ? leftY : rightY;
+
+    setColor('fill', COLORS.bgLight);
+    doc.roundedRect(x, curY, colW, 18, 3, 3, 'F');
+    setColor('draw', COLORS.border);
+    doc.setLineWidth(0.2);
+    doc.roundedRect(x, curY, colW, 18, 3, 3, 'S');
+
+    setColor('text', COLORS.textGray);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.text(ins.label.toUpperCase(), x + 4, curY + 6);
+
+    setColor('text', COLORS.greenDark);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    const valueLines = doc.splitTextToSize(ins.value, colW - 8);
+    doc.text(valueLines.slice(0, 2), x + 4, curY + 12);
+
+    if (col === 0) leftY = curY + 22;
+    else rightY = curY + 22;
+  });
+  y = Math.max(leftY, rightY) + 6;
+
+  // Recruiting Score
+  let score = 0;
+  if (_companyData.avgSalary === '3500-4000' || _companyData.avgSalary === 'ueber4000') score += 2;
+  else if (_companyData.avgSalary === '3000-3500') score += 1;
+  if (_companyData.hiringProcess === 'schnell') score += 2;
+  else if (_companyData.hiringProcess === 'mittel_proc') score += 1;
+  if (_companyData.socialPresence === 'sehr_aktiv') score += 2;
+  else if (_companyData.socialPresence === 'gelegentlich') score += 1;
+  if (_companyData.websiteCareers === 'ja_gut') score += 2;
+  else if (_companyData.websiteCareers === 'ja_veraltet') score += 1;
+  if (_companyData.employerBrand === 'stark') score += 2;
+  else if (_companyData.employerBrand === 'mittel') score += 1;
+  if (_companyData.benefits && _companyData.benefits.length >= 3) score += 2;
+  else if (_companyData.benefits && _companyData.benefits.length >= 1) score += 1;
+  const maxScore = 12;
+  const pct = Math.round((score / maxScore) * 100);
+  const scoreLabel = pct >= 70 ? 'Gut aufgestellt' : pct >= 40 ? 'Ausbaufähig' : 'Dringender Handlungsbedarf';
+  const scoreColor = pct >= 70 ? COLORS.greenMain : pct >= 40 ? COLORS.gold : COLORS.red;
+
+  // Score box
+  setColor('fill', scoreColor);
+  doc.roundedRect(margin, y, contentW, 32, 4, 4, 'F');
+  setColor('text', [255, 255, 255]);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.text('IHR RECRUITING-SCORE', margin + 8, y + 9);
+  doc.setFontSize(26);
+  doc.text(pct + ' / 100', margin + 8, y + 23);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('› ' + scoreLabel, margin + 8, y + 29);
+
+  // Score bar
+  const barX = margin + 100;
+  const barY = y + 16;
+  const barW = contentW - 110;
+  setColor('fill', [255, 255, 255, 80]);
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(barX, barY, barW, 4, 2, 2, 'F');
+  // actually white with transparency isn't supported, use a light fill
+  setColor('fill', [180, 200, 180]);
+  doc.roundedRect(barX, barY, barW, 4, 2, 2, 'F');
+  setColor('fill', [255, 255, 255]);
+  doc.roundedRect(barX, barY, barW * (pct / 100), 4, 2, 2, 'F');
+
+  y += 42;
+
+  // Strengths & Weaknesses side by side
+  const halfW = (contentW - 5) / 2;
+
+  // Strengths (left)
+  setColor('fill', COLORS.greenPale);
+  const strengths = [];
+  if (_companyData.benefits && _companyData.benefits.length > 0) strengths.push('Attraktive Benefits (' + _companyData.benefits.length + ')');
+  if (_companyData.hiringProcess === 'schnell') strengths.push('Schneller Bewerbungsprozess');
+  if (_companyData.socialPresence === 'sehr_aktiv') strengths.push('Aktive Social-Media-Präsenz');
+  if (_companyData.employerBrand === 'stark') strengths.push('Starke regionale Marke');
+  if (_companyData.avgSalary === '3500-4000' || _companyData.avgSalary === 'ueber4000') strengths.push('Wettbewerbsfähiges Gehalt');
+  if (_companyData.websiteCareers === 'ja_gut') strengths.push('Aktuelle Karriereseite');
+  if (strengths.length === 0) strengths.push('Ihre Investition in Recruiting');
+
+  const weaknesses = [];
+  if (_companyData.hiringProcess === 'langsam' || _companyData.hiringProcess === 'kein') weaknesses.push('Langsamer Bewerbungsprozess');
+  if (_companyData.socialPresence === 'selten' || _companyData.socialPresence === 'kein_profil') weaknesses.push('Fehlende Social-Media-Präsenz');
+  if (_companyData.websiteCareers === 'nein_web' || _companyData.websiteCareers === 'keine_website') weaknesses.push('Keine Karriereseite');
+  if (_companyData.avgSalary === 'unter2500' || _companyData.avgSalary === '2500-3000') weaknesses.push('Gehalt unter Branchendurchschnitt');
+  if (_companyData.employerBrand === 'schwach' || _companyData.employerBrand === 'aufbau') weaknesses.push('Geringe Arbeitgeberbekanntheit');
+  if (!_companyData.benefits || _companyData.benefits.length === 0) weaknesses.push('Wenig kommunizierte Benefits');
+
+  const maxRows = Math.max(strengths.length, weaknesses.length);
+  const boxH = 14 + maxRows * 6 + 6;
+
+  setColor('fill', COLORS.greenPale);
+  doc.roundedRect(margin, y, halfW, boxH, 4, 4, 'F');
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('✓ Ihre Stärken', margin + 5, y + 8);
+  setColor('text', COLORS.textDark);
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  strengths.forEach((s, i) => {
+    doc.text('• ' + s, margin + 5, y + 16 + (i * 6));
+  });
+
+  // Weaknesses (right)
+  setColor('fill', COLORS.redPale);
+  doc.roundedRect(margin + halfW + 5, y, halfW, boxH, 4, 4, 'F');
+  setColor('text', COLORS.red);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('⚠ Handlungsbedarf', margin + halfW + 10, y + 8);
+  setColor('text', COLORS.textDark);
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  weaknesses.forEach((w, i) => {
+    doc.text('• ' + w, margin + halfW + 10, y + 16 + (i * 6));
+  });
+
+  // ══════════════════════════════════════
+  // PAGE 3+ — STRATEGY STEPS
+  // ══════════════════════════════════════
+  doc.addPage();
+  y = drawPageHeader(doc, COLORS, margin, pageW, 3, 'Ihr Maßnahmenplan');
+
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Die ${steps.length} Schritte zu mehr qualifizierten Bewerbungen`, margin, y);
+  setColor('draw', COLORS.greenLight);
+  doc.setLineWidth(1);
+  doc.line(margin, y + 2, margin + 18, y + 2);
+  y += 12;
+
+  setColor('text', COLORS.textGray);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Jeder Schritt ist konkret umsetzbar und auf Ihre Situation zugeschnitten.', margin, y);
+  y += 8;
+
+  steps.forEach((step, i) => {
+    // Check if we need a new page (each step takes ~35mm)
+    if (y > pageH - 60) {
+      doc.addPage();
+      y = drawPageHeader(doc, COLORS, margin, pageW, doc.internal.getNumberOfPages(), 'Ihr Maßnahmenplan');
+      y += 5;
+    }
+
+    // Step number badge (circle)
+    setColor('fill', COLORS.greenMain);
+    doc.circle(margin + 6, y + 3, 5, 'F');
+    setColor('text', [255, 255, 255]);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(String(i + 1), margin + 6, y + 4.5, { align: 'center' });
+
+    // Step title
+    setColor('text', COLORS.greenDark);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    const titleLines = doc.splitTextToSize(step.h, contentW - 18);
+    doc.text(titleLines, margin + 16, y + 4);
+    y += titleLines.length * 5 + 3;
+
+    // Step description
+    setColor('text', COLORS.textDark);
+    doc.setFontSize(9.5);
+    doc.setFont('helvetica', 'normal');
+    const descLines = doc.splitTextToSize(step.t, contentW - 16);
+    doc.text(descLines, margin + 16, y);
+    y += descLines.length * 4.8 + 10;
+  });
+
+  // ══════════════════════════════════════
+  // FINAL PAGE — NEXT STEPS + CTA
+  // ══════════════════════════════════════
+  if (y > pageH - 100) {
+    doc.addPage();
+    y = drawPageHeader(doc, COLORS, margin, pageW, doc.internal.getNumberOfPages(), 'Ihre nächsten Schritte');
+  }
+
+  y += 5;
+  setColor('text', COLORS.greenDark);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Ihre 3 Sofort-Maßnahmen', margin, y);
+  setColor('draw', COLORS.greenLight);
+  doc.setLineWidth(1);
+  doc.line(margin, y + 2, margin + 18, y + 2);
+  y += 12;
+
+  const sofort = [
+    { when: 'Diese Woche', what: steps[0] ? steps[0].h : 'Stellenanzeige optimieren' },
+    { when: 'Nächste Woche', what: steps[1] ? steps[1].h : 'Bewerbungsprozess beschleunigen' },
+    { when: 'In 2 Wochen', what: steps[2] ? steps[2].h : 'Social-Media-Präsenz starten' }
+  ];
+  sofort.forEach((s, i) => {
+    setColor('fill', COLORS.bgLight);
+    doc.roundedRect(margin, y, contentW, 16, 3, 3, 'F');
+    setColor('fill', COLORS.greenMain);
+    doc.roundedRect(margin, y, 3, 16, 3, 3, 'F');
+
+    setColor('text', COLORS.greenDark);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text(s.when.toUpperCase(), margin + 8, y + 6);
+    setColor('text', COLORS.textDark);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const whatLines = doc.splitTextToSize(s.what, contentW - 16);
+    doc.text(whatLines[0], margin + 8, y + 12);
+    y += 20;
+  });
+
+  y += 8;
+
+  // CTA Box
+  if (y > pageH - 80) {
+    doc.addPage();
+    y = drawPageHeader(doc, COLORS, margin, pageW, doc.internal.getNumberOfPages(), 'So unterstützt GreenCareers Sie');
+    y += 5;
+  }
+
+  setColor('fill', COLORS.greenDark);
+  doc.roundedRect(margin, y, contentW, 55, 4, 4, 'F');
+
+  // Decorative accent
+  setColor('fill', COLORS.greenLight);
+  doc.circle(pageW - 30, y + 28, 18, 'F');
+
+  setColor('text', [255, 255, 255]);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Bereit für qualifizierte Bewerbungen?', margin + 8, y + 14);
+
+  setColor('text', [230, 240, 220]);
+  doc.setFontSize(9.5);
+  doc.setFont('helvetica', 'normal');
+  const ctaText = 'GreenCareers ist Deutschlands spezialisierte Recruiting-Plattform für die grüne Branche. Ihr persönlicher Ansprechpartner meldet sich innerhalb von 24 Stunden bei Ihnen zurück und bespricht die Umsetzung mit Ihnen.';
+  const ctaLines = doc.splitTextToSize(ctaText, contentW - 45);
+  doc.text(ctaLines, margin + 8, y + 22);
+
+  setColor('text', [255, 255, 255]);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('www.green-careers.de', margin + 8, y + 48);
+
+  // ── Add footers to all pages ──
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    drawPageFooter(doc, COLORS, margin, pageW, pageH, i, totalPages, leadData.firma);
+  }
+
+  // Save
+  const safeFirma = (leadData.firma || 'Unternehmen').replace(/[^a-zA-Z0-9äöüÄÖÜß\s]/g, '').replace(/\s+/g, '-');
+  const fileName = 'GreenCareers-Recruiting-Strategie-' + safeFirma + '.pdf';
+  doc.save(fileName);
+}
+
+function drawPageHeader(doc, COLORS, margin, pageW, pageNum, sectionTitle) {
+  // Header bar
+  doc.setFillColor(...COLORS.greenDark);
+  doc.rect(0, 0, pageW, 22, 'F');
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('GREENCAREERS', margin, 10);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(200, 230, 201);
+  doc.text('Recruiting-Strategie 2026', margin, 15);
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.text(sectionTitle, pageW - margin, 12, { align: 'right' });
+
+  return 35; // Return start Y for content
+}
+
+function drawPageFooter(doc, COLORS, margin, pageW, pageH, pageNum, totalPages, firma) {
+  doc.setFontSize(7);
+  doc.setTextColor(150, 150, 150);
+  doc.text('© 2026 GreenCareers — www.green-careers.de', margin, pageH - 8);
+  doc.text('Individuell für ' + (firma || 'Ihr Unternehmen') + ' erstellt', pageW / 2, pageH - 8, { align: 'center' });
+  doc.text('Seite ' + pageNum + ' / ' + totalPages, pageW - margin, pageH - 8, { align: 'right' });
+}
 </script>
 </body>
 </html>
