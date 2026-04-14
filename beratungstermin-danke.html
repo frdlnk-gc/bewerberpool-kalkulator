@@ -4,20 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terminanfrage erhalten | GreenCareers</title>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '634469765867935');
-fbq('track', 'PageView');
-fbq('track', 'Schedule');
-  </script>
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=634469765867935&ev=PageView&noscript=1"/></noscript>
   <style>
     :root {
       --green-dark: #1a5c1a;
@@ -332,8 +318,7 @@ fbq('track', 'Schedule');
 
 <header>
   <a href="https://www.green-careers.de" class="logo-row">
-    <div class="logo-icon">🌿</div>
-    <span class="logo-text">GreenCareers</span>
+    <img src="logo-white.png" alt="GreenCareers" style="height:38px;width:auto;">
   </a>
 </header>
 
@@ -356,10 +341,10 @@ fbq('track', 'Schedule');
   <div class="upsell-card fade-up">
     <div class="upsell-header">
       <div class="upsell-eyebrow">⭐ Limitiertes Angebot</div>
-      <h2>Die Recruiting-Strategie 2026 für <span id="upsellFirma">Ihren Betrieb</span></h2>
+      <h2>Ihre persönliche Recruiting-Strategie – maßgeschneidert für Ihren Betrieb</h2>
       <p>Kein allgemeines Template. Eine echte Schritt-für-Schritt-Anleitung, die genau auf Ihre Situation passt.</p>
       <div class="price-row">
-        <span class="price-main">7 €</span>
+        <span class="price-main">19 €</span>
         <span class="price-old">79 €</span>
         <span class="price-label">einmalig, sofort verfügbar</span>
       </div>
@@ -446,43 +431,88 @@ fbq('track', 'Schedule');
             </select>
           </div>
 
+
           <div class="field-group">
-            <label for="s_urgency">Wie dringend suchen Sie Fachkräfte? *</label>
-            <select id="s_urgency" required>
+            <label for="s_region_radius">In welchem Umkreis suchen Sie Fachkräfte? *</label>
+            <select id="s_region_radius" required>
               <option value="" disabled selected>Bitte wählen…</option>
-              <option value="sofort">Sofort – offene Stellen unbesetzt</option>
-              <option value="1-3">In 1–3 Monaten</option>
-              <option value="3-6">In 3–6 Monaten</option>
-              <option value="langfristig">Langfristig aufbauen</option>
+              <option value="15km">Bis 15 km</option>
+              <option value="30km">Bis 30 km</option>
+              <option value="50km">Bis 50 km</option>
+              <option value="bundesweit">Bundesweit</option>
             </select>
           </div>
 
           <div class="field-group">
-            <label for="s_positions">Wie viele Stellen sind aktuell offen? *</label>
-            <select id="s_positions" required>
+            <label for="s_avg_salary">Welches Gehalt zahlen Sie durchschnittlich für Facharbeiter (brutto/Monat)? *</label>
+            <select id="s_avg_salary" required>
               <option value="" disabled selected>Bitte wählen…</option>
-              <option value="1">1 Stelle</option>
-              <option value="2-3">2–3 Stellen</option>
-              <option value="4-5">4–5 Stellen</option>
-              <option value="6+">6 oder mehr</option>
+              <option value="unter2500">Unter 2.500 €</option>
+              <option value="2500-3000">2.500 – 3.000 €</option>
+              <option value="3000-3500">3.000 – 3.500 €</option>
+              <option value="3500-4000">3.500 – 4.000 €</option>
+              <option value="ueber4000">Über 4.000 €</option>
             </select>
           </div>
 
           <div class="field-group">
-            <label>Welche Benefits bieten Sie? (Mehrfachauswahl)</label>
-            <div class="check-grid" id="benefitsGrid">
-              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="firmenwagen"> 🚗 Firmenwagen</div>
-              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="weiterbildung"> 🎓 Weiterbildung</div>
-              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="uebertarif"> 💰 Übertariflich</div>
-              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="4tage"> 📅 4-Tage-Woche</div>
-              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="ausstattung"> 🔧 Moderne Ausstattung</div>
-              <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox" value="teamevents"> 🎉 Teamevents</div>
-            </div>
+            <label for="s_employer_brand">Wie würden Sie Ihre Arbeitgebermarke einschätzen? *</label>
+            <select id="s_employer_brand" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="stark">Wir sind als Arbeitgeber regional sehr bekannt</option>
+              <option value="mittel">Wir sind bekannt, aber nicht als Arbeitgeber</option>
+              <option value="schwach">Wir sind eher unbekannt</option>
+              <option value="aufbau">Wir bauen gerade erst unsere Marke auf</option>
+            </select>
           </div>
 
+          <div class="field-group">
+            <label for="s_hiring_process">Wie sieht Ihr Bewerbungsprozess aktuell aus? *</label>
+            <select id="s_hiring_process" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="schnell">Schnell: Bewerbung → Gespräch → Zusage in unter 1 Woche</option>
+              <option value="mittel_proc">Standardprozess: 2–4 Wochen</option>
+              <option value="langsam">Langwieriger Prozess: über 4 Wochen</option>
+              <option value="kein">Wir haben keinen festen Prozess</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="s_social_presence">Ist Ihr Unternehmen auf Social Media aktiv? *</label>
+            <select id="s_social_presence" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="sehr_aktiv">Ja, regelmäßig (mehrmals pro Woche)</option>
+              <option value="gelegentlich">Gelegentlich (1–2 Mal pro Monat)</option>
+              <option value="selten">Selten oder gar nicht</option>
+              <option value="kein_profil">Wir haben kein Social-Media-Profil</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="s_website_careers">Haben Sie eine Karriereseite auf Ihrer Website? *</label>
+            <select id="s_website_careers" required>
+              <option value="" disabled selected>Bitte wählen…</option>
+              <option value="ja_gut">Ja, mit aktuellen Stellenanzeigen und Infos</option>
+              <option value="ja_veraltet">Ja, aber veraltet</option>
+              <option value="nein_web">Wir haben eine Website, aber keine Karriereseite</option>
+              <option value="keine_website">Wir haben keine Website</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="s_biggest_competitor">Was macht Ihren größten Konkurrenten als Arbeitgeber attraktiv?</label>
+            <select id="s_biggest_competitor">
+              <option value="" selected>Optional – bitte wählen…</option>
+              <option value="gehalt">Höheres Gehalt</option>
+              <option value="bekanntheit">Größere Bekanntheit</option>
+              <option value="benefits_comp">Bessere Benefits</option>
+              <option value="naehe">Näher am Wohnort der Mitarbeiter</option>
+              <option value="weiss_nicht">Weiß ich nicht</option>
+            </select>
+          </div>
           <div class="form-error" id="formError1">Bitte alle Pflichtfelder ausfüllen.</div>
           <button type="submit" class="btn-primary btn-gold">Weiter zur Bezahlung →</button>
-          <p class="privacy-note">Einmalig 7 €. Kein Abo, keine versteckten Kosten.</p>
+          <p class="privacy-note">Einmalig 19 €. Kein Abo, keine versteckten Kosten.</p>
         </form>
         <span class="skip-link" onclick="skipUpsell()">Nein danke, ich benötige keine Strategie</span>
       </div>
@@ -490,24 +520,38 @@ fbq('track', 'Schedule');
       <!-- ── STEP 2: Payment ── -->
       <div id="paymentSection">
         <div class="payment-box">
-          <h4>🔒 Sichere Zahlung über Stripe</h4>
-          <p style="font-size:0.85rem;color:var(--text-gray);margin-bottom:16px;line-height:1.5">
-            Nach Klick auf den Button werden Sie zu Stripe weitergeleitet – Europas führendem Zahlungsanbieter.
-            Ihre Daten sind 100 % sicher. Sie können per Karte, PayPal, Apple Pay oder Überweisung zahlen.
-          </p>
+          <h4>🔒 Sichere Zahlung</h4>
           <div class="field-group">
-            <label for="p_email">E-Mail für den Versand Ihrer Strategie *</label>
+            <label for="p_email">E-Mail-Adresse *</label>
             <input type="email" id="p_email" placeholder="max@muster.de" required>
+          </div>
+          <div class="field-group">
+            <label for="p_name">Name auf der Karte *</label>
+            <input type="text" id="p_name" placeholder="Max Muster">
+          </div>
+          <div class="field-group">
+            <label for="p_card">Kartennummer *</label>
+            <input type="text" id="p_card" placeholder="•••• •••• •••• ••••" maxlength="19" inputmode="numeric">
+          </div>
+          <div class="card-row">
+            <div class="field-group">
+              <label for="p_exp">Ablaufdatum *</label>
+              <input type="text" id="p_exp" placeholder="MM / JJ" maxlength="7">
+            </div>
+            <div class="field-group">
+              <label for="p_cvv">CVV *</label>
+              <input type="text" id="p_cvv" placeholder="•••" maxlength="4" inputmode="numeric">
+            </div>
           </div>
           <div class="secure-badges">
             <span class="sec-badge">🔒 SSL-verschlüsselt</span>
-            <span class="sec-badge">💳 Karte / PayPal / Apple Pay</span>
-            <span class="sec-badge">✅ Stripe-gesichert</span>
+            <span class="sec-badge">💳 Visa / Mastercard</span>
+            <span class="sec-badge">✅ 100 % sicher</span>
           </div>
         </div>
-        <div class="form-error" id="formError2">Bitte geben Sie Ihre E-Mail-Adresse ein.</div>
-        <button class="btn-primary btn-gold" onclick="startStripePayment()">🔒 Jetzt für 7 € sichern</button>
-        <p class="privacy-note">Sichere Zahlung über Stripe. Sie erhalten Ihre Strategie innerhalb von 24 Stunden per E-Mail. <a href="https://www.green-careers.de/datenschutz" target="_blank">Datenschutz</a></p>
+        <div class="form-error" id="formError2">Bitte alle Zahlungsfelder ausfüllen.</div>
+        <button class="btn-primary btn-gold" onclick="processPayment()">🔒 Jetzt für 19 € kaufen</button>
+        <p class="privacy-note">Mit dem Kauf stimmen Sie unseren <a href="#">AGB</a> zu. Sofortiger Zugang nach Zahlung.</p>
         <span class="skip-link" onclick="skipUpsell()">Nein danke, kein Interesse</span>
       </div>
 
@@ -518,7 +562,7 @@ fbq('track', 'Schedule');
           <p>Personalisiert auf Basis Ihrer Angaben – sofort einsetzbar.</p>
         </div>
         <div id="strategyContent"></div>
-        <a class="download-btn" href="#" onclick="downloadPDF(); return false;">📥 Strategie als PDF herunterladen</a>
+        <a class="download-btn" href="#" onclick="window.print(); return false;">⬇️ Als PDF speichern</a>
       </div>
 
     </div>
@@ -527,61 +571,37 @@ fbq('track', 'Schedule');
 </main>
 
 <footer>
-  © 2026 <a href="https://www.green-careers.de">GreenCareers</a> – Karriereplattform für die grüne Branche<br>
+  © 2025 <a href="https://www.green-careers.de">GreenCareers</a> – Karriereplattform für die grüne Branche<br>
   <span style="font-size:0.73rem">Bei Fragen: <a href="mailto:info@green-careers.de">info@green-careers.de</a></span>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 // ══════════════════════════════════════
-// READ URL PARAMS & LEAD DATA
+// READ URL PARAMS
 // ══════════════════════════════════════
 
 const params = new URLSearchParams(window.location.search);
-let stored = {};
-try { stored = JSON.parse(sessionStorage.getItem('gc_lead') || '{}'); } catch(e) {}
+const pName  = params.get('name')  || '';
+const pFirma = params.get('firma') || '';
+const pPlz   = params.get('plz')   || '';
 
-const leadData = {
-  anrede: params.get('anrede') || stored.anrede || '',
-  vorname: params.get('vorname') || stored.vorname || '',
-  nachname: params.get('nachname') || stored.nachname || '',
-  firma: params.get('firma') || stored.firma || 'Ihr Unternehmen',
-  mitarbeiter: params.get('mitarbeiter') || stored.mitarbeiter || '',
-  whatsapp: params.get('whatsapp') || stored.whatsapp || '',
-  email: params.get('email') || stored.email || '',
-  plz: params.get('plz') || stored.plz || '',
-  region: params.get('region') || stored.region || ''
-};
+document.getElementById('confirmName').textContent = pName ? pName + '!' : '!';
+document.getElementById('confirmFirma').textContent = pFirma || 'Ihr Unternehmen';
 
-// Update greeting
-const greeting = leadData.anrede && leadData.nachname
-  ? `${leadData.anrede} ${leadData.nachname}`
-  : (leadData.vorname || '');
-document.getElementById('confirmName').textContent = greeting ? greeting + '!' : '!';
-document.getElementById('confirmFirma').textContent = leadData.firma;
-
-// Update upsell header
-const upsellFirma = document.getElementById('upsellFirma');
-if (upsellFirma && leadData.firma && leadData.firma !== 'Ihr Unternehmen') {
-  upsellFirma.textContent = leadData.firma;
-}
-
-// Pre-fill email field
-const emailField = document.getElementById('p_email');
-if (emailField && leadData.email) {
-  emailField.value = leadData.email;
-}
-
-// Check for paid=true on page load
+// Check if returning from successful payment
 if (params.get('paid') === 'true') {
   try {
     const savedData = sessionStorage.getItem('gc_strategy_data');
     if (savedData) {
       _companyData = JSON.parse(savedData);
-      showStrategy();
+      // Hide the form, show strategy directly
+      setTimeout(() => {
+        document.getElementById('strategyForm').style.display = 'none';
+        document.getElementById('paymentSection').style.display = 'none';
+        showStrategy();
+      }, 100);
     }
-  } catch(e) {}
+  } catch(e) { console.log('Error restoring strategy:', e); }
 }
 
 // ══════════════════════════════════════
@@ -620,21 +640,23 @@ function goToPayment(e) {
   const size    = document.getElementById('s_size').value;
   const problem = document.getElementById('s_problem').value;
   const budget  = document.getElementById('s_budget').value;
-  const urgency = document.getElementById('s_urgency').value;
-  const positions = document.getElementById('s_positions').value;
   const profs   = [...document.querySelectorAll('#profCheckGrid input:checked')].map(c=>c.value);
+  const regionRadius = document.getElementById('s_region_radius').value;
+  const avgSalary = document.getElementById('s_avg_salary').value;
+  const employerBrand = document.getElementById('s_employer_brand').value;
+  const hiringProcess = document.getElementById('s_hiring_process').value;
+  const socialPresence = document.getElementById('s_social_presence').value;
+  const websiteCareers = document.getElementById('s_website_careers').value;
+  const biggestCompetitor = document.getElementById('s_biggest_competitor').value;
   const benefits = [...document.querySelectorAll('#benefitsGrid input:checked')].map(c=>c.value);
 
-  if (!size || !problem || !budget || !urgency || !positions || profs.length === 0) {
+  if (!size || !problem || !budget || profs.length === 0 || !regionRadius || !avgSalary || !employerBrand || !hiringProcess || !socialPresence || !websiteCareers) {
     errEl.style.display = 'block'; return;
   }
   errEl.style.display = 'none';
 
   const tried = [...document.querySelectorAll('#triedGrid input:checked')].map(c=>c.value);
-  _companyData = { size, problem, budget, profs, tried, urgency, positions, benefits, plz: leadData.plz };
-
-  // Send Slack notification
-  sendSlackNotification('form_completed');
+  _companyData = { size, problem, budget, profs, tried, regionRadius, avgSalary, employerBrand, hiringProcess, socialPresence, websiteCareers, biggestCompetitor, benefits, plz: pPlz };
 
   document.getElementById('strategyForm').style.display  = 'none';
   document.getElementById('paymentSection').style.display = 'block';
@@ -643,67 +665,48 @@ function goToPayment(e) {
 }
 
 // ══════════════════════════════════════
-// STRIPE PAYMENT
+// PAYMENT (prototype – replace with Stripe)
 // ══════════════════════════════════════
 
-function startStripePayment() {
+function processPayment() {
   const errEl = document.getElementById('formError2');
-  const email = document.getElementById('p_email').value.trim();
-
+  const email = document.getElementById('p_email')?.value.trim() || '';
+  
   if (!email || !email.includes('@')) {
     errEl.style.display = 'block'; return;
   }
   errEl.style.display = 'none';
 
-  // Save email
-  leadData.email = email;
+  // Save lead data
+  const leadData = {
+    name: document.getElementById('p_name')?.value.trim() || '',
+    firma: _companyData.firma || '',
+    email: email,
+    plz: pPlz || ''
+  };
 
   // Meta Pixel Purchase event
   if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 7.00, currency: 'EUR' });
 
-  // Slack notification
-  sendSlackNotification('payment');
-
-  // Save form data to sessionStorage for when they return from Stripe
+  // Save form data to sessionStorage for return from Stripe
   sessionStorage.setItem('gc_strategy_data', JSON.stringify(_companyData));
   sessionStorage.setItem('gc_lead', JSON.stringify(leadData));
-  sessionStorage.setItem('gc_paid', 'true');
 
-  // Open Stripe Payment Link
+  // Show waiting state
+  document.getElementById('paymentSection').innerHTML = `
+    <div style="text-align:center;padding:40px 20px">
+      <div style="font-size:2.5rem;margin-bottom:16px">🔄</div>
+      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:8px">Zahlung wird verarbeitet…</h3>
+      <p style="font-size:0.88rem;color:var(--text-gray);line-height:1.5;max-width:360px;margin:0 auto 16px">
+        Sie werden zu Stripe weitergeleitet. Nach erfolgreicher Zahlung kommen Sie automatisch hierher zurück und Ihre Strategie wird freigeschaltet.
+      </p>
+      <p style="font-size:0.8rem;color:var(--text-gray)">
+        Falls das Fenster sich nicht öffnet: <a href="https://buy.stripe.com/dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=\${encodeURIComponent(email)}" target="_blank" style="color:var(--green-main);font-weight:600">Hier klicken</a>
+      </p>
+    </div>`;
+
+  // Open Stripe Payment Link in new tab
   window.open('https://buy.stripe.com/dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=' + encodeURIComponent(email), '_blank');
-
-  // Show strategy immediately as well
-  setTimeout(() => {
-    showStrategy();
-  }, 1000);
-}
-
-// ══════════════════════════════════════
-// SLACK WEBHOOK NOTIFICATIONS
-// ══════════════════════════════════════
-
-async function sendSlackNotification(type) {
-  const webhookUrl = 'https://hooks.slack.com/services/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';
-
-  let message = {};
-  const profNames = {facharbeiter:'Facharbeiter GaLaBau', vorarbeiter:'Vorarbeiter GaLaBau', bauleiter:'Bauleiter GaLaBau', strassenbauer:'Straßenbauer', tiefbauer:'Tiefbauer'};
-  const probMap = {low_apps:'Zu wenige Bewerbungen', bad_quality:'Unqualifizierte Bewerber', churn:'Hohe Fluktuation', slow:'Lange Besetzungszeiten', no_brand:'Geringe Arbeitgeberbekanntheit', budget:'Begrenztes Budget'};
-  const budgetMap = {low:'Unter 500 €', mid:'500–1.500 €', high:'1.500–3.000 €', premium:'Über 3.000 €'};
-
-  if (type === 'form_completed') {
-    const profs = _companyData.profs ? _companyData.profs.map(p => profNames[p] || p).join(', ') : '';
-    message = {
-      text: `📋 *Neue Recruiting-Analyse ausgefüllt*\n👤 ${leadData.anrede} ${leadData.vorname} ${leadData.nachname}\n🏢 ${leadData.firma} (${leadData.mitarbeiter})\n📍 PLZ ${leadData.plz} — ${leadData.region}\n📱 ${leadData.whatsapp}\n📊 Problem: ${probMap[_companyData.problem] || _companyData.problem}\n💼 Berufe: ${profs}\n💰 Budget: ${budgetMap[_companyData.budget] || _companyData.budget}`
-    };
-  } else if (type === 'payment') {
-    message = {
-      text: `💰 *7€ Report-Kauf gestartet*\n👤 ${leadData.anrede} ${leadData.vorname} ${leadData.nachname}\n🏢 ${leadData.firma}\n📧 ${leadData.email || 'k.A.'}\n📍 PLZ ${leadData.plz} — ${leadData.region}`
-    };
-  }
-
-  try {
-    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(message), mode: 'no-cors' });
-  } catch(e) { console.log('Slack notification failed:', e); }
 }
 
 // ══════════════════════════════════════
@@ -741,18 +744,25 @@ function buildInsights(d) {
   const probMap = {low_apps:'Zu wenige Bewerbungen', bad_quality:'Unqualifizierte Bewerber', churn:'Hohe Fluktuation', slow:'Lange Besetzungszeiten', no_brand:'Geringe Arbeitgeberbekanntheit', budget:'Begrenztes Budget'};
   const budgetMap = {low:'Unter 500 €/Monat', mid:'500–1.500 €/Monat', high:'1.500–3.000 €/Monat', premium:'Über 3.000 €/Monat'};
   const profNames = {facharbeiter:'Facharbeiter GaLaBau', vorarbeiter:'Vorarbeiter GaLaBau', bauleiter:'Bauleiter GaLaBau', strassenbauer:'Straßenbauer', tiefbauer:'Tiefbauer'};
-  const urgencyMap = {sofort:'Sofort', '1-3':'In 1–3 Monaten', '3-6':'In 3–6 Monaten', langfristig:'Langfristig'};
-  const benefitNames = {firmenwagen:'Firmenwagen', weiterbildung:'Weiterbildung', uebertarif:'Übertariflich', '4tage':'4-Tage-Woche', ausstattung:'Moderne Ausstattung', teamevents:'Teamevents'};
-
+  const radiusMap = {'15km':'Bis 15 km','30km':'Bis 30 km','50km':'Bis 50 km','bundesweit':'Bundesweit'};
+  const salaryMap = {'unter2500':'Unter 2.500 €','2500-3000':'2.500–3.000 €','3000-3500':'3.000–3.500 €','3500-4000':'3.500–4.000 €','ueber4000':'Über 4.000 €'};
+  const brandMap = {'stark':'Regional sehr bekannt','mittel':'Bekannt, nicht als Arbeitgeber','schwach':'Eher unbekannt','aufbau':'Im Aufbau'};
+  const processMap = {'schnell':'Unter 1 Woche','mittel_proc':'2–4 Wochen','langsam':'Über 4 Wochen','kein':'Kein fester Prozess'};
+  const socialMap = {'sehr_aktiv':'Sehr aktiv','gelegentlich':'Gelegentlich','selten':'Selten','kein_profil':'Kein Profil'};
+  const careerMap = {'ja_gut':'Ja, aktuell','ja_veraltet':'Ja, veraltet','nein_web':'Keine Karriereseite','keine_website':'Keine Website'};
+  
   return [
     {label:'Betriebsgröße',        value: sizeMap[d.size] || d.size},
     {label:'Hauptproblem',         value: probMap[d.problem] || d.problem},
     {label:'Gesuchte Fachkräfte',  value: d.profs.map(p=>profNames[p]||p).join(', ')},
     {label:'Recruiting-Budget',    value: budgetMap[d.budget] || d.budget},
-    {label:'Dringlichkeit',        value: urgencyMap[d.urgency] || d.urgency || 'k.A.'},
-    {label:'Offene Stellen',       value: d.positions || 'k.A.'},
-    {label:'Benefits',             value: d.benefits && d.benefits.length ? d.benefits.map(b=>benefitNames[b]||b).join(', ') : 'Keine angegeben'},
-    {label:'Standort-PLZ',         value: leadData.plz || 'Nicht angegeben'},
+    {label:'Standort-PLZ',         value: d.plz || 'Nicht angegeben'},
+    {label:'Suchradius',           value: radiusMap[d.regionRadius] || d.regionRadius || 'k.A.'},
+    {label:'Durchschn. Gehalt',    value: salaryMap[d.avgSalary] || d.avgSalary || 'k.A.'},
+    {label:'Arbeitgebermarke',     value: brandMap[d.employerBrand] || d.employerBrand || 'k.A.'},
+    {label:'Bewerbungsprozess',    value: processMap[d.hiringProcess] || d.hiringProcess || 'k.A.'},
+    {label:'Social Media',         value: socialMap[d.socialPresence] || d.socialPresence || 'k.A.'},
+    {label:'Karriereseite',        value: careerMap[d.websiteCareers] || d.websiteCareers || 'k.A.'},
   ];
 }
 
@@ -764,6 +774,46 @@ function buildStrategySteps(d) {
     h: 'Stellenanzeige mit echten Einblicken optimieren',
     t: 'Ersetzen Sie klassische Anforderungslisten durch authentische Bilder und kurze Videos aus dem Arbeitsalltag. Kandidaten entscheiden in 8 Sekunden – zeigen Sie, wie das Leben im Team wirklich aussieht.'
   });
+
+  // Based on salary
+  if (d.avgSalary === 'unter2500' || d.avgSalary === '2500-3000') {
+    steps.push({
+      h: 'Gehaltsstruktur wettbewerbsfähig anpassen',
+      t: 'Ihr aktuelles Gehaltsniveau liegt unter dem Branchendurchschnitt von 3.000–3.500 € für Facharbeiter im GaLaBau. Selbst eine moderate Erhöhung von 200–300 € kann die Bewerbungsrate verdoppeln. Rechnen Sie dagegen: Eine unbesetzte Stelle kostet Sie ca. 1.500 € pro Monat an entgangenem Umsatz.'
+    });
+  }
+
+  // Based on hiring process
+  if (d.hiringProcess === 'langsam' || d.hiringProcess === 'kein') {
+    steps.push({
+      h: 'Bewerbungsprozess auf 48 Stunden straffen',
+      t: 'Ihr aktueller Prozess dauert zu lang. Top-Kandidaten im GaLaBau sind im Schnitt nur 10 Tage auf dem Markt. Implementieren Sie diesen Fast-Track: Bewerbungseingang → WhatsApp-Antwort am selben Tag → Telefonat innerhalb 24h → Probetag innerhalb 1 Woche → Zusage am Probetag-Ende.'
+    });
+  }
+
+  // Based on social presence
+  if (d.socialPresence === 'selten' || d.socialPresence === 'kein_profil') {
+    steps.push({
+      h: 'Social-Media-Präsenz als Arbeitgeber aufbauen',
+      t: 'Ohne Social-Media-Präsenz sind Sie für 73 % der wechselbereiten Fachkräfte unsichtbar. Starten Sie mit Instagram: 3 Posts pro Woche – Baustellenfotos, Team-Einblicke, kurze Videos vom Arbeitsalltag. Kein perfekter Content nötig – Authentizität schlägt Hochglanz. GreenCareers kann Sie dabei unterstützen.'
+    });
+  }
+
+  // Based on career page
+  if (d.websiteCareers === 'nein_web' || d.websiteCareers === 'keine_website' || d.websiteCareers === 'ja_veraltet') {
+    steps.push({
+      h: 'Karriereseite erstellen oder aktualisieren',
+      t: 'Bewerber googeln Ihren Firmennamen, bevor sie sich bewerben. Wenn sie keine Karriereseite finden, springen 40 % ab. Eine einfache Seite mit: Wer sind wir, Warum bei uns arbeiten, Offene Stellen, Ansprechpartner mit Foto reicht völlig aus.'
+    });
+  }
+
+  // Based on employer brand
+  if (d.employerBrand === 'schwach' || d.employerBrand === 'aufbau') {
+    steps.push({
+      h: 'Arbeitgebermarke gezielt aufbauen',
+      t: 'Als eher unbekannter Arbeitgeber müssen Sie stärker über Ihre Alleinstellungsmerkmale kommunizieren. Fragen Sie Ihre besten Mitarbeiter: "Warum arbeitest du hier?" Die Antworten sind Ihr Employer-Branding-Gold. Nutzen Sie diese als Zitate in Stellenanzeigen und auf Social Media.'
+    });
+  }
 
   // Step 2: based on problem
   if (d.problem === 'low_apps' || d.problem === 'no_brand') {
@@ -834,94 +884,29 @@ function buildStrategySteps(d) {
 }
 
 // ══════════════════════════════════════
-// PDF GENERATION
-// ══════════════════════════════════════
-
-function downloadPDF() {
-  if (!window.jspdf) {
-    alert('PDF-Bibliothek wird noch geladen. Bitte versuchen Sie es in wenigen Sekunden erneut.');
-    return;
-  }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  // Header bar
-  doc.setFillColor(45, 122, 45);
-  doc.rect(0, 0, 210, 35, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(20);
-  doc.setFont(undefined, 'bold');
-  doc.text('GreenCareers', 15, 18);
-  doc.setFontSize(11);
-  doc.setFont(undefined, 'normal');
-  doc.text('Recruiting-Strategie 2026 für ' + (leadData.firma || 'Ihr Unternehmen'), 15, 28);
-
-  // Reset
-  doc.setTextColor(30, 43, 27);
-  let y = 50;
-
-  // Company info
-  doc.setFontSize(13);
-  doc.setFont(undefined, 'bold');
-  doc.text('Ihre Situation auf einen Blick', 15, y);
-  y += 10;
-  doc.setFontSize(10);
-  doc.setFont(undefined, 'normal');
-
-  const insights = buildInsights(_companyData);
-  insights.forEach(i => {
-    doc.setFont(undefined, 'bold');
-    doc.text(i.label + ': ', 15, y);
-    doc.setFont(undefined, 'normal');
-    doc.text(i.value, 15 + doc.getTextWidth(i.label + ': '), y);
-    y += 7;
-  });
-
-  y += 8;
-
-  // Strategy steps
-  doc.setFontSize(13);
-  doc.setFont(undefined, 'bold');
-  doc.text('Ihr persönlicher 5-Schritte-Plan', 15, y);
-  y += 10;
-
-  const steps = buildStrategySteps(_companyData);
-  doc.setFontSize(10);
-  steps.forEach((s, i) => {
-    if (y > 260) { doc.addPage(); y = 20; }
-    doc.setFont(undefined, 'bold');
-    doc.text((i+1) + '. ' + s.h, 15, y);
-    y += 6;
-    doc.setFont(undefined, 'normal');
-    const lines = doc.splitTextToSize(s.t, 180);
-    doc.text(lines, 15, y);
-    y += lines.length * 5 + 6;
-  });
-
-  // Footer
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text('© GreenCareers — www.green-careers.de | Erstellt am ' + new Date().toLocaleDateString('de-DE'), 15, 287);
-    doc.text('Seite ' + i + ' von ' + pageCount, 195, 287, { align: 'right' });
-  }
-
-  // Save
-  const fileName = 'GreenCareers-Recruiting-Strategie-' + (leadData.firma || 'Strategie').replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '-') + '.pdf';
-  doc.save(fileName);
-}
-
-// ══════════════════════════════════════
 // SKIP UPSELL
 // ══════════════════════════════════════
 
 function skipUpsell() {
   document.querySelector('.upsell-card').style.display = 'none';
 }
-</script>
 
+// ══════════════════════════════════════
+// CARD NUMBER FORMATTING
+// ══════════════════════════════════════
+
+document.getElementById('p_card').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,16);
+  this.value = v.replace(/(.{4})/g,'$1 ').trim();
+});
+document.getElementById('p_exp').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,4);
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+  this.value = v;
+});
+document.getElementById('p_cvv').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g,'');
+});
+</script>
 </body>
 </html>

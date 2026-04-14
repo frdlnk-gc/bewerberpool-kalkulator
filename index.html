@@ -7,16 +7,6 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '634469765867935');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=634469765867935&ev=PageView&noscript=1"/></noscript>
   <style>
     :root {
       --green-dark: #1a5c1a;
@@ -446,8 +436,7 @@ fbq('track', 'PageView');
 
 <header>
   <a href="https://www.green-careers.de" class="logo-row">
-    <div class="logo-icon">🌿</div>
-    <span class="logo-text">GreenCareers</span>
+    <img src="logo-white.png" alt="GreenCareers" style="height:42px;width:auto;">
   </a>
   <h1>Bewerberpool-Kalkulator</h1>
   <p>Erfahren Sie, wie viele qualifizierte Fachkräfte in Ihrer Region erreichbar sind.</p>
@@ -488,12 +477,8 @@ fbq('track', 'PageView');
     <p class="modal-sub">Wir rufen Sie zurück und zeigen Ihnen, wie Sie mit GreenCareers die richtigen Fachkräfte finden.</p>
     <form id="bookingForm" onsubmit="submitBooking(event)" novalidate>
       <div class="field-group">
-        <label for="b_vorname">Vorname *</label>
-        <input type="text" id="b_vorname" placeholder="Max" required>
-      </div>
-      <div class="field-group">
-        <label for="b_nachname">Nachname *</label>
-        <input type="text" id="b_nachname" placeholder="Muster" required>
+        <label for="b_name">Vor- und Nachname *</label>
+        <input type="text" id="b_name" placeholder="Max Muster" required>
       </div>
       <div class="field-group">
         <label for="b_firma">Unternehmensname *</label>
@@ -643,20 +628,6 @@ const PLZ = {
 };
 
 // ═══════════════════════════════════════
-// GENDER DETECTION
-// ═══════════════════════════════════════
-
-const MALE_NAMES = ['alexander','andreas','benjamin','bernd','björn','boris','carsten','christian','christoph','clemens','daniel','david','dennis','detlef','dieter','dirk','dominik','erik','fabian','felix','florian','frank','franz','frederik','friedhelm','fritz','georg','gerald','gerd','gerhard','guido','günter','hans','harald','hartmut','heiko','heinrich','heinz','helmut','henning','herbert','hermann','holger','horst','ingo','jan','jens','joachim','jochen','johannes','jörg','jürgen','kai','karl','karsten','klaus','konrad','kurt','lars','lukas','manfred','marcel','marco','marcus','mario','markus','martin','mathias','matthias','max','michael','moritz','nico','nicolas','niklas','norbert','olaf','oliver','otto','patrick','paul','peter','philipp','rainer','ralf','reinhard','robert','rolf','rüdiger','sascha','sebastian','simon','stefan','steffen','stephan','sven','thomas','thorsten','tim','tobias','torsten','uwe','volker','walter','werner','wilhelm','willi','wolfgang'];
-const FEMALE_NAMES = ['alexandra','andrea','angelika','anja','anna','annette','antje','astrid','barbara','beate','bianca','birgit','brigitte','carina','carmen','caroline','charlotte','christa','christiane','christina','claudia','daniela','diana','doris','dorothea','elena','elke','emma','erika','eva','franziska','friederike','gabriele','gisela','gudrun','hannelore','heidi','heike','helga','ines','ingrid','irene','iris','jana','janina','jasmin','jennifer','jessica','johanna','julia','karin','karla','katharina','kathrin','katja','kerstin','klara','kristin','laura','lena','lisa','luise','manuela','margarete','maria','marie','marina','marion','marlene','martina','melanie','michaela','monika','nadine','natascha','nicole','nina','petra','ramona','regina','renate','rita','rosa','roswitha','ruth','sabine','sandra','sara','silke','silvia','simone','sofia','sonja','stefanie','susanne','tanja','theresa','ulrike','ursula','ute','vanessa','vera','veronika','waltraud'];
-
-function detectGender(vorname) {
-  const n = vorname.trim().toLowerCase();
-  if (MALE_NAMES.includes(n)) return 'Herr';
-  if (FEMALE_NAMES.includes(n)) return 'Frau';
-  return '';
-}
-
-// ═══════════════════════════════════════
 // BUILD CHECKBOXES
 // ═══════════════════════════════════════
 
@@ -772,22 +743,6 @@ function getBesetzungsdauer(score, region) {
 }
 
 // ═══════════════════════════════════════
-// SLACK WEBHOOK
-// ═══════════════════════════════════════
-
-async function sendSlackNotification(type, data) {
-  const webhookUrl = 'https://hooks.slack.com/services/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';
-  const emoji = type === 'lead' ? '📊' : '📅';
-  const title = type === 'lead' ? 'Neue PLZ-Analyse angefordert' : 'Neuer Beratungstermin';
-  const payload = {
-    text: `${emoji} *${title}*\n👤 ${data.anrede || ''} ${data.vorname || ''} ${data.nachname || ''}\n🏢 ${data.firma || ''} (${data.mitarbeiter || ''} MA)\n📱 ${data.whatsapp || ''}\n📍 PLZ ${data.plz || ''} — ${data.region || ''}`
-  };
-  try {
-    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
-  } catch(e) { console.log('Slack notification failed:', e); }
-}
-
-// ═══════════════════════════════════════
 // CALCULATE
 // ═══════════════════════════════════════
 
@@ -875,24 +830,12 @@ function calculate() {
       <div class="gate-header">
         <div class="gate-eyebrow">🔓 Kostenloser Report</div>
         <h3>Vollständigen Fachkräfte-Report freischalten</h3>
-        <p>Nur 6 kurze Felder – Ihr Report wird sofort freigeschaltet.</p>
+        <p>Nur wenige Felder – Ihr Report wird sofort freigeschaltet.</p>
       </div>
       <form id="leadForm" onsubmit="unlockReport(event)" novalidate>
         <div class="field-group">
-          <label for="f_anrede">Anrede *</label>
-          <select id="f_anrede" required>
-            <option value="" disabled selected>Bitte wählen…</option>
-            <option value="Herr">Herr</option>
-            <option value="Frau">Frau</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label for="f_vorname">Vorname *</label>
-          <input type="text" id="f_vorname" placeholder="Max" required>
-        </div>
-        <div class="field-group">
-          <label for="f_nachname">Nachname *</label>
-          <input type="text" id="f_nachname" placeholder="Muster" required>
+          <label for="f_name">Vor- und Nachname *</label>
+          <input type="text" id="f_name" placeholder="Max Muster" required>
         </div>
         <div class="field-group">
           <label for="f_firma">Unternehmensname *</label>
@@ -913,6 +856,10 @@ function calculate() {
         <div class="field-group">
           <label for="f_wa">WhatsApp-Nummer *</label>
           <input type="tel" id="f_wa" placeholder="+49 0000 000000" required>
+        </div>
+        <div class="field-group">
+          <label for="f_email">E-Mail-Adresse *</label>
+          <input type="email" id="f_email" placeholder="max@muster.de" required>
         </div>
         <div class="gate-error" id="gateError">Bitte alle Felder ausfüllen.</div>
         <button type="submit" class="btn-gate">🔓 Jetzt freischalten</button>
@@ -1018,37 +965,8 @@ function buildReport(data, animate) {
       </ul>
     </div>`;
 
-  // GreenCareers Insider-Tipps
-  html += `
-    <div class="report-section">
-      <div class="rs-title">🚀 GreenCareers Insider-Tipps</div>
-
-      <div style="background:#f8fcf8;border-radius:11px;padding:16px 18px;border-left:3px solid var(--green-light);margin-bottom:14px">
-        <strong style="display:block;font-size:0.9rem;color:var(--green-dark);margin-bottom:6px">💡 So erstellen Sie mit ChatGPT in 5 Minuten eine perfekte Stellenanzeige</strong>
-        <p style="font-size:0.85rem;color:var(--text-dark);line-height:1.5;margin-bottom:8px">Kopieren Sie diesen Prompt in ChatGPT und ersetzen Sie die Platzhalter:</p>
-        <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:0.82rem;color:#333;line-height:1.5;font-family:monospace">
-          Erstelle eine Stellenanzeige für einen [BERUFSBEZEICHNUNG] bei [FIRMENNAME] in [ORT]. Wir sind ein [BETRIEBSGRÖSSE]-Mann-Betrieb. Unsere Stärken als Arbeitgeber: [z.B. moderner Maschinenpark, familiäres Team, übertarifliche Bezahlung]. Schreibe die Anzeige so, dass sie auf Social Media funktioniert – kurz, direkt, mit einem starken Einstieg. Keine Bullet-Points mit Anforderungen am Anfang. Starte mit dem, was wir bieten.
-        </div>
-        <p style="font-size:0.8rem;color:var(--text-gray);margin-top:6px">Tipp: Lassen Sie ChatGPT 3 Varianten erstellen und wählen Sie die beste.</p>
-      </div>
-
-      <div style="background:#f8fcf8;border-radius:11px;padding:16px 18px;border-left:3px solid var(--green-light);margin-bottom:14px">
-        <strong style="display:block;font-size:0.9rem;color:var(--green-dark);margin-bottom:6px">⚠️ 3 häufige Recruiting-Fehler im GaLaBau</strong>
-        <ol style="font-size:0.85rem;color:var(--text-dark);line-height:1.6;padding-left:18px;margin:0">
-          <li style="margin-bottom:6px"><strong>Nur auf Jobportale setzen:</strong> 80 % der wechselbereiten Fachkräfte im GaLaBau suchen nicht aktiv auf Indeed oder StepStone. Sie scrollen durch Instagram und Facebook – dort müssen Sie sichtbar sein.</li>
-          <li style="margin-bottom:6px"><strong>Keine Gehaltsangabe:</strong> Anzeigen ohne Gehaltsrahmen erhalten bis zu 70 % weniger Bewerbungen. Fachkräfte wollen wissen, was sie erwartet, bevor sie sich die Mühe machen.</li>
-          <li><strong>Zu langsame Reaktion:</strong> Wer länger als 48 Stunden braucht, um auf eine Bewerbung zu antworten, verliert den Kandidaten an die Konkurrenz. WhatsApp-Erstantwort innerhalb von 2 Stunden ist der neue Standard.</li>
-        </ol>
-      </div>
-
-      <div style="background:#f8fcf8;border-radius:11px;padding:16px 18px;border-left:3px solid var(--green-light)">
-        <strong style="display:block;font-size:0.9rem;color:var(--green-dark);margin-bottom:6px">📱 Warum WhatsApp-Recruiting 3× mehr Bewerbungen bringt</strong>
-        <p style="font-size:0.85rem;color:var(--text-dark);line-height:1.5">GaLaBau-Fachkräfte sitzen nicht am PC und schreiben Anschreiben. Sie sind auf der Baustelle, im Transporter, auf der Fläche. WhatsApp ist das Tool, das sie den ganzen Tag nutzen. Wenn Sie Bewerbungen per WhatsApp ermöglichen (z.B. "Schick uns einfach eine kurze Nachricht an 0170-XXX"), senken Sie die Hürde massiv. Unsere Daten zeigen: Betriebe, die WhatsApp als Bewerbungskanal anbieten, erhalten 3× mehr Kontaktanfragen als mit klassischen Online-Formularen. GreenCareers integriert WhatsApp-Recruiting standardmäßig in jede Kampagne.</p>
-      </div>
-    </div>`;
-
   // Disclaimer
-  html += `<div class="disclaimer">ℹ️ <strong>Über diese Analyse:</strong> Diese Daten stammen aus dem exklusiven GreenCareers-Bewerberpool – Deutschlands spezialisierter Fachkräfte-Datenbank für die grüne Branche. Unsere Schätzwerte basieren auf der Verteilung sozialversicherungspflichtig Beschäftigter (Bundesagentur für Arbeit / Destatis) proportional zur regionalen Einwohnerzahl. Als „erreichbar" gilt ein branchenüblicher Wechselbereitschaftsanteil von 12–18 % je Beruf. Sie haben Fragen zu den Zahlen für Ihre Region? Unsere Recruiting-Experten beraten Sie gerne – kostenlos und unverbindlich.</div>`;
+  html += `<div class="disclaimer">ℹ️ <strong>Methodik:</strong> Schätzwerte auf Basis der Verteilung sozialversicherungspflichtig Beschäftigter (Bundesagentur für Arbeit / Destatis) proportional zur regionalen Einwohnerzahl. Als „erreichbar" gilt ein branchenüblicher Wechselbereitschaftsanteil von 12–18 % je Beruf.</div>`;
 
   // CTA
   html += `
@@ -1068,30 +986,24 @@ function buildReport(data, animate) {
 function unlockReport(e) {
   e.preventDefault();
   const errEl = document.getElementById('gateError');
-  const req   = ['f_anrede','f_vorname','f_nachname','f_firma','f_ma','f_wa'];
+  const req   = ['f_name','f_firma','f_ma','f_wa','f_email'];
   if (req.some(id=>!document.getElementById(id)?.value.trim())) {
     errEl.style.display='block'; return;
   }
   errEl.style.display='none';
 
-  // Meta Pixel
-  if (typeof fbq !== 'undefined') fbq('track', 'Lead');
-
-  // Save to sessionStorage
+  // Capture lead data
   const leadData = {
-    anrede: document.getElementById('f_anrede').value,
-    vorname: document.getElementById('f_vorname').value.trim(),
-    nachname: document.getElementById('f_nachname').value.trim(),
+    name: document.getElementById('f_name').value.trim(),
     firma: document.getElementById('f_firma').value.trim(),
-    mitarbeiter: document.getElementById('f_ma').value,
-    whatsapp: document.getElementById('f_wa').value.trim(),
-    plz: _data.plzRaw,
-    region: _data.region.name
+    ma: document.getElementById('f_ma').value,
+    wa: document.getElementById('f_wa').value.trim(),
+    email: document.getElementById('f_email').value.trim(),
+    plz: _data ? _data.plzRaw : ''
   };
-  sessionStorage.setItem('gc_lead', JSON.stringify(leadData));
 
-  // Send Slack notification
-  sendSlackNotification('lead', leadData);
+  // → Send lead data to your backend/CRM here
+  // fetch('/api/leads', { method:'POST', body: JSON.stringify(leadData) });
 
   // Hide gate
   const lockPeek = document.querySelector('.lock-peek');
@@ -1124,14 +1036,17 @@ function unlockReport(e) {
 function openModal() {
   document.getElementById('bookingModal').classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Pre-fill from sessionStorage
-  try {
-    const ld = JSON.parse(sessionStorage.getItem('gc_lead') || '{}');
-    if (ld.vorname) document.getElementById('b_vorname').value = ld.vorname;
-    if (ld.nachname) document.getElementById('b_nachname').value = ld.nachname;
-    if (ld.firma) document.getElementById('b_firma').value = ld.firma;
-    if (ld.whatsapp) document.getElementById('b_wa').value = ld.whatsapp;
-  } catch(e) {}
+  
+  // Pre-fill form with lead data if available
+  const name = document.getElementById('f_name')?.value || '';
+  const firma = document.getElementById('f_firma')?.value || '';
+  const wa = document.getElementById('f_wa')?.value || '';
+  const email = document.getElementById('f_email')?.value || '';
+  
+  if (name) document.getElementById('b_name').value = name;
+  if (firma) document.getElementById('b_firma').value = firma;
+  if (wa) document.getElementById('b_wa').value = wa;
+  if (email) document.getElementById('b_email').value = email;
 }
 function closeModal() {
   document.getElementById('bookingModal').classList.remove('open');
@@ -1144,48 +1059,24 @@ document.getElementById('bookingModal').addEventListener('click', function(e) {
 function submitBooking(e) {
   e.preventDefault();
   const errEl = document.getElementById('bookingError');
-  const req   = ['b_vorname','b_nachname','b_firma','b_wa','b_email','b_termin'];
+  const req   = ['b_name','b_firma','b_wa','b_email','b_termin'];
   if (req.some(id => !document.getElementById(id)?.value.trim())) {
     errEl.style.display = 'block'; return;
   }
   errEl.style.display = 'none';
 
-  // Meta Pixel
-  if (typeof fbq !== 'undefined') fbq('track', 'Schedule');
+  const name  = document.getElementById('b_name').value.trim();
+  const firma = document.getElementById('b_firma').value.trim();
+  const wa    = document.getElementById('b_wa').value.trim();
+  const email = document.getElementById('b_email').value.trim();
+  const termin= document.getElementById('b_termin').value;
+  const plz   = _data ? _data.plzRaw : '';
 
-  // Get lead data
-  let ld = {};
-  try { ld = JSON.parse(sessionStorage.getItem('gc_lead') || '{}'); } catch(e) {}
+  // → Hier Backend/CRM-Übergabe einfügen
+  // fetch('/api/booking', { method:'POST', body: JSON.stringify({name,firma,wa,email,termin,plz}) });
 
-  const params = new URLSearchParams({
-    anrede: ld.anrede || '',
-    vorname: document.getElementById('b_vorname').value.trim(),
-    nachname: document.getElementById('b_nachname').value.trim(),
-    firma: document.getElementById('b_firma').value.trim(),
-    mitarbeiter: ld.mitarbeiter || '',
-    whatsapp: document.getElementById('b_wa').value.trim(),
-    email: document.getElementById('b_email').value.trim(),
-    plz: ld.plz || (_data ? _data.plzRaw : ''),
-    region: ld.region || (_data ? _data.region.name : '')
-  });
-
-  // Slack notification
-  sendSlackNotification('booking', Object.fromEntries(params));
-
-  window.location.replace('beratungstermin-danke.html?' + params.toString());
+  window.location.replace('beratungstermin-danke.html');
 }
-
-// ═══════════════════════════════════════
-// GENDER DETECTION EVENT LISTENER
-// ═══════════════════════════════════════
-
-document.getElementById('f_vorname').addEventListener('blur', function() {
-  const detected = detectGender(this.value);
-  const anredeSelect = document.getElementById('f_anrede');
-  if (detected && !anredeSelect.value) {
-    anredeSelect.value = detected;
-  }
-});
 
 // ═══════════════════════════════════════
 // PLZ INPUT
