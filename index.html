@@ -834,8 +834,20 @@ function calculate() {
       </div>
       <form id="leadForm" onsubmit="unlockReport(event)" novalidate>
         <div class="field-group">
-          <label for="f_name">Vor- und Nachname *</label>
-          <input type="text" id="f_name" placeholder="Max Muster" required>
+          <label for="f_anrede">Anrede *</label>
+          <select id="f_anrede" required>
+            <option value="" disabled selected>Bitte wählen…</option>
+            <option value="Herr">Herr</option>
+            <option value="Frau">Frau</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="f_vorname">Vorname *</label>
+          <input type="text" id="f_vorname" placeholder="Max" required>
+        </div>
+        <div class="field-group">
+          <label for="f_nachname">Nachname *</label>
+          <input type="text" id="f_nachname" placeholder="Muster" required>
         </div>
         <div class="field-group">
           <label for="f_firma">Unternehmensname *</label>
@@ -986,7 +998,7 @@ function buildReport(data, animate) {
 function unlockReport(e) {
   e.preventDefault();
   const errEl = document.getElementById('gateError');
-  const req   = ['f_name','f_firma','f_ma','f_wa','f_email'];
+  const req   = ['f_anrede','f_vorname','f_nachname','f_firma','f_ma','f_wa','f_email'];
   if (req.some(id=>!document.getElementById(id)?.value.trim())) {
     errEl.style.display='block'; return;
   }
@@ -994,16 +1006,25 @@ function unlockReport(e) {
 
   // Capture lead data
   const leadData = {
-    name: document.getElementById('f_name').value.trim(),
+    anrede: document.getElementById('f_anrede').value,
+    vorname: document.getElementById('f_vorname').value.trim(),
+    nachname: document.getElementById('f_nachname').value.trim(),
     firma: document.getElementById('f_firma').value.trim(),
-    ma: document.getElementById('f_ma').value,
-    wa: document.getElementById('f_wa').value.trim(),
+    mitarbeiter: document.getElementById('f_ma').value,
+    whatsapp: document.getElementById('f_wa').value.trim(),
     email: document.getElementById('f_email').value.trim(),
-    plz: _data ? _data.plzRaw : ''
+    plz: _data ? _data.plzRaw : '',
+    region: _data ? _data.region.name : ''
   };
 
-  // → Send lead data to your backend/CRM here
-  // fetch('/api/leads', { method:'POST', body: JSON.stringify(leadData) });
+  // Save to sessionStorage for the booking modal and danke page
+  sessionStorage.setItem('gc_lead', JSON.stringify(leadData));
+
+  // Meta Pixel Lead event
+  if (typeof fbq !== 'undefined') fbq('track', 'Lead');
+
+  // Slack notification
+  sendSlackNotification('lead', leadData);
 
   // Hide gate
   const lockPeek = document.querySelector('.lock-peek');
@@ -1036,17 +1057,24 @@ function unlockReport(e) {
 function openModal() {
   document.getElementById('bookingModal').classList.add('open');
   document.body.style.overflow = 'hidden';
-  
-  // Pre-fill form with lead data if available
-  const name = document.getElementById('f_name')?.value || '';
-  const firma = document.getElementById('f_firma')?.value || '';
-  const wa = document.getElementById('f_wa')?.value || '';
-  const email = document.getElementById('f_email')?.value || '';
-  
-  if (name) document.getElementById('b_name').value = name;
-  if (firma) document.getElementById('b_firma').value = firma;
-  if (wa) document.getElementById('b_wa').value = wa;
-  if (email) document.getElementById('b_email').value = email;
+
+  // Pre-fill form with lead data from sessionStorage (or from current form values)
+  let ld = {};
+  try { ld = JSON.parse(sessionStorage.getItem('gc_lead') || '{}'); } catch(e) {}
+
+  // Build full name from anrede+vorname+nachname or use what's stored
+  const fullName = (ld.vorname && ld.nachname)
+    ? (ld.vorname + ' ' + ld.nachname).trim()
+    : (ld.name || '');
+
+  const firma = ld.firma || document.getElementById('f_firma')?.value || '';
+  const wa = ld.whatsapp || document.getElementById('f_wa')?.value || '';
+  const email = ld.email || document.getElementById('f_email')?.value || '';
+
+  if (document.getElementById('b_name') && fullName) document.getElementById('b_name').value = fullName;
+  if (document.getElementById('b_firma') && firma) document.getElementById('b_firma').value = firma;
+  if (document.getElementById('b_wa') && wa) document.getElementById('b_wa').value = wa;
+  if (document.getElementById('b_email') && email) document.getElementById('b_email').value = email;
 }
 function closeModal() {
   document.getElementById('bookingModal').classList.remove('open');
@@ -1065,18 +1093,82 @@ function submitBooking(e) {
   }
   errEl.style.display = 'none';
 
-  const name  = document.getElementById('b_name').value.trim();
-  const firma = document.getElementById('b_firma').value.trim();
-  const wa    = document.getElementById('b_wa').value.trim();
-  const email = document.getElementById('b_email').value.trim();
-  const termin= document.getElementById('b_termin').value;
-  const plz   = _data ? _data.plzRaw : '';
+  // Meta Pixel Schedule event
+  if (typeof fbq !== 'undefined') fbq('track', 'Schedule');
 
-  // → Hier Backend/CRM-Übergabe einfügen
-  // fetch('/api/booking', { method:'POST', body: JSON.stringify({name,firma,wa,email,termin,plz}) });
+  // Get lead data from sessionStorage for anrede/vorname/nachname
+  let ld = {};
+  try { ld = JSON.parse(sessionStorage.getItem('gc_lead') || '{}'); } catch(e) {}
 
-  window.location.replace('beratungstermin-danke.html');
+  const fullName = document.getElementById('b_name').value.trim();
+  // Try to parse fullName into vorname/nachname
+  const nameParts = fullName.split(/\s+/);
+  const vorname = ld.vorname || nameParts[0] || '';
+  const nachname = ld.nachname || nameParts.slice(1).join(' ') || '';
+
+  const bookingData = {
+    anrede: ld.anrede || '',
+    vorname: vorname,
+    nachname: nachname,
+    name: fullName,
+    firma: document.getElementById('b_firma').value.trim(),
+    whatsapp: document.getElementById('b_wa').value.trim(),
+    email: document.getElementById('b_email').value.trim(),
+    termin: document.getElementById('b_termin').value,
+    mitarbeiter: ld.mitarbeiter || '',
+    plz: ld.plz || (_data ? _data.plzRaw : ''),
+    region: ld.region || (_data ? _data.region.name : '')
+  };
+
+  // Update sessionStorage with latest data
+  sessionStorage.setItem('gc_lead', JSON.stringify(bookingData));
+
+  // Slack notification
+  sendSlackNotification('booking', bookingData);
+
+  // Build URL params
+  const params = new URLSearchParams({
+    anrede: bookingData.anrede,
+    vorname: bookingData.vorname,
+    nachname: bookingData.nachname,
+    name: bookingData.name,
+    firma: bookingData.firma,
+    whatsapp: bookingData.whatsapp,
+    email: bookingData.email,
+    mitarbeiter: bookingData.mitarbeiter,
+    plz: bookingData.plz,
+    region: bookingData.region
+  });
+
+  window.location.replace('beratungstermin-danke.html?' + params.toString());
 }
+
+// ═══════════════════════════════════════
+// SLACK NOTIFICATION
+// ═══════════════════════════════════════
+async function sendSlackNotification(type, data) {
+  const webhookUrl = 'https://hooks.slack.com/services/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';
+  const emoji = type === 'lead' ? '📊' : '📅';
+  const title = type === 'lead' ? 'Neue PLZ-Analyse angefordert' : 'Neuer Beratungstermin';
+  const payload = {
+    text: `${emoji} *${title}*\n👤 ${data.anrede || ''} ${data.vorname || ''} ${data.nachname || ''}\n🏢 ${data.firma || ''} (${data.mitarbeiter || 'k.A.'} MA)\n📱 ${data.whatsapp || 'k.A.'}\n📧 ${data.email || 'k.A.'}\n📍 PLZ ${data.plz || 'k.A.'} — ${data.region || ''}`
+  };
+  try {
+    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
+  } catch(e) { console.log('Slack notification failed:', e); }
+}
+
+// Auto-detect gender from first name
+const MALE_NAMES = ['alexander','andreas','benjamin','bernd','björn','carsten','christian','christoph','daniel','david','dennis','detlef','dieter','dirk','dominik','erik','fabian','felix','florian','frank','franz','frederik','fritz','georg','gerd','gerhard','guido','günter','hans','harald','hartmut','heiko','heinrich','heinz','helmut','henning','herbert','hermann','holger','horst','ingo','jan','jens','joachim','jochen','johannes','jörg','jürgen','kai','karl','karsten','klaus','konrad','kurt','lars','lukas','manfred','marcel','marco','marcus','mario','markus','martin','mathias','matthias','max','michael','moritz','nico','nicolas','niklas','norbert','olaf','oliver','otto','patrick','paul','peter','philipp','rainer','ralf','reinhard','robert','rolf','rüdiger','sascha','sebastian','simon','stefan','steffen','stephan','sven','thomas','thorsten','tim','tobias','torsten','uwe','volker','walter','werner','wilhelm','willi','wolfgang'];
+const FEMALE_NAMES = ['alexandra','andrea','angelika','anja','anna','annette','antje','astrid','barbara','beate','bianca','birgit','brigitte','carina','carmen','caroline','charlotte','christa','christiane','christina','claudia','daniela','diana','doris','dorothea','elena','elke','emma','erika','eva','franziska','friederike','gabriele','gisela','gudrun','hannelore','heidi','heike','helga','ines','ingrid','irene','iris','jana','janina','jasmin','jennifer','jessica','johanna','julia','karin','katharina','kathrin','katja','kerstin','klara','laura','lena','lisa','luise','manuela','margarete','maria','marie','marina','marion','martina','melanie','michaela','monika','nadine','natascha','nicole','nina','petra','ramona','regina','renate','rita','sabine','sandra','sara','silke','silvia','simone','sonja','stefanie','susanne','tanja','ulrike','ursula','ute','vanessa','vera','veronika'];
+
+document.getElementById('f_vorname')?.addEventListener('blur', function() {
+  const n = this.value.trim().toLowerCase();
+  const anredeSelect = document.getElementById('f_anrede');
+  if (!anredeSelect || anredeSelect.value) return;
+  if (MALE_NAMES.includes(n)) anredeSelect.value = 'Herr';
+  else if (FEMALE_NAMES.includes(n)) anredeSelect.value = 'Frau';
+});
 
 // ═══════════════════════════════════════
 // PLZ INPUT

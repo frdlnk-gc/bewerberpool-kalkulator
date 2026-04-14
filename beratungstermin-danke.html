@@ -341,11 +341,11 @@
   <div class="upsell-card fade-up">
     <div class="upsell-header">
       <div class="upsell-eyebrow">⭐ Limitiertes Angebot</div>
-      <h2>Ihre persönliche Recruiting-Strategie – maßgeschneidert für Ihren Betrieb</h2>
-      <p>Kein allgemeines Template. Eine echte Schritt-für-Schritt-Anleitung, die genau auf Ihre Situation passt.</p>
+      <h2>Die Recruiting-Strategie 2026 für <span id="upsellFirma">Ihren Betrieb</span></h2>
+      <p>Finden Sie heraus, warum Ihre Stellen unbesetzt bleiben – und was Sie ab morgen ändern können.</p>
       <div class="price-row">
-        <span class="price-main">19 €</span>
-        <span class="price-old">79 €</span>
+        <span class="price-main">7 €</span>
+        <span class="price-old">49 €</span>
         <span class="price-label">einmalig, sofort verfügbar</span>
       </div>
     </div>
@@ -512,7 +512,7 @@
           </div>
           <div class="form-error" id="formError1">Bitte alle Pflichtfelder ausfüllen.</div>
           <button type="submit" class="btn-primary btn-gold">Weiter zur Bezahlung →</button>
-          <p class="privacy-note">Einmalig 19 €. Kein Abo, keine versteckten Kosten.</p>
+          <p class="privacy-note">Einmalig 7 €. Kein Abo, keine versteckten Kosten.</p>
         </form>
         <span class="skip-link" onclick="skipUpsell()">Nein danke, ich benötige keine Strategie</span>
       </div>
@@ -520,38 +520,23 @@
       <!-- ── STEP 2: Payment ── -->
       <div id="paymentSection">
         <div class="payment-box">
-          <h4>🔒 Sichere Zahlung</h4>
+          <h4>🔒 Sichere Zahlung über Stripe</h4>
+          <p style="font-size:0.85rem;color:var(--text-gray);margin-bottom:16px;line-height:1.5">
+            Nach Klick auf den Button werden Sie zu Stripe weitergeleitet – Europas führendem Zahlungsanbieter. Sie können per Karte, PayPal, Apple Pay oder Überweisung zahlen. Ihre Strategie wird sofort nach Zahlung freigeschaltet.
+          </p>
           <div class="field-group">
             <label for="p_email">E-Mail-Adresse *</label>
             <input type="email" id="p_email" placeholder="max@muster.de" required>
           </div>
-          <div class="field-group">
-            <label for="p_name">Name auf der Karte *</label>
-            <input type="text" id="p_name" placeholder="Max Muster">
-          </div>
-          <div class="field-group">
-            <label for="p_card">Kartennummer *</label>
-            <input type="text" id="p_card" placeholder="•••• •••• •••• ••••" maxlength="19" inputmode="numeric">
-          </div>
-          <div class="card-row">
-            <div class="field-group">
-              <label for="p_exp">Ablaufdatum *</label>
-              <input type="text" id="p_exp" placeholder="MM / JJ" maxlength="7">
-            </div>
-            <div class="field-group">
-              <label for="p_cvv">CVV *</label>
-              <input type="text" id="p_cvv" placeholder="•••" maxlength="4" inputmode="numeric">
-            </div>
-          </div>
           <div class="secure-badges">
             <span class="sec-badge">🔒 SSL-verschlüsselt</span>
-            <span class="sec-badge">💳 Visa / Mastercard</span>
-            <span class="sec-badge">✅ 100 % sicher</span>
+            <span class="sec-badge">💳 Karte / PayPal / Apple Pay</span>
+            <span class="sec-badge">✅ Stripe-gesichert</span>
           </div>
         </div>
-        <div class="form-error" id="formError2">Bitte alle Zahlungsfelder ausfüllen.</div>
-        <button class="btn-primary btn-gold" onclick="processPayment()">🔒 Jetzt für 19 € kaufen</button>
-        <p class="privacy-note">Mit dem Kauf stimmen Sie unseren <a href="#">AGB</a> zu. Sofortiger Zugang nach Zahlung.</p>
+        <div class="form-error" id="formError2">Bitte geben Sie Ihre E-Mail-Adresse ein.</div>
+        <button class="btn-primary btn-gold" onclick="processPayment()">🔒 Jetzt für 7 € sichern</button>
+        <p class="privacy-note">Mit dem Kauf stimmen Sie unseren <a href="https://www.green-careers.de/agb" target="_blank">AGB</a> zu. Ihre Strategie wird nach Zahlung automatisch freigeschaltet.</p>
         <span class="skip-link" onclick="skipUpsell()">Nein danke, kein Interesse</span>
       </div>
 
@@ -581,12 +566,54 @@
 // ══════════════════════════════════════
 
 const params = new URLSearchParams(window.location.search);
-const pName  = params.get('name')  || '';
-const pFirma = params.get('firma') || '';
-const pPlz   = params.get('plz')   || '';
 
-document.getElementById('confirmName').textContent = pName ? pName + '!' : '!';
-document.getElementById('confirmFirma').textContent = pFirma || 'Ihr Unternehmen';
+// Read from URL params AND sessionStorage fallback
+let stored = {};
+try { stored = JSON.parse(sessionStorage.getItem('gc_lead') || '{}'); } catch(e) {}
+
+const leadData = {
+  anrede: params.get('anrede') || stored.anrede || '',
+  vorname: params.get('vorname') || stored.vorname || '',
+  nachname: params.get('nachname') || stored.nachname || '',
+  name: params.get('name') || stored.name || '',
+  firma: params.get('firma') || stored.firma || '',
+  email: params.get('email') || stored.email || '',
+  whatsapp: params.get('whatsapp') || stored.whatsapp || '',
+  mitarbeiter: params.get('mitarbeiter') || stored.mitarbeiter || '',
+  plz: params.get('plz') || stored.plz || '',
+  region: params.get('region') || stored.region || ''
+};
+
+const pPlz = leadData.plz;
+
+// Build greeting: "Herr Müller" or "Frau Meier" or fallback to full name
+let greetingText = '';
+if (leadData.anrede && leadData.nachname) {
+  greetingText = leadData.anrede + ' ' + leadData.nachname;
+} else if (leadData.nachname) {
+  greetingText = leadData.nachname;
+} else if (leadData.vorname) {
+  greetingText = leadData.vorname;
+} else if (leadData.name) {
+  greetingText = leadData.name;
+}
+
+document.getElementById('confirmName').textContent = greetingText ? greetingText + '!' : '!';
+document.getElementById('confirmFirma').textContent = leadData.firma || 'Ihr Unternehmen';
+
+// Personalize upsell title with company name
+const upsellFirmaEl = document.getElementById('upsellFirma');
+if (upsellFirmaEl && leadData.firma) {
+  upsellFirmaEl.textContent = leadData.firma;
+}
+
+// Pre-fill email field in payment section
+setTimeout(() => {
+  const emailField = document.getElementById('p_email');
+  if (emailField && leadData.email) {
+    emailField.value = leadData.email;
+  }
+}, 100);
 
 // Check if returning from successful payment
 if (params.get('paid') === 'true') {
@@ -658,6 +685,9 @@ function goToPayment(e) {
   const tried = [...document.querySelectorAll('#triedGrid input:checked')].map(c=>c.value);
   _companyData = { size, problem, budget, profs, tried, regionRadius, avgSalary, employerBrand, hiringProcess, socialPresence, websiteCareers, biggestCompetitor, benefits, plz: pPlz };
 
+  // Slack notification - form completed
+  sendSlackNotification('form_completed');
+
   document.getElementById('strategyForm').style.display  = 'none';
   document.getElementById('paymentSection').style.display = 'block';
   setStep(2);
@@ -665,28 +695,53 @@ function goToPayment(e) {
 }
 
 // ══════════════════════════════════════
-// PAYMENT (prototype – replace with Stripe)
+// SLACK NOTIFICATION
+// ══════════════════════════════════════
+
+async function sendSlackNotification(type) {
+  const webhookUrl = 'https://hooks.slack.com/services/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';
+  const profNames = {facharbeiter:'Facharbeiter GaLaBau', vorarbeiter:'Vorarbeiter GaLaBau', bauleiter:'Bauleiter GaLaBau', strassenbauer:'Straßenbauer', tiefbauer:'Tiefbauer'};
+  const probMap = {low_apps:'Zu wenige Bewerbungen', bad_quality:'Unqualifizierte Bewerber', churn:'Hohe Fluktuation', slow:'Lange Besetzungszeiten', no_brand:'Geringe Arbeitgeberbekanntheit', budget:'Begrenztes Budget'};
+  const budgetMap = {low:'Unter 500 €', mid:'500–1.500 €', high:'1.500–3.000 €', premium:'Über 3.000 €'};
+
+  let message = {};
+  if (type === 'form_completed') {
+    const profs = _companyData.profs ? _companyData.profs.map(p => profNames[p] || p).join(', ') : '';
+    message = {
+      text: `📋 *Neue Recruiting-Analyse ausgefüllt*\n👤 ${leadData.anrede} ${leadData.vorname} ${leadData.nachname}\n🏢 ${leadData.firma} (${leadData.mitarbeiter || 'k.A.'} MA)\n📍 PLZ ${leadData.plz} — ${leadData.region}\n📱 ${leadData.whatsapp || 'k.A.'}\n📊 Problem: ${probMap[_companyData.problem] || _companyData.problem}\n💼 Berufe: ${profs}\n💰 Budget: ${budgetMap[_companyData.budget] || _companyData.budget}`
+    };
+  } else if (type === 'payment') {
+    message = {
+      text: `💰 *7€ Report-Kauf gestartet*\n👤 ${leadData.anrede} ${leadData.vorname} ${leadData.nachname}\n🏢 ${leadData.firma}\n📧 ${leadData.email || 'k.A.'}\n📍 PLZ ${leadData.plz} — ${leadData.region}`
+    };
+  }
+
+  try {
+    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(message), mode: 'no-cors' });
+  } catch(e) { console.log('Slack notification failed:', e); }
+}
+
+// ══════════════════════════════════════
+// PAYMENT (Stripe Checkout)
 // ══════════════════════════════════════
 
 function processPayment() {
   const errEl = document.getElementById('formError2');
   const email = document.getElementById('p_email')?.value.trim() || '';
-  
+
   if (!email || !email.includes('@')) {
     errEl.style.display = 'block'; return;
   }
   errEl.style.display = 'none';
 
-  // Save lead data
-  const leadData = {
-    name: document.getElementById('p_name')?.value.trim() || '',
-    firma: _companyData.firma || '',
-    email: email,
-    plz: pPlz || ''
-  };
+  // Update lead data with email
+  leadData.email = email;
 
   // Meta Pixel Purchase event
   if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 7.00, currency: 'EUR' });
+
+  // Slack notification
+  sendSlackNotification('payment');
 
   // Save form data to sessionStorage for return from Stripe
   sessionStorage.setItem('gc_strategy_data', JSON.stringify(_companyData));
