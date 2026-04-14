@@ -761,12 +761,12 @@ function processPayment() {
         Sie werden zu Stripe weitergeleitet. Nach erfolgreicher Zahlung kommen Sie automatisch hierher zurück und Ihre Strategie wird freigeschaltet.
       </p>
       <p style="font-size:0.8rem;color:var(--text-gray)">
-        Falls das Fenster sich nicht öffnet: <a href="https://buy.stripe.com/dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=\${encodeURIComponent(email)}" target="_blank" style="color:var(--green-main);font-weight:600">Hier klicken</a>
+        Falls das Fenster sich nicht öffnet: <a href="https://buy.stripe.com/test_dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=\${encodeURIComponent(email)}" target="_blank" style="color:var(--green-main);font-weight:600">Hier klicken</a>
       </p>
     </div>`;
 
   // Open Stripe Payment Link in new tab
-  window.open('https://buy.stripe.com/dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=' + encodeURIComponent(email), '_blank');
+  window.open('https://buy.stripe.com/test_dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=' + encodeURIComponent(email), '_blank');
 }
 
 // ══════════════════════════════════════
