@@ -311,6 +311,144 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── VALUE META ROW (4 quick stats) ── */
+    .value-meta-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px; margin: 0 0 22px;
+      padding: 14px 10px; background: var(--green-pale);
+      border-radius: 12px; text-align: center;
+    }
+    .vm-item { padding: 2px; }
+    .vm-num {
+      font-size: 1.3rem; font-weight: 900; color: var(--green-dark);
+      line-height: 1.1; margin-bottom: 2px;
+    }
+    .vm-lbl {
+      font-size: 0.68rem; font-weight: 600; color: var(--text-gray);
+      text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    @media (max-width: 480px) {
+      .value-meta-row { padding: 12px 6px; gap: 4px; }
+      .vm-num { font-size: 1.05rem; }
+      .vm-lbl { font-size: 0.58rem; }
+    }
+
+    /* ── REPORT PREVIEW (cover mockup + feature list) ── */
+    .report-preview {
+      display: grid; grid-template-columns: 130px 1fr;
+      gap: 18px; align-items: start;
+      margin-bottom: 22px; padding: 18px;
+      background: #f8fcf8; border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    @media (max-width: 520px) {
+      .report-preview { grid-template-columns: 96px 1fr; gap: 14px; padding: 14px; }
+    }
+    .preview-cover {
+      background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-main) 100%);
+      color: #fff; border-radius: 8px; padding: 12px 10px;
+      min-height: 180px; position: relative; overflow: hidden;
+      box-shadow: 0 6px 16px rgba(27,94,32,0.25);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .preview-cover::after {
+      content: ''; position: absolute; top: -20px; right: -20px;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: rgba(129,199,132,0.3);
+    }
+    .pc-top { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.8px; }
+    .pc-kicker { font-size: 0.5rem; font-weight: 700; margin-top: 18px; color: #c8e6c9; letter-spacing: 0.6px; }
+    .pc-title { font-size: 1rem; font-weight: 900; line-height: 1.05; margin-top: 4px; }
+    .pc-year { font-size: 1rem; font-weight: 900; color: #81c784; line-height: 1; margin-top: 2px; }
+    .pc-firma { font-size: 0.55rem; color: #c8e6c9; margin-top: 14px; font-weight: 600; position: relative; z-index: 2; word-break: break-word; }
+    @media (max-width: 520px) {
+      .pc-top { font-size: 0.48rem; }
+      .pc-kicker { margin-top: 14px; font-size: 0.45rem; }
+      .pc-title { font-size: 0.8rem; }
+      .pc-year { font-size: 0.85rem; }
+      .pc-firma { font-size: 0.5rem; margin-top: 10px; }
+    }
+
+    .preview-desc { padding-top: 2px; }
+    .pd-badge {
+      display: inline-block; background: var(--gold);
+      color: #fff; font-size: 0.68rem; font-weight: 800;
+      padding: 3px 9px; border-radius: 20px;
+      letter-spacing: 0.4px; margin-bottom: 8px;
+    }
+    .preview-desc h4 {
+      font-size: 0.95rem; color: var(--green-dark);
+      font-weight: 800; margin-bottom: 10px; line-height: 1.3;
+    }
+    .pd-list { list-style: none; padding: 0; }
+    .pd-list li {
+      font-size: 0.83rem; color: var(--text-dark); line-height: 1.45;
+      padding: 5px 0 5px 22px; position: relative;
+    }
+    .pd-list li::before {
+      content: '✓'; position: absolute; left: 0; top: 5px;
+      color: var(--green-main); font-weight: 900; font-size: 0.9rem;
+    }
+    .pd-list strong { color: var(--green-dark); }
+
+    /* ── TESTIMONIAL STRIP ── */
+    .testimonial-strip {
+      background: #fffef6; border: 1px solid #ffe082;
+      border-left: 4px solid #f9a825;
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 20px;
+    }
+    .ts-stars { color: #f5b800; font-size: 0.95rem; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .ts-quote {
+      font-size: 0.92rem; color: var(--text-dark);
+      line-height: 1.5; font-style: italic; margin-bottom: 8px;
+    }
+    .ts-author {
+      font-size: 0.75rem; color: var(--text-gray); font-weight: 600;
+    }
+
+    /* ── VALUE STACK ── */
+    .value-stack {
+      background: #f8fcf8; border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 20px;
+      border-left: 3px solid var(--green-main);
+    }
+    .vs-title {
+      font-size: 0.9rem; font-weight: 800; color: var(--green-dark);
+      margin-bottom: 6px;
+    }
+    .vs-text {
+      font-size: 0.85rem; color: var(--text-dark); line-height: 1.5;
+    }
+
+    /* ── REASSURANCE ROW ── */
+    .reassurance-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+      padding: 10px 0; border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .rr-item {
+      font-size: 0.78rem; color: var(--text-gray); font-weight: 600;
+    }
+    @media (max-width: 480px) {
+      .reassurance-row { gap: 10px; }
+      .rr-item { font-size: 0.72rem; }
+    }
+
+    /* Attention pulse for the report download button */
+    @keyframes gc-pulse {
+      0%   { transform: scale(1);    box-shadow: 0 4px 16px rgba(45,122,45,0.35); }
+      50%  { transform: scale(1.04); box-shadow: 0 8px 28px rgba(45,122,45,0.55); }
+      100% { transform: scale(1);    box-shadow: 0 4px 16px rgba(45,122,45,0.35); }
+    }
+    .btn-pulse {
+      animation: gc-pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes gc-shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
     .fade-up { animation: fadeUp 0.4s ease forwards; }
 
     @media (max-width: 400px) {
@@ -345,20 +483,83 @@
   <!-- ── UPSELL ── -->
   <div class="upsell-card fade-up">
     <div class="upsell-header">
-      <div class="upsell-eyebrow">⭐ Limitiertes Angebot</div>
+      <div class="upsell-eyebrow">⭐ Exklusiv für Beratungstermin-Interessenten</div>
       <h2>Die Recruiting-Strategie 2026 für <span id="upsellFirma">Ihren Betrieb</span></h2>
-      <p>Finden Sie heraus, warum Ihre Stellen unbesetzt bleiben – und was Sie ab morgen ändern können.</p>
+      <p>Individuell erstellt auf Basis Ihrer Angaben. Über 10 Seiten, konkrete Maßnahmen, Zeit- und Kostenrechnung, direkt umsetzbar.</p>
       <div class="price-row">
         <span class="price-main">7 €</span>
-        <span class="price-old">49 €</span>
-        <span class="price-label">einmalig, sofort verfügbar</span>
+        <span class="price-old">249 €</span>
+        <span class="price-label">Launch-Angebot, einmalig zahlbar</span>
       </div>
     </div>
 
     <div class="upsell-body">
 
+      <!-- Value meta row -->
+      <div class="value-meta-row">
+        <div class="vm-item">
+          <div class="vm-num">10+</div>
+          <div class="vm-lbl">Seiten PDF</div>
+        </div>
+        <div class="vm-item">
+          <div class="vm-num">9</div>
+          <div class="vm-lbl">Maßnahmen</div>
+        </div>
+        <div class="vm-item">
+          <div class="vm-num">100 %</div>
+          <div class="vm-lbl">individuell</div>
+        </div>
+        <div class="vm-item">
+          <div class="vm-num">&lt; 60 s</div>
+          <div class="vm-lbl">Lieferzeit</div>
+        </div>
+      </div>
+
+      <!-- Preview strip with report cover mockup -->
+      <div class="report-preview">
+        <div class="preview-cover">
+          <div class="pc-top">GREENCAREERS</div>
+          <div class="pc-kicker">INDIVIDUELLER REPORT</div>
+          <div class="pc-title">Ihre<br>Recruiting-<br>Strategie</div>
+          <div class="pc-year">2026</div>
+          <div class="pc-firma" id="previewFirma">Ihr Unternehmen</div>
+        </div>
+        <div class="preview-desc">
+          <div class="pd-badge">⭐ Bestseller</div>
+          <h4>Was Sie in wenigen Sekunden erhalten</h4>
+          <ul class="pd-list">
+            <li><strong>Individuelle Analyse</strong> Ihrer aktuellen Situation mit Recruiting-Score</li>
+            <li><strong>9 konkrete Maßnahmen</strong>, zugeschnitten auf Ihre Probleme und Region</li>
+            <li><strong>Stärken- &amp; Schwächen-Profil</strong> auf einen Blick</li>
+            <li><strong>Zeit- und Kostenvergleich:</strong> Was spart Ihnen eine professionelle Umsetzung?</li>
+            <li><strong>Sofort-Maßnahmen für die ersten 2 Wochen</strong> mit Umsetzungsanleitung</li>
+            <li><strong>Gebrandetes PDF</strong>, sofort herunterladbar, lebenslang nutzbar</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Testimonial strip -->
+      <div class="testimonial-strip">
+        <div class="ts-stars">★★★★★</div>
+        <div class="ts-quote">„Nach kurzer Zeit hatte ich mehr als 20 Bewerber auf meine ausgeschriebene Stelle. Ich kann GreenCareers jedem Arbeitgeber nur empfehlen."</div>
+        <div class="ts-author">Tobias Knauf · GaLaBau-Betrieb · Verifizierte Google-Bewertung</div>
+      </div>
+
+      <!-- Value stack -->
+      <div class="value-stack">
+        <div class="vs-title">Warum so günstig?</div>
+        <p class="vs-text">Normalerweise erstellen wir solche Strategien nur in persönlichen Beratungsgesprächen ab 249 €. Für Kalkulator-Nutzer wie Sie bieten wir den gleichen Inhalt als automatisierten Report für 7 € an. Eine faire Gebühr, damit wir wissen, dass Sie wirklich an Ihrem Recruiting arbeiten wollen.</p>
+      </div>
+
+      <!-- Reassurance row -->
+      <div class="reassurance-row">
+        <span class="rr-item">🔒 Sichere Zahlung via Stripe</span>
+        <span class="rr-item">📧 Rechnung automatisch per E-Mail</span>
+        <span class="rr-item">⚡ Sofort-Download</span>
+      </div>
+
       <!-- What's included -->
-      <ul class="includes-list">
+      <ul class="includes-list" style="display:none">
         <li><span class="inc-icon">✅</span> Analyse Ihrer aktuellen Recruiting-Situation</li>
         <li><span class="inc-icon">✅</span> 5-Schritte-Aktionsplan speziell für Ihre Betriebsgröße & Region</li>
         <li><span class="inc-icon">✅</span> Konkrete Maßnahmen für die von Ihnen gesuchten Fachkräfte</li>
@@ -553,12 +754,12 @@
           <p style="font-size:0.95rem;color:var(--text-gray);line-height:1.55;max-width:380px;margin:0 auto 24px">
             Wir haben alles für Sie zusammengefasst. Laden Sie jetzt Ihren individuellen Recruiting-Report als PDF herunter.
           </p>
-          <button onclick="downloadPDF()" class="btn-primary btn-green" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;min-height:auto;width:auto;font-size:0.98rem">
+          <button id="downloadReportBtn" onclick="downloadPDF()" class="btn-primary btn-green" style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;min-height:auto;width:auto;font-size:0.98rem">
             📥 Report jetzt herunterladen
           </button>
           <p style="font-size:0.78rem;color:var(--text-gray);margin-top:16px;line-height:1.5">
             Ihr Report wurde zusätzlich an <strong id="strategyEmail">Ihre E-Mail</strong> gesendet.<br>
-            Bei Fragen: <a href="mailto:info@green-careers.de" style="color:var(--green-main)">info@green-careers.de</a>
+            Bei Fragen: <a href="mailto:hello@green-careers.de" style="color:var(--green-main)">hello@green-careers.de</a>
           </p>
         </div>
       </div>
@@ -570,7 +771,7 @@
 
 <footer>
   © 2025 <a href="https://www.green-careers.de">GreenCareers</a> – Karriereplattform für die grüne Branche<br>
-  <span style="font-size:0.73rem">Bei Fragen: <a href="mailto:info@green-careers.de">info@green-careers.de</a></span>
+  <span style="font-size:0.73rem">Bei Fragen: <a href="mailto:hello@green-careers.de">hello@green-careers.de</a></span>
 </footer>
 
 <script>
@@ -580,22 +781,55 @@
 
 const params = new URLSearchParams(window.location.search);
 
-// Read from URL params AND sessionStorage fallback
+// If arriving via the e-mail download link (?paid=true&d=<base64>), decode the
+// self-contained data payload and restore it to localStorage so the PDF
+// generation works seamlessly.
+let _bundleFromUrl = null;
+const _encodedD = params.get('d');
+if (_encodedD) {
+  try {
+    const decoded = decodeURIComponent(escape(atob(_encodedD)));
+    _bundleFromUrl = JSON.parse(decoded);
+    if (_bundleFromUrl.lead) {
+      localStorage.setItem('gc_lead', JSON.stringify(_bundleFromUrl.lead));
+      sessionStorage.setItem('gc_lead', JSON.stringify(_bundleFromUrl.lead));
+    }
+    if (_bundleFromUrl.analysis) {
+      localStorage.setItem('gc_strategy_data', JSON.stringify(_bundleFromUrl.analysis));
+      sessionStorage.setItem('gc_strategy_data', JSON.stringify(_bundleFromUrl.analysis));
+    }
+  } catch(e) { console.log('Could not decode URL data bundle:', e); }
+}
+
+// Read from URL params AND localStorage/sessionStorage fallback (cross-tab for Stripe)
 let stored = {};
-try { stored = JSON.parse(sessionStorage.getItem('gc_lead') || '{}'); } catch(e) {}
+try {
+  stored = JSON.parse(localStorage.getItem('gc_lead') || sessionStorage.getItem('gc_lead') || '{}');
+} catch(e) {}
+
+// Parse selIds from URL (comma-separated) or from stored
+const urlProfs = params.get('profs');
+const parsedSelIds = urlProfs ? urlProfs.split(',').filter(Boolean) : (stored.selIds || []);
 
 const leadData = {
-  anrede: params.get('anrede') || stored.anrede || '',
-  vorname: params.get('vorname') || stored.vorname || '',
-  nachname: params.get('nachname') || stored.nachname || '',
-  name: params.get('name') || stored.name || '',
-  firma: params.get('firma') || stored.firma || '',
-  email: params.get('email') || stored.email || '',
-  whatsapp: params.get('whatsapp') || stored.whatsapp || '',
-  mitarbeiter: params.get('mitarbeiter') || stored.mitarbeiter || '',
-  plz: params.get('plz') || stored.plz || '',
-  region: params.get('region') || stored.region || ''
+  anrede: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.anrede) || params.get('anrede') || stored.anrede || '',
+  vorname: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.vorname) || params.get('vorname') || stored.vorname || '',
+  nachname: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.nachname) || params.get('nachname') || stored.nachname || '',
+  name: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.name) || params.get('name') || stored.name || '',
+  firma: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.firma) || params.get('firma') || stored.firma || '',
+  email: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.email) || params.get('email') || stored.email || '',
+  whatsapp: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.whatsapp) || params.get('whatsapp') || stored.whatsapp || '',
+  mitarbeiter: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.mitarbeiter) || params.get('mitarbeiter') || stored.mitarbeiter || '',
+  plz: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.plz) || params.get('plz') || stored.plz || '',
+  region: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.region) || params.get('region') || stored.region || '',
+  selIds: (_bundleFromUrl && _bundleFromUrl.lead && _bundleFromUrl.lead.selIds) || parsedSelIds
 };
+
+// Persist latest data for Stripe-return
+try {
+  localStorage.setItem('gc_lead', JSON.stringify(leadData));
+  sessionStorage.setItem('gc_lead', JSON.stringify(leadData));
+} catch(e) {}
 
 const pPlz = leadData.plz;
 
@@ -619,6 +853,10 @@ const upsellFirmaEl = document.getElementById('upsellFirma');
 if (upsellFirmaEl && leadData.firma) {
   upsellFirmaEl.textContent = leadData.firma;
 }
+const previewFirmaEl = document.getElementById('previewFirma');
+if (previewFirmaEl && leadData.firma) {
+  previewFirmaEl.textContent = 'Für: ' + leadData.firma;
+}
 
 // Pre-fill email field in payment section
 setTimeout(() => {
@@ -626,7 +864,36 @@ setTimeout(() => {
   if (emailField && leadData.email) {
     emailField.value = leadData.email;
   }
-}, 100);
+
+  // Pre-fill Step 1 (company profile) from data the user already provided on the calculator
+  // Map "6–15 Mitarbeiter" labels to s_size option values
+  const sizeMap = {
+    '1–5 Mitarbeiter': 'micro',
+    '6–15 Mitarbeiter': 'small',
+    '16–30 Mitarbeiter': 'medium',
+    '31–50 Mitarbeiter': 'large',
+    '51–100 Mitarbeiter': 'xlarge',
+    'Mehr als 100 Mitarbeiter': 'enterprise'
+  };
+  const sizeField = document.getElementById('s_size');
+  if (sizeField && leadData.mitarbeiter && sizeMap[leadData.mitarbeiter]) {
+    sizeField.value = sizeMap[leadData.mitarbeiter];
+  }
+
+  // Pre-fill profession checkboxes from calculator selection (facharbeiter, vorarbeiter, bauleiter, strassenbauer, tiefbauer)
+  if (leadData.selIds && leadData.selIds.length) {
+    const profGrid = document.getElementById('profCheckGrid');
+    if (profGrid) {
+      leadData.selIds.forEach(id => {
+        const cb = profGrid.querySelector('input[value="' + id + '"]');
+        if (cb) {
+          cb.checked = true;
+          cb.closest('.check-item').classList.add('active');
+        }
+      });
+    }
+  }
+}, 120);
 
 // Check if returning from successful payment - use localStorage (cross-tab!)
 if (params.get('paid') === 'true') {
@@ -638,14 +905,32 @@ if (params.get('paid') === 'true') {
         // Hide the form, payment section, skip-link
         document.getElementById('strategyForm').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'none';
+        // Also hide the upsell header block + value rows since we skip past them
+        const upsellHeader = document.querySelector('.upsell-header');
+        if (upsellHeader) upsellHeader.style.display = 'none';
+        const valueBlocks = document.querySelectorAll('.value-meta-row, .report-preview, .testimonial-strip, .value-stack, .reassurance-row');
+        valueBlocks.forEach(el => el.style.display = 'none');
+        const stepsRow = document.getElementById('stepsRow');
+        if (stepsRow) stepsRow.style.display = 'none';
         const skipLinks = document.querySelectorAll('.skip-link');
         skipLinks.forEach(el => el.style.display = 'none');
-        // Show strategy
+
+        // Slack + Email notification: TRIGGER ONLY AFTER SUCCESSFUL PAYMENT
+        if (!localStorage.getItem('gc_payment_notified')) {
+          sendSlackNotification('payment_completed');
+          sendEmailNotification('payment_completed');
+          localStorage.setItem('gc_payment_notified', '1');
+          // Clear flag after 5 min so user can buy again if needed
+          setTimeout(() => localStorage.removeItem('gc_payment_notified'), 5 * 60 * 1000);
+        }
+
+        // Show strategy (triggers confetti + button pulse)
         showStrategy();
+
         // Mark as used - clear data so strategy can't be re-accessed without paying again
         setTimeout(() => {
           localStorage.removeItem('gc_strategy_data');
-        }, 3000);
+        }, 10000);
       } else {
         // No saved data - show error message
         const upsellBody = document.querySelector('.upsell-body');
@@ -658,7 +943,7 @@ if (params.get('paid') === 'true') {
                 Vielen Dank für Ihren Kauf. Ihre personalisierte Recruiting-Strategie senden wir Ihnen innerhalb von 24 Stunden per E-Mail zu.
               </p>
               <p style="font-size:0.85rem;color:var(--text-gray)">
-                Bei Fragen erreichen Sie uns unter <a href="mailto:info@green-careers.de" style="color:var(--green-main)">info@green-careers.de</a>
+                Bei Fragen erreichen Sie uns unter <a href="mailto:hello@green-careers.de" style="color:var(--green-main)">hello@green-careers.de</a>
               </p>
             </div>`;
         }
@@ -734,27 +1019,109 @@ function goToPayment(e) {
 // SLACK NOTIFICATION
 // ══════════════════════════════════════
 
+// ══════════════════════════════════════
+// MAKE.COM WEBHOOK (zentraler Integrations-Hub)
+// ══════════════════════════════════════
+// Ein einziger Webhook für alle Events: lead, booking, purchase.
+// Make.com verschickt Slack-Nachrichten in #gc-inbounds und E-Mail an den Kunden.
+// Freddy: Ersetze YOUR_MAKE_WEBHOOK mit deiner Catch-Hook-URL aus Make.com.
+const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/7uvygnajw7qitsuxh7d7ebxhme28x7x2';
+
+async function notifyMake(event, payload) {
+  if (!MAKE_WEBHOOK_URL || MAKE_WEBHOOK_URL.includes('YOUR_MAKE_WEBHOOK')) {
+    console.log('[Make Webhook] Noch nicht konfiguriert — überspringe Event:', event);
+    return;
+  }
+  const body = JSON.stringify({
+    event: event,
+    timestamp: new Date().toISOString(),
+    source: 'kalkulator.green-careers.de',
+    ...payload
+  });
+  try {
+    await fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: body
+    });
+  } catch(e) {
+    try {
+      await fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: body
+      });
+    } catch(e2) { console.log('[Make Webhook] Fehler:', e2); }
+  }
+}
+
+// Build a self-contained download URL (base64-encoded data) — so customer can
+// re-download their report from any device via the e-mail link.
+function buildDownloadUrl() {
+  try {
+    const bundle = {
+      lead: {
+        anrede: leadData.anrede,
+        vorname: leadData.vorname,
+        nachname: leadData.nachname,
+        firma: leadData.firma,
+        email: leadData.email,
+        whatsapp: leadData.whatsapp,
+        mitarbeiter: leadData.mitarbeiter,
+        plz: leadData.plz,
+        region: leadData.region,
+        selIds: leadData.selIds
+      },
+      analysis: _companyData || {}
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(bundle))));
+    const base = window.location.origin + window.location.pathname;
+    return base + '?paid=true&d=' + encoded;
+  } catch(e) { return window.location.origin + '/beratungstermin-danke.html?paid=true'; }
+}
+
+// Kompatibilitäts-Wrapper — leitet an notifyMake weiter
 async function sendSlackNotification(type) {
-  const webhookUrl = 'https://hooks.slack.com/services/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';
   const profNames = {facharbeiter:'Facharbeiter GaLaBau', vorarbeiter:'Vorarbeiter GaLaBau', bauleiter:'Bauleiter GaLaBau', strassenbauer:'Straßenbauer', tiefbauer:'Tiefbauer'};
   const probMap = {low_apps:'Zu wenige Bewerbungen', bad_quality:'Unqualifizierte Bewerber', churn:'Hohe Fluktuation', slow:'Lange Besetzungszeiten', no_brand:'Geringe Arbeitgeberbekanntheit', budget:'Begrenztes Budget'};
   const budgetMap = {low:'Unter 500 €', mid:'500–1.500 €', high:'1.500–3.000 €', premium:'Über 3.000 €'};
+  const d = _companyData || {};
 
-  let message = {};
+  // Build the full analysis payload for Make.com
+  const analysisPayload = {
+    profs: (d.profs || []).map(p => profNames[p] || p),
+    problem: d.problem,
+    problemLabel: probMap[d.problem] || d.problem,
+    budget: d.budget,
+    budgetLabel: budgetMap[d.budget] || d.budget,
+    urgency: d.urgency,
+    positions: d.positions,
+    avgSalary: d.avgSalary,
+    employerBrand: d.employerBrand,
+    hiringProcess: d.hiringProcess,
+    socialPresence: d.socialPresence,
+    websiteCareers: d.websiteCareers,
+    benefits: d.benefits
+  };
+
   if (type === 'form_completed') {
-    const profs = _companyData.profs ? _companyData.profs.map(p => profNames[p] || p).join(', ') : '';
-    message = {
-      text: `📋 *Neue Recruiting-Analyse ausgefüllt*\n👤 ${leadData.anrede} ${leadData.vorname} ${leadData.nachname}\n🏢 ${leadData.firma} (${leadData.mitarbeiter || 'k.A.'} MA)\n📍 PLZ ${leadData.plz} — ${leadData.region}\n📱 ${leadData.whatsapp || 'k.A.'}\n📊 Problem: ${probMap[_companyData.problem] || _companyData.problem}\n💼 Berufe: ${profs}\n💰 Budget: ${budgetMap[_companyData.budget] || _companyData.budget}`
-    };
-  } else if (type === 'payment') {
-    message = {
-      text: `💰 *7€ Report-Kauf gestartet*\n👤 ${leadData.anrede} ${leadData.vorname} ${leadData.nachname}\n🏢 ${leadData.firma}\n📧 ${leadData.email || 'k.A.'}\n📍 PLZ ${leadData.plz} — ${leadData.region}`
-    };
+    // Optional: kann genutzt werden, wenn du einen Zwischen-Event in Make auswerten willst.
+    // Aktuell kein separates Event, wird durch payment_completed abgedeckt.
+    return;
+  } else if (type === 'payment_started') {
+    notifyMake('payment_started', { lead: leadData, analysis: analysisPayload });
+  } else if (type === 'payment_completed') {
+    const downloadUrl = buildDownloadUrl();
+    notifyMake('purchase', {
+      lead: leadData,
+      analysis: analysisPayload,
+      downloadUrl: downloadUrl,
+      amount: 7.00,
+      currency: 'EUR',
+      product: 'GreenCareers Recruiting-Strategie 2026'
+    });
   }
-
-  try {
-    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(message), mode: 'no-cors' });
-  } catch(e) { console.log('Slack notification failed:', e); }
 }
 
 // ══════════════════════════════════════
@@ -773,11 +1140,14 @@ function processPayment() {
   // Update lead data with email
   leadData.email = email;
 
-  // Meta Pixel Purchase event
-  if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: 7.00, currency: 'EUR' });
+  // Meta Pixel: track InitiateCheckout (user clicks to go to Stripe). Purchase fires only on actual ?paid=true return.
+  if (typeof fbq !== 'undefined') fbq('track', 'InitiateCheckout', { value: 7.00, currency: 'EUR' });
 
-  // Slack notification
-  sendSlackNotification('payment');
+  // Slack: notify "payment started" (intent signal). Full Slack+Email notification on successful return.
+  sendSlackNotification('payment_started');
+
+  // Reset payment notification flag so we can notify again on return
+  localStorage.removeItem('gc_payment_notified');
 
   // Save form data to localStorage (persists across tabs and Stripe redirect)
   localStorage.setItem('gc_strategy_data', JSON.stringify(_companyData));
@@ -818,6 +1188,67 @@ function showStrategy() {
   }
 
   document.getElementById('strategyResult').scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Confetti celebration!
+  setTimeout(() => {
+    fireConfetti();
+  }, 400);
+
+  // Pulse animation for the download button to draw attention
+  setTimeout(() => {
+    const btn = document.getElementById('downloadReportBtn');
+    if (btn) {
+      btn.classList.add('btn-pulse');
+      // Stop pulsing after 8 seconds or on first hover/click
+      const stopPulse = () => btn.classList.remove('btn-pulse');
+      btn.addEventListener('mouseenter', stopPulse, { once: true });
+      btn.addEventListener('click', stopPulse, { once: true });
+      setTimeout(stopPulse, 8000);
+    }
+  }, 900);
+}
+
+// ══════════════════════════════════════
+// CONFETTI CELEBRATION
+// ══════════════════════════════════════
+function fireConfetti() {
+  if (typeof confetti !== 'function') return;
+  const greenColors = ['#1a5c1a', '#2d7a2d', '#4caf50', '#81c784', '#c8e6c9', '#ffffff'];
+  const duration = 2500;
+  const end = Date.now() + duration;
+
+  // Initial burst from top center
+  confetti({
+    particleCount: 80,
+    spread: 90,
+    origin: { y: 0 },
+    colors: greenColors,
+    gravity: 0.9,
+    scalar: 1.1
+  });
+
+  // Continuous falling confetti from top edges
+  (function frame() {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0 },
+      colors: greenColors,
+      gravity: 1,
+      scalar: 0.9
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0 },
+      colors: greenColors,
+      gravity: 1,
+      scalar: 0.9
+    });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  }());
 }
 
 function buildInsights(d) {
@@ -1184,6 +1615,7 @@ function skipUpsell() {
 
 <!-- jsPDF Library for branded PDF generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <script>
 // ══════════════════════════════════════

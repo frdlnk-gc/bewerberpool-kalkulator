@@ -1246,7 +1246,7 @@ function unlockReport(e) {
   }
   errEl.style.display='none';
 
-  // Capture lead data
+  // Capture lead data (incl. selected profession groups for pre-fill on danke page)
   const leadData = {
     anrede: document.getElementById('f_anrede').value,
     vorname: document.getElementById('f_vorname').value.trim(),
@@ -1256,11 +1256,13 @@ function unlockReport(e) {
     whatsapp: document.getElementById('f_wa').value.trim(),
     email: document.getElementById('f_email').value.trim(),
     plz: _data ? _data.plzRaw : '',
-    region: _data ? _data.region.name : ''
+    region: _data ? _data.region.name : '',
+    selIds: _data ? _data.selIds : []
   };
 
-  // Save to sessionStorage for the booking modal and danke page
+  // Save to BOTH sessionStorage (current tab) AND localStorage (cross-tab for Stripe return)
   sessionStorage.setItem('gc_lead', JSON.stringify(leadData));
+  localStorage.setItem('gc_lead', JSON.stringify(leadData));
 
   // Meta Pixel Lead event
   if (typeof fbq !== 'undefined') fbq('track', 'Lead');
@@ -1348,6 +1350,8 @@ function submitBooking(e) {
   const vorname = ld.vorname || nameParts[0] || '';
   const nachname = ld.nachname || nameParts.slice(1).join(' ') || '';
 
+  const selIds = (ld.selIds && Array.isArray(ld.selIds)) ? ld.selIds : (_data ? _data.selIds : []);
+
   const bookingData = {
     anrede: ld.anrede || '',
     vorname: vorname,
@@ -1359,16 +1363,18 @@ function submitBooking(e) {
     termin: document.getElementById('b_termin').value,
     mitarbeiter: ld.mitarbeiter || '',
     plz: ld.plz || (_data ? _data.plzRaw : ''),
-    region: ld.region || (_data ? _data.region.name : '')
+    region: ld.region || (_data ? _data.region.name : ''),
+    selIds: selIds
   };
 
-  // Update sessionStorage with latest data
+  // Update sessionStorage AND localStorage (cross-tab for Stripe)
   sessionStorage.setItem('gc_lead', JSON.stringify(bookingData));
+  localStorage.setItem('gc_lead', JSON.stringify(bookingData));
 
   // Slack notification
   sendSlackNotification('booking', bookingData);
 
-  // Build URL params
+  // Build URL params (selIds as comma-separated)
   const params = new URLSearchParams({
     anrede: bookingData.anrede,
     vorname: bookingData.vorname,
@@ -1379,25 +1385,59 @@ function submitBooking(e) {
     email: bookingData.email,
     mitarbeiter: bookingData.mitarbeiter,
     plz: bookingData.plz,
-    region: bookingData.region
+    region: bookingData.region,
+    profs: selIds.join(',')
   });
 
   window.location.replace('beratungstermin-danke.html?' + params.toString());
 }
 
 // ═══════════════════════════════════════
-// SLACK NOTIFICATION
+// MAKE.COM WEBHOOK (zentraler Integrations-Hub)
 // ═══════════════════════════════════════
-async function sendSlackNotification(type, data) {
-  const webhookUrl = 'https://hooks.slack.com/services/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';
-  const emoji = type === 'lead' ? '📊' : '📅';
-  const title = type === 'lead' ? 'Neue PLZ-Analyse angefordert' : 'Neuer Beratungstermin';
-  const payload = {
-    text: `${emoji} *${title}*\n👤 ${data.anrede || ''} ${data.vorname || ''} ${data.nachname || ''}\n🏢 ${data.firma || ''} (${data.mitarbeiter || 'k.A.'} MA)\n📱 ${data.whatsapp || 'k.A.'}\n📧 ${data.email || 'k.A.'}\n📍 PLZ ${data.plz || 'k.A.'} — ${data.region || ''}`
-  };
+// Ein einziger Webhook für alle Events: lead, booking, purchase.
+// Make.com übernimmt Slack-Nachrichten und E-Mail-Versand an den Kunden.
+// Freddy: Ersetze YOUR_MAKE_WEBHOOK mit deiner Catch-Hook-URL aus Make.com.
+const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/7uvygnajw7qitsuxh7d7ebxhme28x7x2';
+
+async function notifyMake(event, payload) {
+  if (!MAKE_WEBHOOK_URL || MAKE_WEBHOOK_URL.includes('YOUR_MAKE_WEBHOOK')) {
+    console.log('[Make Webhook] Noch nicht konfiguriert — überspringe Event:', event);
+    return;
+  }
+  const body = JSON.stringify({
+    event: event,
+    timestamp: new Date().toISOString(),
+    source: 'kalkulator.green-careers.de',
+    ...payload
+  });
   try {
-    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
-  } catch(e) { console.log('Slack notification failed:', e); }
+    // Primärer Versuch: application/json (funktioniert wenn CORS-Header in Make erlaubt sind)
+    await fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: body
+    });
+  } catch(e) {
+    // Fallback: text/plain (umgeht CORS-Preflights bei manchen Browsern)
+    try {
+      await fetch(MAKE_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: body
+      });
+    } catch(e2) {
+      console.log('[Make Webhook] Fehler:', e2);
+    }
+  }
+}
+
+// Kompatibilitäts-Wrapper — ruft weiterhin notifyMake auf
+async function sendSlackNotification(type, data) {
+  const eventMap = { lead: 'lead', booking: 'booking' };
+  const event = eventMap[type] || type;
+  notifyMake(event, { lead: data });
 }
 
 // Auto-detect gender from first name
