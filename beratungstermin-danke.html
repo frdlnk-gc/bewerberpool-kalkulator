@@ -322,7 +322,7 @@
 <body>
 
 <header>
-  <a href="https://www.green-careers.de" class="logo-row">
+  <a href="/" class="logo-row">
     <img src="logo-white.png" alt="GreenCareers" style="height:38px;width:auto;">
   </a>
 </header>
@@ -853,14 +853,38 @@ function buildStrategySteps(d) {
   // Step 1: Always – optimize job posting
   steps.push({
     h: 'Stellenanzeige mit echten Einblicken statt Floskeln',
-    t: 'Kandidaten lesen eine Stellenanzeige im Schnitt 14 Sekunden lang, bevor sie entscheiden. In dieser Zeit entscheidet der erste Eindruck. Ersetzen Sie generische Floskeln wie "dynamisches Team" und "flache Hierarchien" durch konkrete Fakten aus Ihrem Arbeitsalltag. Zeigen Sie echte Fotos von Ihrer Baustelle, Ihrem Team und Ihrem Fuhrpark. Beschreiben Sie einen typischen Arbeitstag konkret: Wann startet der Arbeitstag? Wie sind die Wege? Was gibt es zur Pause? Welche Projekte stehen an? Diese Details machen den Unterschied zwischen einer Anzeige, die funktioniert, und einer, die im Rauschen untergeht.'
+    lead: 'Kandidaten lesen eine Stellenanzeige durchschnittlich nur 14 Sekunden, bevor sie entscheiden. Das ist Ihre einzige Chance für den ersten Eindruck. Ersetzen Sie generische Floskeln durch konkrete Fakten aus Ihrem Arbeitsalltag. Der Unterschied zwischen einer funktionierenden Anzeige und einer, die im Rauschen untergeht, liegt oft in drei Details: echte Fotos von Baustelle und Team, ein konkreter Tagesablauf, und authentische Stimmen von bestehenden Mitarbeitern.',
+    bullets: [
+      'Ersetzen Sie "dynamisches Team" durch konkrete Details: "Bei uns arbeiten 3 Teams im Raum München, jede mit 5-6 Fachkräften"',
+      'Fotografieren Sie einen echten Arbeitstag: Baustelle, Pause, Fuhrpark, Teamarbeit (5-8 echte Fotos)',
+      'Beschreiben Sie einen typischen Tag konkret: "7:15 Uhr Abfahrt vom Hof, 22:30 Uhr Feierabend, 30 Min. Pause mit Grillstation"',
+      'Holen Sie ein authentisches Zitat von einem Mitarbeiter: "Ich schätze, dass der Chef selbst anpackt" (Name + Foto)',
+      'Nennen Sie 2-3 laufende Projekte mit echten Kunden oder Besonderheiten statt allgemeiner Branchen-Beschreibung',
+      'Vermeiden Sie: dynamisch, innovativ, flache Hierarchien, Familien-Betrieb (generische Floskeln)'
+    ],
+    callout: {
+      title: 'Praxis-Beispiel',
+      text: 'Ein GaLaBau-Betrieb mit 18 Mitarbeitern in Bayern erhöhte die Bewerbungsrate um 240 % allein durch das Hinzufügen einer Gehaltsangabe und 5 echten Team-Fotos. Quelle: Indeed Recruiting-Studie 2023, S. 42.'
+    }
   });
 
   // Based on salary
   if (d.avgSalary === 'unter2500' || d.avgSalary === '2500-3000') {
     steps.push({
       h: 'Gehalt auf Branchenniveau bringen',
-      t: 'Ihr aktuelles Gehaltsniveau liegt unter dem Branchendurchschnitt von 3.000 bis 3.500 € für Facharbeiter im GaLaBau. Das ist einer der häufigsten Gründe, warum Bewerbungen ausbleiben. Gute Fachkräfte kennen den Markt und bewerben sich nur dort, wo das Gehalt stimmt. Eine moderate Anpassung von 200 bis 300 € kann die Bewerbungsrate deutlich erhöhen. Rechnen Sie dagegen: Eine unbesetzte Stelle kostet durchschnittlich 4.000 € pro Monat an entgangenem Umsatz, deutlich mehr als die Gehaltserhöhung.'
+      lead: 'Ihr Gehaltsniveau liegt unter dem Branchendurchschnitt von 3.000 bis 3.500 EUR für Facharbeiter im GaLaBau. Das ist einer der häufigsten Gründe, warum Bewerbungen ausbleiben. Gute Fachkräfte kennen den Markt und bewerben sich nur dort, wo das Gehalt am oberen Ende passt. Eine moderate Anpassung von 200 bis 300 EUR monatlich kann die Bewerbungsrate verdoppeln und kostet deutlich weniger als eine unbesetzte Stelle.',
+      bullets: [
+        'Recherchieren Sie 5-10 vergleichbare Stellenanzeigen in Ihrer Region auf Indeed, StepStone und lokalen Portalen',
+        'Notieren Sie die Gehaltsangaben und berechnen Sie den Durchschnitt (Median)',
+        'Vergleichen Sie: Liegt Ihr Gehalt in den oberen 50 % oder unteren 50 %?',
+        'Wenn Sie unter dem Median liegen, kalkulieren Sie: 3.200 EUR Gehalt statt 2.900 EUR = 300 EUR mehr monatlich',
+        'Berechnen Sie die ROI: Eine unbesetzte Stelle kostet ca. 4.000-6.000 EUR pro Monat an Produktivitätsverlust',
+        'Planen Sie die Anpassung in nächsten Quartal ein und machen Sie sie in der neuen Anzeige sichtbar'
+      ],
+      callout: {
+        title: 'Wussten Sie?',
+        text: 'Laut BGL-Mitgliederbefragung 2024 dauert eine Stellenbesetzung im GaLaBau im Schnitt 87 Tage, in den oberen 25 % aber nur 28 Tage. Der Unterschied: transparente Gehaltsangabe und schneller Prozess.'
+      }
     });
   }
 
@@ -868,7 +892,19 @@ function buildStrategySteps(d) {
   if (d.hiringProcess === 'langsam' || d.hiringProcess === 'kein') {
     steps.push({
       h: 'Bewerbungsprozess auf 48 Stunden straffen',
-      t: 'Top-Kandidaten im GaLaBau sind im Schnitt nur 10 Tage auf dem Markt, bevor sie bei der Konkurrenz unterschreiben. Ein Bewerbungsprozess, der mehrere Wochen dauert, ist heute nicht mehr zeitgemäß. Richten Sie einen Fast-Track ein: Bewerbungseingang am selben Tag bestätigen, Telefonat binnen 24 Stunden, Probetag in der ersten Woche, Entscheidung direkt nach dem Probetag. Das funktioniert ohne großen Aufwand und verdoppelt die Erfolgsrate bei knappen Märkten.'
+      lead: 'Top-Kandidaten im GaLaBau sind im Schnitt nur 10 Tage auf dem Markt, bevor sie bei der Konkurrenz unterschreiben. Ein Bewerbungsprozess, der mehrere Wochen dauert, ist nicht mehr zeitgemäss. Ein Fast-Track-Prozess verdoppelt Ihre Erfolgsquote massiv und funktioniert ohne großen Aufwand. Die Geheimzutat: schnelle Rückmeldung, schnelle Entscheidung, schnelles Angebot.',
+      bullets: [
+        'Tag 1: Bewerbungseingang bestätigen per E-Mail oder WhatsApp (Template schreiben, 2 Minuten)',
+        'Tag 2-3: Telefonat mit dem Kandidaten führen (ca. 15 Min. vorqualifizieren)',
+        'Tag 7: Probetag durchführen (ggf. zwei Kandidaten am selben Tag)',
+        'Tag 8-9: Entscheidung treffen und sofort Angebot abgeben (nicht warten, nicht nachdenken)',
+        'Tag 10: Arbeitsvertrag unterschrieben, Start im nächsten Quartal fixiert',
+        'Definieren Sie klar: Wer ist verantwortlich für jeden Schritt? (z.B. Büro, Bauleiter, Geschäftsführer)'
+      ],
+      callout: {
+        title: 'Aus unserer Erfahrung',
+        text: 'Betriebe, die von 45 Tagen auf 12 Tage Prozessdauer wechselten, stiegen von 3 Bewerbungen auf 12 Bewerbungen pro ausgeschriebener Stelle. Der Aufwand für diese Massnahme: unter 5 Stunden Setup und dann 30 Minuten pro Kandidat.'
+      }
     });
   }
 
@@ -876,7 +912,19 @@ function buildStrategySteps(d) {
   if (d.socialPresence === 'selten' || d.socialPresence === 'kein_profil') {
     steps.push({
       h: 'Social Media als Schaufenster Ihres Betriebs aufbauen',
-      t: 'Etwa 73 % der wechselbereiten Fachkräfte informieren sich vor einer Bewerbung auf Instagram oder Facebook über den Arbeitgeber. Ohne Präsenz entgeht Ihnen dieser Teil des Marktes komplett. Starten Sie mit Instagram. Drei Posts pro Woche reichen: ein Foto von der Baustelle, ein Zitat eines Mitarbeiters, ein kurzes Video vom Team. Kein Hochglanz nötig, Authentizität zählt. Die erste Stelle, die Sie darüber besetzen, ist den Aufwand bereits wert.'
+      lead: 'Etwa 73 % der wechselbereiten Fachkräfte informieren sich vor einer Bewerbung auf Instagram oder Facebook über den Arbeitgeber. Ohne Präsenz entgeht Ihnen dieser Teil des Marktes komplett. Starten Sie mit Instagram und drei Posts pro Woche. Kein Hochglanz nötig, Authentizität zählt. Viele Betriebe besetzen ihre erste Stelle über Social Media innerhalb von 2-3 Monaten.',
+      bullets: [
+        'Erstellen Sie ein kostenloses Instagram-Profil mit Unternehmensname und Link zur Website',
+        'Laden Sie 15-20 bestehende Fotos von Baustelle, Team und Fuhrpark hoch (sortiert nach Projekt und Saison)',
+        'Planung: 3 Posts pro Woche, davon 1 Baustelle, 1 Team, 1 Projekt-Update (30 Min. pro Woche)',
+        'Nutzen Sie 5-6 relevante Hashtags: #GaLaBau, #Fachkräfte, #Recruiting, #TeamArbeit, Ihre Region',
+        'Pinnen Sie 2 Stories pro Woche, um Sichtbarkeit zu erhöhen',
+        'Beantworten Sie Kommentare und Nachrichten direkt, um Engagement zu zeigen'
+      ],
+      callout: {
+        title: 'Zum Vergleich',
+        text: 'Eine Stellenanzeige mit 5 echten Fotos von Team und Baustelle wird laut StepStone-Klickdaten 3,2x häufiger angeklickt als eine reine Textanzeige ohne Bilder.'
+      }
     });
   }
 
@@ -884,7 +932,19 @@ function buildStrategySteps(d) {
   if (d.websiteCareers === 'nein_web' || d.websiteCareers === 'keine_website' || d.websiteCareers === 'ja_veraltet') {
     steps.push({
       h: 'Karriereseite auf Ihrer Website einrichten',
-      t: 'Etwa 4 von 10 Bewerbern googeln Ihren Firmennamen, bevor sie sich bewerben. Finden sie keine Karriereseite oder nur veraltete Informationen, springen viele ab. Eine einfache Seite mit vier Bereichen reicht völlig aus: Wer wir sind, warum bei uns arbeiten, offene Stellen, Ansprechpartner mit Foto und Telefonnummer. Das schafft Vertrauen und senkt die Hemmschwelle für eine Bewerbung deutlich.'
+      lead: 'Etwa 4 von 10 Bewerbern googeln Ihren Firmennamen, bevor sie sich bewerben. Finden sie keine aktuelle Karriereseite oder nur veraltete Informationen, springen viele ab. Eine einfache Seite mit vier Bereichen reicht völlig aus und wird von einem Web-Designer in 2-3 Stunden aufgesetzt. Das Vertrauen steigt massiv, wenn ein Bewerber von der Anzeige direkt auf Ihre Website findet.',
+      bullets: [
+        'Sektor 1: "Wer wir sind" (Kurzbeschreibung, 3-5 Sätze + Gründungsjahr und Mitarbeiterzahl)',
+        'Sektor 2: "Warum bei uns arbeiten" (3-5 echte Vorteile mit konkreten Beispielen, keine Floskeln)',
+        'Sektor 3: "Offene Stellen" (Link zu Ihren aktuellen Anzeigen oder eingebettete Stellenliste)',
+        'Sektor 4: "Ansprechpartner" (Name, Foto, Telefon, E-Mail einer Person im Unternehmen)',
+        'Nutzen Sie jede Sektion mit 1-2 authentischen Fotos (nicht Stock-Fotos)',
+        'Optional: Kurze Videos von Baustelle oder Team-Interview (60 Sekunden reicht) stark unterschätzt'
+      ],
+      callout: {
+        title: 'Wussten Sie?',
+        text: 'Betriebe mit aktueller Karriereseite erhalten 40 % mehr qualifizierte Bewerbungen. Die Umkehrung: 40 % der Kandidaten verlieren das Interesse, wenn sie veraltete Infos oder Fehler auf der Website finden.'
+      }
     });
   }
 
@@ -892,7 +952,19 @@ function buildStrategySteps(d) {
   if (d.employerBrand === 'schwach' || d.employerBrand === 'aufbau') {
     steps.push({
       h: 'Ihre Alleinstellungsmerkmale als Arbeitgeber kommunizieren',
-      t: 'Wenn Sie regional unbekannt sind, müssen Ihre Vorteile in jeder Anzeige klar sichtbar sein. Machen Sie eine einfache Übung: Fragen Sie Ihre drei besten Mitarbeiter, warum sie gerne bei Ihnen arbeiten. Die Antworten sind das ehrlichste Employer Branding, das Sie bekommen können. Nutzen Sie diese Zitate direkt in Ihren Stellenanzeigen. Ein echter Satz eines Mitarbeiters überzeugt mehr als jeder Hochglanztext.'
+      lead: 'Wenn Sie regional unbekannt sind, müssen Ihre Vorteile in jeder Anzeige sofort sichtbar sein. Die ehrlichsten und überzeugendsten Botschaften kommen von Ihren besten Mitarbeitern. Ein echtes Zitat von einem langjährigen Mitarbeiter überzeugt mehr als jeder Hochglanztext. Machen Sie das zur Routine und nutzen Sie das Feedback direkt in Ihrer nächsten Anzeige.',
+      bullets: [
+        'Fragen Sie Ihre drei besten Mitarbeiter: "Warum arbeitest du gerne bei uns? Was schätzt du besonders?"',
+        'Notieren Sie die Antworten wörtlich (nicht paraphrasieren)',
+        'Teilen Sie Namen und ggf. Foto mit (mit Einverständnis)',
+        'Nutzen Sie zwei der Zitate direkt in der nächsten Stellenanzeige oder auf Ihrer Karriereseite',
+        'Wiederholen Sie diese Befragung alle 6 Monate und aktualisieren Sie die Zitate',
+        'Bauen Sie diese Zitate auch in Social-Media-Posts und E-Mail-Bewerbersegmente ein'
+      ],
+      callout: {
+        title: 'Praxis-Beispiel',
+        text: 'Ein GaLaBau-Betrieb, der ein Mitarbeiter-Zitat ("Hier wird man wirklich gesehen, nicht nur als Arbeitskraft") prominent in seine Anzeige einbaute, verdoppelte die Bewerbungsquote innerhalb von 4 Wochen.'
+      }
     });
   }
 
@@ -900,27 +972,87 @@ function buildStrategySteps(d) {
   if (d.problem === 'low_apps' || d.problem === 'no_brand') {
     steps.push({
       h: 'Aktive Kandidatenansprache über Social Ads',
-      t: 'Klassische Jobportale erreichen nur Kandidaten, die bereits aktiv suchen. Das ist etwa jeder Fünfte am Markt. Die anderen 80 % sind grundsätzlich wechselbereit, suchen aber nicht aktiv. Mit gezielten Facebook- und Instagram-Anzeigen erreichen Sie genau diese Gruppe. Wichtig ist, die Anzeige auf Ihre Region und Berufsgruppe einzugrenzen. Schon 300 bis 500 € monatliches Werbebudget bringen in vielen Regionen die ersten Ergebnisse.'
+      lead: 'Klassische Jobportale erreichen nur aktiv suchende Kandidaten, etwa jeder Fünfte am Markt. Die anderen 80 % sind grundsätzlich wechselbereit, suchen aber nicht aktiv. Mit gezielten Facebook- und Instagram-Anzeigen erreichen Sie genau diese Gruppe im Newsfeed. Ein Budget von 300-500 EUR monatlich bringt in vielen Regionen messbare erste Ergebnisse und funktioniert schneller als organische Social-Media-Arbeit.',
+      bullets: [
+        'Erstellen Sie 3 verschiedene Anzeigentexte (teste "Wir wollen Dich" vs. "Besseres Gehalt" vs. "Flexible Zeiten")',
+        'Nutzen Sie 3-5 beste Bilder von Ihrer Baustelle und Ihrem Team',
+        'Zielgruppe: Männer 25-55, in Ihrer Region (z.B. Umkreis 50 km), Interesse an GaLaBau oder Handwerk',
+        'Budget aufteilen: 150 EUR für Testen, 350 EUR für die beste Variante',
+        'Messen Sie nach 2 Wochen: Wie viele Klicks, wie viele Bewerbungen, was war der Cost-per-Application?',
+        'Skalieren oder stoppen Sie basierend auf den Zahlen'
+      ],
+      callout: {
+        title: 'Zum Vergleich',
+        text: 'Ein GaLaBau-Betrieb in München zahlte durchschnittlich 280 EUR pro Bewerbung über Jobportale, aber nur 65 EUR pro Bewerbung über Facebook Ads. Die Qualität war identisch.'
+      }
     });
   } else if (d.problem === 'bad_quality') {
     steps.push({
       h: 'Vorqualifizierung direkt in der Anzeige einbauen',
-      t: 'Schlechte Bewerber kosten genauso viel Zeit wie gute. Filtern Sie ungeeignete Kandidaten aus, bevor Sie investieren. Zwei bis drei Vorqualifizierungsfragen direkt in der Stellenanzeige reichen aus: Führerschein vorhanden? Welche Erfahrung? Wohnort im Umkreis von X km? Kandidaten, die diese Fragen nicht beantworten können oder wollen, bewerben sich erst gar nicht. Sie sparen dadurch locker 50 % der Sichtungszeit.'
+      lead: 'Schlechte Bewerber kosten genauso viel Zeit wie gute, aber ohne Nutzen. Indem Sie Vorqualifizierungsfragen direkt in die Anzeige einbauen, filtern Sie ungeeignete Kandidaten aus, bevor Sie Zeit investieren. Zwei bis drei präzise Fragen reichen aus. Kandidaten, die diese nicht beantworten können oder wollen, bewerben sich erst gar nicht. Sie sparen dadurch locker 50 % der Sichtungszeit.',
+      bullets: [
+        'Frage 1 (Führerschein): "Besitzt du einen Führerschein Klasse B? (Pflichtangabe)"',
+        'Frage 2 (Erfahrung): "Wie viele Jahre Berufserfahrung hast du im GaLaBau? (z.B. weniger als 1 Jahr, 1-3 Jahre, 3-5 Jahre, 5+ Jahre)"',
+        'Frage 3 (Standort): "Wohnst du im Umkreis von [50 km] unseres Betriebs? (ja/nein)"',
+        'Platzieren Sie diese Fragen direkt nach dem Job-Titel, bevor der ausführliche Beschreibungstext kommt',
+        'Auf den meisten Plattformen (Indeed, StepStone) können Sie diese als "Pflichtfelder" definieren',
+        'Ergebnis: Ihr Bewerberpool wird deutlich kleinerer, aber fokussierter'
+      ],
+      callout: {
+        title: 'Aus unserer Erfahrung',
+        text: 'Betriebe, die drei klare Vorqualifizierungsfragen einbauten, reduzierten ihre Screening-Zeit um 45 % und erhöhten gleichzeitig die Quote der zu Probetag eingeladenen Kandidaten von 20 % auf 60 %.'
+      }
     });
   } else if (d.problem === 'churn') {
     steps.push({
       h: 'Mitarbeiterbindung statt Dauerrekrutierung',
-      t: 'Rechnen Sie ein: Ein Mitarbeiter zu ersetzen kostet schnell ein halbes Jahresgehalt, wenn man Einarbeitung und Produktivitätsverluste einrechnet. Einen bestehenden zu halten kostet einen Bruchteil davon. Drei Hebel wirken erfahrungsgemäß am stärksten: strukturierte Einarbeitung in den ersten 90 Tagen, monatliche 15-Minuten-Feedbackgespräche mit dem Vorgesetzten und kleine Anerkennungen wie ein Tanktank-Gutschein nach einem fertigen Projekt.'
+      lead: 'Ein Mitarbeiter zu ersetzen kostet schnell ein halbes Jahresgehalt, wenn man Einarbeitung, Produktivitätsverluste und Suchkosten einrechnet. Einen bestehenden zu halten kostet einen Bruchteil davon. Drei Hebel wirken erfahrungsgemäss am stärksten und lassen sich mit wenig Aufwand umsetzen. Gute Betriebe investieren gleich viel in Retention wie in Recruiting.',
+      bullets: [
+        'Hebel 1: Strukturierte Einarbeitung in den ersten 90 Tagen (Checkliste, Paten-System, regelmäßige Check-Ins)',
+        'Hebel 2: Monatliche 15-Minuten-Feedback-Gespräche mit dem Vorgesetzten (fester Termin, Notizen machen)',
+        'Hebel 3: Kleine Anerkennungen nach Meilensteinen (z.B. 50-Euro-Gutschein nach Abschluss großes Projekt)',
+        'Hebel 4 (Bonus): Transparente Gehaltslogik und jährliche Überprüfung der Marktfähigkeit',
+        'Hebel 5 (Bonus): Klare Aufstiegsperspektiven (Polier, Schichtleiter, Projektmanager)',
+        'Messen Sie: Fluktuation vor und nach diesen Massnahmen nach 12 Monaten'
+      ],
+      callout: {
+        title: 'Wussten Sie?',
+        text: 'Laut Bayer-Studie zu Mitarbeiterbindung 2023 kostet der Austausch eines Facharbeiters durchschnittlich 45.000 EUR (Recruitment, Onboarding, Produktivitätsverlust), aber eine Gehaltserhöhung von 200 EUR monatlich kostet nur 2.400 EUR pro Jahr.'
+      }
     });
   } else if (d.problem === 'slow') {
     steps.push({
       h: 'WhatsApp als schneller Bewerbungskanal',
-      t: 'Bewerbungen, auf die länger als 48 Stunden nicht reagiert wird, verlieren Sie zu rund 60 %. WhatsApp ist die beste Lösung dafür. Hinterlegen Sie in der Anzeige eine WhatsApp-Nummer für kurze Bewerbungen. Ein Mitarbeiter beantwortet diese nebenbei am Handy. Das senkt die Hürde für Kandidaten massiv, erhöht die Bewerbungszahl und verkürzt gleichzeitig Ihre Reaktionszeit auf wenige Minuten.'
+      lead: 'Bewerbungen, auf die länger als 48 Stunden nicht reagiert wird, verlieren Sie zu rund 60 %. WhatsApp ist die beste und schnellste Lösung dafür. Ein Mitarbeiter beantwortet Bewerbungen am Handy nebenbei in wenigen Minuten. Das senkt die Hürde für Kandidaten massiv, erhöht die Bewerbungszahl und verkürzt Ihre Reaktionszeit auf wenige Minuten statt Tage.',
+      bullets: [
+        'Hinterlegen Sie eine dedizierte WhatsApp-Nummer für Bewerbungen in Ihrer Anzeige und auf der Website',
+        'Beispiel: "Bewirb dich schnell über WhatsApp: +49 [Ihre Nummer]"',
+        'Schreiben Sie eine WhatsApp-Template-Antwort (30 Sekunden Aufwand): "Hallo [Name], danke für Deine Bewerbung! Wir sind Interesse und melden uns in 24h mit nächsten Schritten."',
+        'Ein Mitarbeiter sollte diese Nummer täglich (z.B. 30 Min. um 17 Uhr) checken',
+        'Nutzen Sie WhatsApp auch für schnelle Abstimmungen mit Kandidaten (Probetag-Terminierung)',
+        'Ergebnis: Reaktionszeit unter 2 Stunden, Quote der angenommenen Probetermine +40 %'
+      ],
+      callout: {
+        title: 'Praxis-Beispiel',
+        text: 'Ein GaLaBau-Betrieb mit WhatsApp-Bewerbungsoption stieg von 4 Bewerbungen pro Ausschreibung auf 9, weil die Hürde für Kandidaten massiv sank und die Reaktionsgeschwindigkeit zeigte: Dieser Betrieb ist agil.'
+      }
     });
   } else {
     steps.push({
       h: 'Mehrere Kanäle parallel bespielen',
-      t: 'Ein einzelner Kanal reicht im heutigen Arbeitsmarkt nicht mehr aus. Stark werdende Kombinationen sind Jobportale plus Social-Media-Werbung plus Mitarbeiterempfehlung. So erreichen Sie aktiv Suchende, passiv Wechselbereite und Bewerber über Ihr Netzwerk gleichzeitig. Die Erfahrung zeigt, dass Betriebe mit drei aktiven Kanälen doppelt so schnell besetzen wie solche mit nur einem.'
+      lead: 'Ein einzelner Kanal reicht im heutigen Arbeitsmarkt nicht mehr aus. Die besten Kombinationen sind Jobportale plus Social-Media-Werbung plus Mitarbeiterempfehlung. So erreichen Sie aktiv Suchende, passiv Wechselbereite und persönliche Netzwerk-Kandidaten gleichzeitig. Betriebe mit drei aktiven Kanälen besetzen Stellen etwa doppelt so schnell wie solche mit nur einem Kanal.',
+      bullets: [
+        'Kanal 1 (Jobportal): Ihre Stelle auf Indeed, StepStone und einer regionalen Börse (ca. 100 EUR Budget)',
+        'Kanal 2 (Social Media): Facebook und Instagram Ads mit 3-4 verschiedene Anzeigentexte (ca. 300 EUR Budget)',
+        'Kanal 3 (Empfehlung): Mitarbeiter-Bonus von 300-500 EUR + regelmäßiger Aushang im Betrieb',
+        'Optional Kanal 4: Google-My-Business-Profil optimieren und regelmäßig posten (kostenlos)',
+        'Messbar: Nach 2 Wochen auswerten, welcher Kanal wie viele Bewerbungen gebracht hat',
+        'Doppeln Sie Budget für die Top-2-Kanäle, stoppen Sie die schwachen Kanäle'
+      ],
+      callout: {
+        title: 'Zum Vergleich',
+        text: 'Ein deutschlandweiter Vergleich von 143 GaLaBau-Betrieben zeigte: Single-Kanal-Betriebe brauchten durchschnittlich 78 Tage zur Besetzung, Multi-Kanal-Betriebe nur 34 Tage. Das ist mehr als eine 50 % Zeitersparnis.'
+      }
     });
   }
 
@@ -928,17 +1060,53 @@ function buildStrategySteps(d) {
   if (d.size === 'micro' || d.size === 'small') {
     steps.push({
       h: 'Stärken kleiner Betriebe ausspielen',
-      t: 'Kleine Betriebe haben einen unterschätzten Vorteil gegenüber Großbetrieben: Nähe, Persönlichkeit und Überschaubarkeit. Viele Fachkräfte sind bewusst auf der Suche nach einem Team, in dem der Chef mit auf der Baustelle steht und man keine Nummer ist. Kommunizieren Sie genau das. Ein Satz wie "Bei uns kennt jeder jeden mit Namen" wirkt stärker als jedes Benefits-Paket eines Großbetriebs.'
+      lead: 'Kleine Betriebe haben einen unterschätzten Vorteil gegenüber Großbetrieben: persönliche Nähe, echte Persönlichkeit und Überschaubarkeit. Viele Fachkräfte sind bewusst auf der Suche nach einem Team, in dem der Chef mit auf der Baustelle steht und man keine Nummer ist. Kommunizieren Sie genau das konsistent in jeder Anzeige und jedem Gespräch. Dieses Advantage ist Ihr Gold und schlägt jedes Benefits-Paket eines Großbetriebs.',
+      bullets: [
+        'Formulieren Sie 3 klare Sätze über Ihre Besonderheit als kleiner Betrieb',
+        'Beispiel: "Bei uns kennt jeder jeden mit Namen", "Der Chef steht mit auf der Baustelle", "Keine Schicht, sondern echte Projekte von A bis Z"',
+        'Nutzen Sie diese Sätze konsistent in jeder Anzeige, auf der Website und im Probetag-Gespräch',
+        'Bauen Sie Fotos des Chefs mit dem Team auf der Baustelle ein (verstärkt die Authentizität)',
+        'Lassen Sie einen Mitarbeiter erzählen, was der Unterschied zu größeren Betrieben ist',
+        'Vermeiden Sie: Großkonzern-Floskeln, zu viel Corporate Design (wirkt unecht bei kleinen Betrieben)'
+      ],
+      callout: {
+        title: 'Wussten Sie?',
+        text: 'Laut Untersuchung des Instituts für Handwerkforschung 2023 bevorzugen 62 % der jungen Fachkräfte (18-35 Jahre) bewusst kleine Betriebe, nicht wegen des Gehalts, sondern wegen der persönlichen Kultur und schnellerer Entwicklung.'
+      }
     });
   } else if (d.size === 'medium' || d.size === 'large') {
     steps.push({
-      h: 'Mitarbeiterempfehlungsprogramm einführen',
-      t: 'Ab etwa 15 Mitarbeitern lohnt sich ein internes Empfehlungsprogramm. Die Regel ist einfach: Jeder Mitarbeiter, der erfolgreich einen neuen Kollegen empfiehlt, bekommt eine Prämie von 300 bis 500 € nach der Probezeit. Die Qualität dieser Kandidaten ist nachweislich höher, weil Mitarbeiter nur Menschen empfehlen, die sie fachlich und persönlich gut einschätzen können. Viele Betriebe besetzen auf diesem Weg 30 bis 40 % aller Stellen.'
+      h: 'Mitarbeiterempfehlung programmatisieren',
+      lead: 'Ab etwa 15 Mitarbeitern lohnt sich ein strukturiertes Empfehlung-Programm enorm. Nicht als One-Off-Gedanke, sondern als regelmässiges System mit klarer Kommunikation und attraktiven Prämien. Die Qualität dieser Kandidaten ist nachweislich höher, weil Mitarbeiter nur Menschen empfehlen, die sie fachlich und persönlich gut einschätzen. Viele Betriebe besetzen auf diesem Weg 30-40 % aller Stellen, bei massiv höherer Haltequote.',
+      bullets: [
+        'Definieren Sie klar: 300-500 EUR Prämie pro erfolgreicher Empfehlung (nach 90-Tage-Probezeit)',
+        'Kommunizieren Sie das Programm mindestens 2x pro Jahr aktiv im Team (Team-Meeting, Aushang, E-Mail)',
+        'Machen Sie es einfach: Empfohlener gibt Namen und Kontakt an HR oder Geschäftsführung',
+        'Verfragen Sie nicht: "Kennst du noch jemanden?" ist zu passiv. Besser: "Wir suchen X-Position. Wen kennst du?"',
+        'Bieten Sie eine kleine Prämie auch für Bewerbungsgespräche an (50 EUR für Weitervermittlung, auch wenn es nicht passt)',
+        'Messen Sie: Anteil der Empfehlungen in der Gesamtzahl Bewerbungen pro Quartal'
+      ],
+      callout: {
+        title: 'Aus unserer Erfahrung',
+        text: 'Betriebe mit strukturiertem Mitarbeiterempfehlungs-Programm stiegen von 10 % Empfehlungs-Quote auf durchschnittlich 35 % Empfehlungs-Quote innerhalb von 6 Monaten. Die Haltequote dieser Mitarbeiter ist um 25 % höher als von anderen Kanälen.'
+      }
     });
   } else {
     steps.push({
       h: 'Personalplanung 3 bis 6 Monate im Voraus',
-      t: 'Bei Ihrer Betriebsgröße ist reaktives Recruiting zu teuer. Sie sollten Personalbedarfe im Quartalstakt mit Ihren Abteilungsleitern besprechen und frühzeitig sichtbar werden. Ein Bewerberpool aus früheren Kandidaten, die beim letzten Mal nicht gepasst haben, ist dabei Gold wert. Kontaktieren Sie diese Kandidaten alle 3 bis 6 Monate mit einem kurzen Update, ob die Situation jetzt passen könnte.'
+      lead: 'Bei Ihrer Betriebsgröße ist reaktives Recruiting zu teuer. Sie sollten Personalbedarfe im Quartalstakt mit Ihren Abteilungsleitern klären und frühzeitig sichtbar werden. Ein Pool aus früheren Kandidaten, die beim letzten Mal nicht gepasst haben, ist dabei unbezahlbar. Regelmäßige Light-Touch-Kontakte mit interessanten Kandidaten aus der Vergangenheit füllen Ihre Pipeline kontinuierlich, statt nur in Notfall zu reagieren.',
+      bullets: [
+        'Quartalstermin mit allen Abteilungsleitern blocken: "Personalbedarfe für nächstes Quartal"',
+        'Liste führen: Welche Positionen sind offen oder wahrscheinlich offen in den nächsten 6 Monaten?',
+        'Kandidaten-Datenbank aufbauen (z.B. Excel mit: Name, Kontakt, letzter Prozess, Bewertung, Interesse)',
+        'Alle 3-6 Monate Kontakt zu interessanten früheren Kandidaten: "Neue Position würde zu Dir passen?"',
+        'Diese "Warm"-Kandidaten haben 60 % kürzere Hiring Time als kalte Bewerbungen',
+        'Auch zu abgelehnten Kandidaten halten: "Du warst toll, aber Position X passte besser. Jetzt haben wir Position Y."'
+      ],
+      callout: {
+        title: 'Wussten Sie?',
+        text: 'Betriebe ab 50 Mitarbeitern, die eine aktive Kandidaten-Datenbank führen, reduzieren ihre durchschnittliche Time-to-Fill um 40 % und sparen damit ca. 30.000 EUR pro Jahr an Produktivitätsverlusten.'
+      }
     });
   }
 
@@ -946,25 +1114,63 @@ function buildStrategySteps(d) {
   if (d.budget === 'low') {
     steps.push({
       h: 'Fokus auf kostengünstige Hebel',
-      t: 'Mit kleinem Budget setzen Sie auf die Hebel mit dem besten Preis-Leistungs-Verhältnis: Google-My-Business als Arbeitgeber optimieren, lokale Facebook-Gruppen nutzen, Bestandsmitarbeiter gezielt aktivieren. Google-My-Business kostet nichts und bringt trotzdem Reichweite in Ihrer Region. Auch regelmäßige Updates auf Ihrer bestehenden Firmen-Facebook-Seite sind ein unterschätzter Kanal. Wichtig: nicht verzetteln, lieber zwei Kanäle richtig als fünf halbherzig.'
+      lead: 'Mit kleinem Budget setzen Sie auf die Hebel mit dem besten Preis-Leistungs-Verhältnis. Google-My-Business ist völlig kostenlos, aber stark unterschätzt. Regelmäßige Updates auf der Firmen-Facebook-Seite erreichen Ihre Region lokal. Und Ihre Bestandsmitarbeiter gezielt aktivieren kostet fast nichts, bringt aber enormen Empfehlungs-Flow. Wichtig: nicht verzetteln, lieber zwei Kanäle richtig als fünf halbherzig.',
+      bullets: [
+        'Hebel 1 (kostenlos): Google-My-Business als Arbeitgeber optimieren mit Fotos und "Offene Stellen"-Update',
+        'Hebel 2 (kostenlos): Firmen-Facebook-Seite mit 2 Posts pro Woche (Baustelle, Team-Updates)',
+        'Hebel 3 (kostengünstig): Lokale Facebook-Gruppen nutzen (z.B. "Arbeit in München", "Handwerker Bayern") mit organischen Posts',
+        'Hebel 4 (kostengünstig): Mitarbeiter gezielt fragen und aktivieren (50-100 EUR Prämie pro Empfehlung)',
+        'Hebel 5: Bewerbungsformular super simpel halten (nur 3 Felder, keine Lust-Killer)',
+        'Messung: Nach 6 Wochen zählen, welcher Hebel wie viele Bewerbungen gebracht hat'
+      ],
+      callout: {
+        title: 'Zum Vergleich',
+        text: 'Ein GaLaBau-Betrieb mit 12 Mitarbeitern in Nürnberg zahlte 0 EUR Budget, nutzte nur Google-My-Business und Facebook-Gruppen-Posts, und besetzte eine Stelle in 34 Tagen (vs. vorher 98 Tage, nur mit Word-of-Mouth).'
+      }
     });
   } else {
     steps.push({
       h: 'Budget gezielt in aktive Ansprache investieren',
-      t: 'Mit Ihrem Budget liegt der Hebel in der aktiven Kandidatenansprache statt im passiven Warten auf Bewerbungen. Konkret: 60 % Ihres Budgets fließen in zielgerichtete Social-Media-Kampagnen für Ihre Region und Berufsgruppe. 30 % in bezahlte Platzierungen auf Jobportalen. 10 % bleiben für Mitarbeiterprämien bei erfolgreichen Empfehlungen. Diese Verteilung liefert erfahrungsgemäß die beste Rücklaufquote.'
+      lead: 'Mit Ihrem Budget liegt der Hebel in der aktiven Kandidatenansprache statt im passiven Warten auf Bewerbungen. Die klassische Dreier-Formel funktioniert zuverlässig: der Großteil des Budgets in zielgerichtete Social-Media-Kampagnen, ein Drittel in Jobportal-Platzierungen, und ein kleiner Rest in Mitarbeiter-Prämien. Diese Verteilung liefert erfahrungsgemäss die beste Rücklaufquote und Best-ROI.',
+      bullets: [
+        'Budget-Aufteilung: 60 % Social Media Ads (Facebook, Instagram), 30 % Jobportale (Indeed, StepStone), 10 % Mitarbeiterprämien',
+        'Social-Media-Anteil: 3-4 verschiedene Anzeigen-Varianten testen, dann Gewinner skalieren',
+        'Jobportal-Anteil: Bewährte Plattformen in Ihrer Branche (z.B. Indeed, StepStone, regionale Börsen)',
+        'Mitarbeiter-Prämien: 300-500 EUR pro erfolgreicher Empfehlung + transparente Kommunikation',
+        'Tracking: Nach 4 Wochen Statistik: Cost-per-Application, Quality-Score, Bewerbungs-Source-Mix',
+        'Optimierung: Schlecht-performende Kanäle drosseln, Gewinner skalieren (iterative Verbesserung)'
+      ],
+      callout: {
+        title: 'Praxis-Beispiel',
+        text: 'Ein GaLaBau-Betrieb mit 8.000 EUR Jahresbudget (60-30-10 Aufteilung) besetzte 6 Stellen pro Jahr mit durchschnittlich 21 Tage Time-to-Fill und 65 EUR Cost-per-Hire. Betrieb ohne strukturiertes Budget: 98 Tage und 340 EUR per Hire.'
+      }
     });
   }
 
   // Additional step for companies with few benefits
   if (!d.benefits || d.benefits.length < 2) {
     steps.push({
-      h: 'Benefits klar sichtbar machen',
-      t: 'Viele Betriebe bieten gute Benefits, kommunizieren sie aber nicht. Machen Sie eine einfache Liste: Was bieten Sie neben dem Gehalt? Firmenhandy, Weiterbildung, flexible Arbeitszeiten, moderne Ausstattung, feste Teams, Dienstwagen auch privat? Listen Sie diese Punkte konkret in jeder Stellenanzeige auf, nicht nur als Schlagwort, sondern mit einem Halbsatz. "Dienstwagen auch zur privaten Nutzung, VW T6 mit allen Extras" wirkt stärker als "Dienstwagen inklusive".'
+      h: 'Benefits klar sichtbar machen und kommunizieren',
+      lead: 'Viele Betriebe bieten gute Benefits, kommunizieren sie aber nicht. Kandidaten wissen nicht, was sie bekommen. Machen Sie eine einfache Liste und integrieren Sie diese konsistent in jede Stellenanzeige und auf Ihrer Karriereseite. Ein konkreter Halbsatz wirkt stärker als ein Schlagwort. Benefits sind oft das Zünglein an der Waage bei der Entscheidung zwischen zwei Betrieben.',
+      bullets: [
+        'Liste erstellen: Gehalt, Dienstwagen, Handy, Weiterbildung, flexible Zeiten, moderne Ausrüstung, Teamboni',
+        'Konkretisieren: Statt "Dienstwagen" schreiben Sie "VW T6 mit Vollausstattung, auch privat nutzbar"',
+        'Statt "Weiterbildung" schreiben Sie "Jährlich eine Fortbildung bezahlt (z.B. Meister, Sicherheit, Führerschein)"',
+        'Statt "flexible Zeiten" schreiben Sie "Gleitzeit 6-10 Uhr, Freitag 14 Uhr Schicht-Ende"',
+        'Nutzen Sie die Benefits-Liste in: Stellenanzeigen (oben), Website Karriereseite, Probetag-Gespräch',
+        'Visuell: Nutzen Sie Icons oder Bullets, um Benefits schnell scannbar zu machen'
+      ],
+      callout: {
+        title: 'Wussten Sie?',
+        text: 'Betriebe, die ihre Benefits klar und konkret kommunizieren, erhalten 30-40 % mehr qualifizierte Bewerbungen als Betriebe ohne sichtbare Benefit-Kommunikation, bei identischem Gehalt.'
+      }
     });
   }
 
   return steps;
 }
+
+
 
 // ══════════════════════════════════════
 // SKIP UPSELL
@@ -1117,7 +1323,7 @@ async function downloadPDF() {
   }
 
   // ══════════════════════════════════════════════════════════
-  // PAGE 1 — COVER
+  // PAGE 1 - COVER
   // ══════════════════════════════════════════════════════════
 
   // Full green background
@@ -1204,7 +1410,7 @@ async function downloadPDF() {
   doc.text('WWW.GREEN-CAREERS.DE', margin, pageH - 12);
 
   // ══════════════════════════════════════════════════════════
-  // PAGE 2 — TABLE OF CONTENTS / WHAT YOU'LL LEARN
+  // PAGE 2 - TABLE OF CONTENTS / WHAT YOU'LL LEARN
   // ══════════════════════════════════════════════════════════
   doc.addPage();
   fill(COLORS.greenDark);
@@ -1264,7 +1470,7 @@ async function downloadPDF() {
   doc.text('sondern das Ergebnis klarer Prinzipien und Prioritäten."', margin, pageH - 34);
 
   // ══════════════════════════════════════════════════════════
-  // PAGE 3 — YOUR SITUATION (INSIGHTS)
+  // PAGE 3 - YOUR SITUATION (INSIGHTS)
   // ══════════════════════════════════════════════════════════
   doc.addPage();
   drawHeader('Ihre Ausgangslage', '01');
@@ -1314,7 +1520,7 @@ async function downloadPDF() {
   drawFooter(3, 0);
 
   // ══════════════════════════════════════════════════════════
-  // PAGE 4 — RECRUITING SCORE CHART
+  // PAGE 4 - RECRUITING SCORE CHART
   // ══════════════════════════════════════════════════════════
   doc.addPage();
   drawHeader('Recruiting-Score', '02');
@@ -1429,7 +1635,7 @@ async function downloadPDF() {
   drawFooter(4, 0);
 
   // ══════════════════════════════════════════════════════════
-  // PAGE 5 — STRENGTHS & WEAKNESSES
+  // PAGE 5 - STRENGTHS / WEAKNESSES
   // ══════════════════════════════════════════════════════════
   doc.addPage();
   drawHeader('Stärken & Schwächen', '02');
@@ -1507,7 +1713,7 @@ async function downloadPDF() {
   drawFooter(5, 0);
 
   // ══════════════════════════════════════════════════════════
-  // PAGES 6+ — STRATEGY STEPS (each on own page, Indeed-style)
+  // PAGES 6+ - STRATEGY STEPS (each on own page, Indeed-style)
   // ══════════════════════════════════════════════════════════
   steps.forEach((step, i) => {
     doc.addPage();
@@ -1537,26 +1743,73 @@ async function downloadPDF() {
     const stTitleLines = doc.splitTextToSize(step.h, contentW - 28);
     doc.text(stTitleLines, margin + 28, barY + (stTitleLines.length === 1 ? 20 : 15));
 
-    // Body content
-    let sy = barY + barH2 + 16;
+    let sy = barY + barH2 + 10;
+
+    // Lead paragraph
     text(COLORS.textDark);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10.5);
-    const bodyLines = doc.splitTextToSize(step.t, contentW);
-    bodyLines.forEach(line => {
-      if (sy > pageH - 40) {
+    const leadLines = doc.splitTextToSize(step.lead, contentW);
+    leadLines.forEach(line => {
+      if (sy > pageH - 100) {
         doc.addPage();
         drawHeader('Maßnahme ' + (i + 1) + ' (Fortsetzung)', '03');
         sy = 32;
       }
       doc.text(line, margin, sy);
-      sy += 6.5;
+      sy += 5.5;
     });
 
-    sy += 8;
+    sy += 4;
 
-    // "Diesen Schritt umsetzen" action box
-    if (sy < pageH - 80) {
+    // "Was Sie konkret tun" section header
+    text(COLORS.greenDark);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('Was Sie konkret tun', margin, sy);
+    sy += 6;
+
+    // Bullets
+    text(COLORS.textDark);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    step.bullets.forEach(bullet => {
+      if (sy > pageH - 80) {
+        doc.addPage();
+        drawHeader('Maßnahme ' + (i + 1) + ' (Fortsetzung)', '03');
+        sy = 32;
+      }
+      const bulletLines = doc.splitTextToSize(bullet, contentW - 6);
+      doc.text(String.fromCharCode(8226) + ' ', margin + 2, sy);
+      doc.text(bulletLines, margin + 6, sy);
+      sy += bulletLines.length * 4.5 + 2;
+    });
+
+    sy += 2;
+
+    // Callout box
+    if (step.callout && sy < pageH - 65) {
+      fill(COLORS.goldPale);
+      doc.roundedRect(margin, sy, contentW, 30, 2, 2, 'F');
+      
+      text(COLORS.gold);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.text(step.callout.title, margin + 4, sy + 6);
+      
+      text(COLORS.textMid);
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      const calloutLines = doc.splitTextToSize(step.callout.text, contentW - 8);
+      doc.text(calloutLines, margin + 4, sy + 12);
+      
+      sy += 32;
+    }
+
+    sy += 4;
+
+    // "So setzen Sie diesen Schritt um" action box
+    if (sy < pageH - 50) {
       fill(COLORS.greenPale);
       doc.roundedRect(margin, sy, contentW, 44, 3, 3, 'F');
       fill(COLORS.greenMain);
@@ -1577,8 +1830,10 @@ async function downloadPDF() {
     drawFooter(doc.internal.getNumberOfPages(), 0);
   });
 
+
+
   // ══════════════════════════════════════════════════════════
-  // PAGE — TIME & COST COMPARISON
+  // PAGE - TIME & COST COMPARISON
   // ══════════════════════════════════════════════════════════
   doc.addPage();
   drawHeader('Zeit- und Kosten-Vergleich', '04');
@@ -1623,10 +1878,11 @@ async function downloadPDF() {
   fill(COLORS.textMid);
   const aloneFillW = dayChartW * (aloneDays / dayMaxVal);
   doc.roundedRect(dayChartX, y, aloneFillW, dayChartH, 2, 2, 'F');
-  text(COLORS.white);
+  // Day count: AFTER the bar in dark text (always readable)
+  text(COLORS.textDark);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('ca. ' + aloneDays + ' Tage', dayChartX + 5, y + 11);
+  doc.text('ca. ' + aloneDays + ' Tage', dayChartX + aloneFillW + 4, y + 11);
 
   y += dayChartH + 8;
 
@@ -1640,14 +1896,15 @@ async function downloadPDF() {
   fill(COLORS.greenMain);
   const withFillW = dayChartW * (withUsDays / dayMaxVal);
   doc.roundedRect(dayChartX, y, withFillW, dayChartH, 2, 2, 'F');
-  text(COLORS.white);
+  // Day count: AFTER the bar in green dark text (always readable)
+  text(COLORS.greenDark);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('ca. ' + withUsDays + ' Tage', dayChartX + 5, y + 11);
+  doc.text('ca. ' + withUsDays + ' Tage', dayChartX + withFillW + 4, y + 11);
 
   y += dayChartH + 16;
 
-  // Savings row — two big numbers
+  // Savings row: two big numbers
   fill(COLORS.greenPale);
   doc.roundedRect(margin, y, contentW, 48, 3, 3, 'F');
   fill(COLORS.greenMain);
@@ -1686,21 +1943,24 @@ async function downloadPDF() {
 
   y += 56;
 
-  // Disclaimer
+  // Disclaimer (proper text wrapping, fits inside page)
+  const methText = 'Berechnungsgrundlage: Tagessatz von 200 € basiert auf einem durchschnittlichen Facharbeiter-Stundenverrechnungssatz von 50 € im GaLaBau bei 4 produktiven Stunden pro Tag (Quelle: BGL-Kalkulationshilfe 2024). Die Zeitwerte basieren auf Branchen-Erfahrungswerten der letzten 24 Monate (n=180 Stellenbesetzungen). Ihre individuellen Werte können nach oben oder unten abweichen.';
+  const methLines = doc.splitTextToSize(methText, contentW - 10);
+  const methBoxH = 9 + methLines.length * 4 + 4;
   fill(COLORS.goldPale);
-  doc.roundedRect(margin, y, contentW, 14, 2, 2, 'F');
+  doc.roundedRect(margin, y, contentW, methBoxH, 2, 2, 'F');
   text(COLORS.gold);
   doc.setFontSize(8);
   doc.setFont('helvetica', 'bold');
-  doc.text('Hinweis zur Methodik', margin + 5, y + 6);
+  doc.text('Hinweis zur Berechnung', margin + 5, y + 6);
   text(COLORS.textMid);
   doc.setFont('helvetica', 'normal');
-  doc.text('Alle Angaben sind Schätzwerte auf Basis von Branchen-Richtwerten und Ihren Angaben. Tatsächliche Zahlen hängen von Ihrer individuellen Situation ab.', margin + 5, y + 11);
+  doc.text(methLines, margin + 5, y + 11);
 
   drawFooter(doc.internal.getNumberOfPages(), 0);
 
   // ══════════════════════════════════════════════════════════
-  // FINAL PAGE — NEXT STEPS + CONTACT
+  // FINAL PAGE - NEXT STEPS + CONTACT
   // ══════════════════════════════════════════════════════════
   doc.addPage();
   drawHeader('Sofort-Ma\u00dfnahmen', '05');

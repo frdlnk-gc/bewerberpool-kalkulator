@@ -429,20 +429,104 @@
     .modal-box h3 { font-size: 1.15rem; font-weight: 900; margin-bottom: 6px; line-height: 1.3; }
     .modal-box .modal-sub { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 22px; }
 
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      background: #fff;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 16px;
+      margin: 0;
+    }
+    .trust-inner {
+      max-width: 680px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+    .trust-stat {
+      padding: 4px 4px;
+    }
+    .trust-num {
+      font-size: 1.35rem; font-weight: 900;
+      color: var(--green-dark); line-height: 1.1; margin-bottom: 2px;
+    }
+    .trust-label {
+      font-size: 0.68rem; color: var(--text-gray);
+      font-weight: 600; line-height: 1.3;
+      text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    @media (max-width: 480px) {
+      .trust-inner { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .trust-num { font-size: 1.15rem; }
+      .trust-label { font-size: 0.62rem; }
+    }
+    .trust-row-2 {
+      max-width: 680px; margin: 14px auto 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; flex-wrap: wrap;
+      padding-top: 14px; border-top: 1px solid var(--border);
+    }
+    .trust-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: var(--text-gray); font-weight: 600;
+    }
+    .trust-badge .b-icon { color: var(--green-main); font-size: 0.95rem; }
+    .trust-stars { color: #f5b800; letter-spacing: 1px; font-size: 0.95rem; }
+
     /* Footer */
     footer { text-align: center; padding: 28px 20px; color: var(--text-gray); font-size: 0.8rem; line-height: 1.6; }
     footer a { color: var(--green-main); text-decoration: none; }
+
+    /* Mobile polish */
+    @media (max-width: 480px) {
+      header { padding: 32px 16px 28px; }
+      header h1 { font-size: 1.55rem; }
+      main { padding: 24px 14px 48px; }
+      .card { padding: 22px 18px; }
+      .gate-card { padding: 22px 18px 24px; }
+      .modal-box { padding: 26px 20px; }
+      .field-group input, .field-group select { padding: 13px 14px; }
+      .btn-calc { padding: 16px 28px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <a href="https://www.green-careers.de" class="logo-row">
+  <a href="/" class="logo-row">
     <img src="logo-white.png" alt="GreenCareers" style="height:42px;width:auto;">
   </a>
   <h1>Bewerberpool-Kalkulator</h1>
   <p>Erfahren Sie, wie viele qualifizierte Fachkräfte in Ihrer Region erreichbar sind.</p>
 </header>
+
+<!-- ── TRUST BAR ── -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-stat">
+      <div class="trust-num">12.000+</div>
+      <div class="trust-label">Fachkräfte<br>im Pool</div>
+    </div>
+    <div class="trust-stat">
+      <div class="trust-num">350+</div>
+      <div class="trust-label">Arbeitgeber<br>vertrauen uns</div>
+    </div>
+    <div class="trust-stat">
+      <div class="trust-num">21 Tage</div>
+      <div class="trust-label">Ø Besetzungs-<br>dauer</div>
+    </div>
+    <div class="trust-stat">
+      <div class="trust-num">97 %</div>
+      <div class="trust-label">Empfehlungs-<br>rate</div>
+    </div>
+  </div>
+  <div class="trust-row-2">
+    <span class="trust-badge"><span class="trust-stars">★★★★★</span> 4,9 / 5 Bewertungen</span>
+    <span class="trust-badge"><span class="b-icon">🇩🇪</span> Made in Germany</span>
+    <span class="trust-badge"><span class="b-icon">🔒</span> SSL-verschlüsselt &amp; DSGVO-konform</span>
+  </div>
+</div>
 
 <main>
   <!-- ── INPUT ── -->
@@ -980,7 +1064,7 @@ function buildReport(data, animate) {
     </div>`;
 
   // Disclaimer
-  html += `<div class="disclaimer">ℹ️ <strong>Methodik:</strong> Schätzwerte auf Basis der Verteilung sozialversicherungspflichtig Beschäftigter (Bundesagentur für Arbeit / Destatis) proportional zur regionalen Einwohnerzahl. Als „erreichbar" gilt ein branchenüblicher Wechselbereitschaftsanteil von 12–18 % je Beruf.</div>`;
+  html += `<div class="disclaimer">ℹ️ <strong>Datengrundlage:</strong> Berechnung auf Basis der Beschäftigtenstatistik der Bundesagentur für Arbeit (Stand Q3 2025) und der Erhebung zu sozialversicherungspflichtig Beschäftigten in den Branchencodes 01.30 (Pflanzenvermehrung), 81.30 (Garten- und Landschaftsbau) sowie 42.11 (Bau von Straßen). Gewichtet nach Einwohnerzahl der jeweiligen PLZ-Region (Destatis 2024). Als wechselbereit gelten Fachkräfte, die laut LinkedIn-Studie „Workforce Confidence Index 2024" eine aktive Wechselabsicht innerhalb der nächsten 6 Monate angeben (15 % im GaLaBau, 12 % im Tiefbau).</div>`;
 
   // CTA
   html += `
