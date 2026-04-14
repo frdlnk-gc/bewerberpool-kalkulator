@@ -620,20 +620,43 @@ setTimeout(() => {
   }
 }, 100);
 
-// Check if returning from successful payment
+// Check if returning from successful payment - use localStorage (cross-tab!)
 if (params.get('paid') === 'true') {
-  try {
-    const savedData = sessionStorage.getItem('gc_strategy_data');
-    if (savedData) {
-      _companyData = JSON.parse(savedData);
-      // Hide the form, show strategy directly
-      setTimeout(() => {
+  window.addEventListener('DOMContentLoaded', function() {
+    try {
+      const savedData = localStorage.getItem('gc_strategy_data') || sessionStorage.getItem('gc_strategy_data');
+      if (savedData) {
+        _companyData = JSON.parse(savedData);
+        // Hide the form, payment section, skip-link
         document.getElementById('strategyForm').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'none';
+        const skipLinks = document.querySelectorAll('.skip-link');
+        skipLinks.forEach(el => el.style.display = 'none');
+        // Show strategy
         showStrategy();
-      }, 100);
-    }
-  } catch(e) { console.log('Error restoring strategy:', e); }
+        // Mark as used - clear data so strategy can't be re-accessed without paying again
+        setTimeout(() => {
+          localStorage.removeItem('gc_strategy_data');
+        }, 3000);
+      } else {
+        // No saved data - show error message
+        const upsellBody = document.querySelector('.upsell-body');
+        if (upsellBody) {
+          upsellBody.innerHTML = `
+            <div style="text-align:center;padding:40px 20px">
+              <div style="font-size:2.5rem;margin-bottom:16px">✅</div>
+              <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:8px">Zahlung erfolgreich!</h3>
+              <p style="font-size:0.9rem;color:var(--text-gray);line-height:1.5;max-width:400px;margin:0 auto 16px">
+                Vielen Dank für Ihren Kauf. Ihre personalisierte Recruiting-Strategie senden wir Ihnen innerhalb von 24 Stunden per E-Mail zu.
+              </p>
+              <p style="font-size:0.85rem;color:var(--text-gray)">
+                Bei Fragen erreichen Sie uns unter <a href="mailto:info@green-careers.de" style="color:var(--green-main)">info@green-careers.de</a>
+              </p>
+            </div>`;
+        }
+      }
+    } catch(e) { console.log('Error restoring strategy:', e); }
+  });
 }
 
 // ══════════════════════════════════════
@@ -748,25 +771,27 @@ function processPayment() {
   // Slack notification
   sendSlackNotification('payment');
 
-  // Save form data to sessionStorage for return from Stripe
+  // Save form data to localStorage (persists across tabs and Stripe redirect)
+  localStorage.setItem('gc_strategy_data', JSON.stringify(_companyData));
+  localStorage.setItem('gc_lead', JSON.stringify(leadData));
   sessionStorage.setItem('gc_strategy_data', JSON.stringify(_companyData));
   sessionStorage.setItem('gc_lead', JSON.stringify(leadData));
 
-  // Show waiting state
+  // Show waiting state briefly
   document.getElementById('paymentSection').innerHTML = `
     <div style="text-align:center;padding:40px 20px">
       <div style="font-size:2.5rem;margin-bottom:16px">🔄</div>
-      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:8px">Zahlung wird verarbeitet…</h3>
-      <p style="font-size:0.88rem;color:var(--text-gray);line-height:1.5;max-width:360px;margin:0 auto 16px">
-        Sie werden zu Stripe weitergeleitet. Nach erfolgreicher Zahlung kommen Sie automatisch hierher zurück und Ihre Strategie wird freigeschaltet.
-      </p>
-      <p style="font-size:0.8rem;color:var(--text-gray)">
-        Falls das Fenster sich nicht öffnet: <a href="https://buy.stripe.com/test_dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=\${encodeURIComponent(email)}" target="_blank" style="color:var(--green-main);font-weight:600">Hier klicken</a>
+      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:8px">Sie werden zu Stripe weitergeleitet…</h3>
+      <p style="font-size:0.88rem;color:var(--text-gray);line-height:1.5;max-width:360px;margin:0 auto">
+        Nach erfolgreicher Zahlung werden Sie automatisch hierher zurückgeleitet und Ihre Strategie wird freigeschaltet.
       </p>
     </div>`;
 
-  // Open Stripe Payment Link in new tab
-  window.open('https://buy.stripe.com/test_dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=' + encodeURIComponent(email), '_blank');
+  // Redirect to Stripe in the SAME tab (localStorage persists after redirect)
+  const stripeUrl = 'https://buy.stripe.com/test_dRm6ozgFS6Zd8kTgif3wQ00?prefilled_email=' + encodeURIComponent(email);
+  setTimeout(() => {
+    window.location.href = stripeUrl;
+  }, 800);
 }
 
 // ══════════════════════════════════════
