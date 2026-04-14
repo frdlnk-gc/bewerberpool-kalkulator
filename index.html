@@ -448,10 +448,26 @@
     .trust-chip .b-icon { font-size: 0.95rem; }
     .trust-stars { color: #f5b800; letter-spacing: 0.5px; font-size: 0.9rem; font-weight: 700; }
     .trust-bar strong { color: var(--green-dark); font-weight: 800; }
+    /* Google mini-logo (multicolored) */
+    .g-mini-logo {
+      font-family: Arial, sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: -0.3px;
+      line-height: 1;
+    }
+    .g-mini-logo span:nth-child(1) { color: #4285F4; }
+    .g-mini-logo span:nth-child(2) { color: #EA4335; }
+    .g-mini-logo span:nth-child(3) { color: #FBBC05; }
+    .g-mini-logo span:nth-child(4) { color: #4285F4; }
+    .g-mini-logo span:nth-child(5) { color: #34A853; }
+    .g-mini-logo span:nth-child(6) { color: #EA4335; }
 
     @media (max-width: 480px) {
       .trust-bar { padding: 9px 12px; }
-      .trust-bar-inner { gap: 10px 14px; font-size: 0.74rem; }
+      .trust-bar-inner { gap: 8px 12px; font-size: 0.72rem; }
+      .g-mini-logo { font-size: 0.82rem; }
+      .trust-stars { font-size: 0.82rem; }
     }
 
     /* ── SOCIAL PROOF (Google Reviews block — below calculator) ── */
@@ -461,7 +477,14 @@
     }
     .reviews-header {
       display: flex; align-items: center; justify-content: center;
-      gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
+      gap: 10px; margin-bottom: 22px; flex-wrap: wrap;
+      text-align: center;
+    }
+    @media (max-width: 480px) {
+      .reviews-header { flex-direction: column; gap: 6px; }
+      .reviews-section { margin-top: 4px; }
+      .review-card { padding: 18px 16px 16px; }
+      .review-text { font-size: 0.88rem; }
     }
     .reviews-header .g-logo {
       font-family: Arial, sans-serif; font-weight: 700; font-size: 1.15rem;
@@ -481,15 +504,15 @@
     .reviews-header .rating-badge .rating-stars { color: #f5b800; letter-spacing: 1px; }
 
     .reviews-grid {
-      display: grid; gap: 12px;
+      display: grid; gap: 14px;
       grid-template-columns: 1fr;
     }
-    @media (min-width: 600px) {
-      .reviews-grid { grid-template-columns: 1fr 1fr 1fr; }
+    @media (min-width: 640px) {
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
     }
     .review-card {
       background: #fff; border: 1px solid var(--border);
-      border-radius: 14px; padding: 18px 18px 16px;
+      border-radius: 14px; padding: 20px 20px 18px;
       box-shadow: 0 1px 4px rgba(27,94,32,0.04);
     }
     .review-header {
@@ -503,6 +526,7 @@
     .avatar-1 { background: linear-gradient(135deg, #4caf50, #2e7d32); }
     .avatar-2 { background: linear-gradient(135deg, #ef6c00, #c62828); }
     .avatar-3 { background: linear-gradient(135deg, #1976d2, #0d47a1); }
+    .avatar-4 { background: linear-gradient(135deg, #8e24aa, #4a148c); }
     .review-meta { flex: 1; line-height: 1.2; min-width: 0; }
     .review-name { font-size: 0.88rem; font-weight: 700; color: var(--text-dark); }
     .review-date { font-size: 0.72rem; color: var(--text-gray); margin-top: 2px; }
@@ -517,6 +541,29 @@
     }
     .review-verified::before {
       content: '✓'; color: var(--green-main); font-weight: 900;
+    }
+
+    /* Bottom stats row */
+    .bottom-stats {
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; margin-top: 24px; flex-wrap: wrap;
+      font-size: 0.82rem; color: var(--text-gray);
+    }
+    .bs-item {
+      display: inline-flex; align-items: baseline; gap: 6px;
+    }
+    .bs-item strong { color: var(--green-dark); font-size: 1rem; font-weight: 800; }
+    .bs-sep { opacity: 0.4; font-weight: 700; }
+    .made-with-love {
+      text-align: center; margin-top: 18px;
+      font-size: 0.82rem; color: var(--text-gray);
+    }
+
+    @media (max-width: 480px) {
+      .bottom-stats { gap: 8px 14px; font-size: 0.78rem; }
+      .bs-item { flex-direction: row; }
+      .bs-item strong { font-size: 0.92rem; }
+      .bs-sep { display: none; }
     }
 
     /* Footer */
@@ -546,11 +593,15 @@
   <p>Erfahren Sie, wie viele qualifizierte Fachkräfte in Ihrer Region erreichbar sind.</p>
 </header>
 
-<!-- ── SLIM TRUST BAR (above the fold, max 3 signals) ── -->
+<!-- ── SLIM TRUST BAR (above the fold) ── -->
 <div class="trust-bar">
   <div class="trust-bar-inner">
-    <span class="trust-chip"><span class="trust-stars">★★★★★</span> <strong>4,9</strong>&nbsp;/&nbsp;5</span>
-    <span class="trust-chip"><strong>500+</strong> Arbeitgeber vertrauen uns</span>
+    <span class="trust-chip">
+      <span class="g-mini-logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></span>
+      <strong>4,9</strong>
+      <span class="trust-stars">★★★★★</span>
+    </span>
+    <span class="trust-chip"><strong>500+</strong> Arbeitgeber</span>
     <span class="trust-chip"><span class="b-icon">🔒</span> DSGVO-konform</span>
   </div>
 </div>
@@ -594,53 +645,66 @@
     <div class="reviews-grid">
       <div class="review-card">
         <div class="review-header">
-          <div class="review-avatar avatar-1">MS</div>
+          <div class="review-avatar avatar-1">TK</div>
           <div class="review-meta">
-            <div class="review-name">Markus Schmitt</div>
-            <div class="review-date">GaLaBau-Betrieb, Köln · vor 2 Monaten</div>
+            <div class="review-name">Tobias Knauf</div>
+            <div class="review-date">vor einer Woche</div>
           </div>
         </div>
         <div class="review-stars">★★★★★</div>
-        <div class="review-text">„Wir hatten unsere offene Vorarbeiter-Stelle über 4 Monate ausgeschrieben. Mit GreenCareers kamen in der ersten Woche 9 Bewerbungen, innerhalb von 3 Wochen war die Stelle besetzt. Klare Empfehlung."</div>
+        <div class="review-text">„Nach kurzer Zeit hatte ich mehr als 20 Bewerber auf meine ausgeschriebene Stelle im Garten- und Landschaftsbau. Ich kann GreenCareers jedem Arbeitgeber und Arbeitnehmer nur empfehlen. Man investiert 30 Minuten, um seine Unternehmensdaten einzugeben, und alles läuft unkompliziert. Sollte ich nochmal einen Mitarbeiter suchen, werde ich mich sofort an GreenCareers wenden."</div>
         <div class="review-verified">Verifizierte Google-Bewertung</div>
       </div>
 
       <div class="review-card">
         <div class="review-header">
-          <div class="review-avatar avatar-2">SK</div>
+          <div class="review-avatar avatar-2">BD</div>
           <div class="review-meta">
-            <div class="review-name">Sabine Krüger</div>
-            <div class="review-date">Landschaftsbau, Hannover · vor 3 Wochen</div>
+            <div class="review-name">Boas Diehl</div>
+            <div class="review-date">vor einer Woche</div>
           </div>
         </div>
         <div class="review-stars">★★★★★</div>
-        <div class="review-text">„Endlich eine Plattform, die unsere Branche wirklich versteht. Die Bewerber waren vorqualifiziert und passten zur Region. Das spart uns Stunden beim Sichten."</div>
+        <div class="review-text">„Unkomplizierte Plattform, bei der es einen guten Rücklauf von mehreren Bewerbern pro Tag gegeben hat. Eine gute, unkomplizierte und offene Kommunikation der Mitarbeiter erleichtern die Zusammenarbeit! Vielen Dank für Eure Bemühungen! Die Plattform kann man weiterempfehlen!"</div>
         <div class="review-verified">Verifizierte Google-Bewertung</div>
       </div>
 
       <div class="review-card">
         <div class="review-header">
-          <div class="review-avatar avatar-3">TH</div>
+          <div class="review-avatar avatar-3">AH</div>
           <div class="review-meta">
-            <div class="review-name">Thorsten Hartmann</div>
-            <div class="review-date">Straßen- &amp; Tiefbau, Leipzig · vor 1 Monat</div>
+            <div class="review-name">Alexander Hildebrand</div>
+            <div class="review-date">vor 3 Wochen</div>
           </div>
         </div>
         <div class="review-stars">★★★★★</div>
-        <div class="review-text">„Ehrlich gesagt war ich skeptisch, aber der Kalkulator gab uns realistische Zahlen für unsere Region. Jetzt haben wir 2 neue Straßenbauer im Team. Saubere Sache."</div>
+        <div class="review-text">„Die Zusammenarbeit mit GreenCareers war insgesamt sehr positiv. Das Team ist freundlich, kompetent und engagiert. Besonders angenehm war die offene und wertschätzende Kommunikation. Insgesamt eine gute Erfahrung – gerne wieder!"</div>
+        <div class="review-verified">Verifizierte Google-Bewertung</div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-avatar avatar-4">MT</div>
+          <div class="review-meta">
+            <div class="review-name">Maryna Türr</div>
+            <div class="review-date">Gärten von Gärtner GmbH · vor einem Monat</div>
+          </div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">„Gute Plattform, wo sich die Landschaftsgärtner einfach unkompliziert bewerben können. Gute schnelle Kommunikation mit dem GreenCareers-Team."</div>
         <div class="review-verified">Verifizierte Google-Bewertung</div>
       </div>
     </div>
 
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap;font-size:0.78rem;color:var(--text-gray)">
-      <span style="display:inline-flex;align-items:center;gap:6px"><strong style="color:var(--green-dark);font-size:0.95rem">15.000+</strong> Fachkräfte im Pool</span>
-      <span style="opacity:0.4">·</span>
-      <span style="display:inline-flex;align-items:center;gap:6px"><strong style="color:var(--green-dark);font-size:0.95rem">Ø 34 Tage</strong> Besetzungsdauer</span>
-      <span style="opacity:0.4">·</span>
-      <span style="display:inline-flex;align-items:center;gap:6px"><strong style="color:var(--green-dark);font-size:0.95rem">93 %</strong> Empfehlungsrate</span>
+    <div class="bottom-stats">
+      <div class="bs-item"><strong>15.000+</strong><span>Fachkräfte im Pool</span></div>
+      <div class="bs-sep">·</div>
+      <div class="bs-item"><strong>Ø 34 Tage</strong><span>Besetzungsdauer</span></div>
+      <div class="bs-sep">·</div>
+      <div class="bs-item"><strong>93 %</strong><span>Empfehlungsrate</span></div>
     </div>
 
-    <div style="text-align:center;margin-top:18px;font-size:0.78rem;color:var(--text-gray)">
+    <div class="made-with-love">
       Made with <span style="color:#e63946">♥</span> in Germany für den GaLaBau
     </div>
   </div>
