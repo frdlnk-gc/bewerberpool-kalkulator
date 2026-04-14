@@ -915,10 +915,9 @@ if (params.get('paid') === 'true') {
         const skipLinks = document.querySelectorAll('.skip-link');
         skipLinks.forEach(el => el.style.display = 'none');
 
-        // Slack + Email notification: TRIGGER ONLY AFTER SUCCESSFUL PAYMENT
+        // Make.com-Notification (Slack + E-Mail): NUR NACH ERFOLGREICHER ZAHLUNG
         if (!localStorage.getItem('gc_payment_notified')) {
           sendSlackNotification('payment_completed');
-          sendEmailNotification('payment_completed');
           localStorage.setItem('gc_payment_notified', '1');
           // Clear flag after 5 min so user can buy again if needed
           setTimeout(() => localStorage.removeItem('gc_payment_notified'), 5 * 60 * 1000);
