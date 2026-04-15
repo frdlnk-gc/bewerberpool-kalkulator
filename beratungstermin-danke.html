@@ -107,8 +107,8 @@
     .price-row {
       display: flex; align-items: baseline; gap: 10px; margin-top: 14px;
     }
-    .price-main { font-size: 2rem; font-weight: 900; }
-    .price-old  { font-size: 1rem; opacity: 0.6; text-decoration: line-through; }
+    .price-main { font-size: 2rem; font-weight: 900; white-space: nowrap; }
+    .price-old  { font-size: 1rem; opacity: 0.6; text-decoration: line-through; white-space: nowrap; }
     .price-label{ font-size: 0.8rem; opacity: 0.8; }
 
     .upsell-body { padding: 24px 24px 28px; }
@@ -487,8 +487,8 @@
       <h2>Die Recruiting-Strategie 2026 für <span id="upsellFirma">Ihren Betrieb</span></h2>
       <p>Individuell erstellt auf Basis Ihrer Angaben. Über 10 Seiten, konkrete Maßnahmen, Zeit- und Kostenrechnung, direkt umsetzbar.</p>
       <div class="price-row">
-        <span class="price-main">7 €</span>
-        <span class="price-old">249 €</span>
+        <span class="price-main">7&nbsp;€</span>
+        <span class="price-old">249&nbsp;€</span>
         <span class="price-label">Launch-Angebot, einmalig zahlbar</span>
       </div>
     </div>
@@ -568,10 +568,10 @@
         <li><span class="inc-icon">✅</span> Sofort als PDF abrufbar – kein Warten</li>
       </ul>
 
-      <!-- Steps indicator -->
+      <!-- Steps indicator (clickable) -->
       <div class="steps-row" id="stepsRow">
-        <div class="step active" id="step1"><span class="s-num">1</span>Ihr Betrieb</div>
-        <div class="step" id="step2"><span class="s-num">2</span>Bezahlung</div>
+        <div class="step active" id="step1" onclick="goToStep(1)" style="cursor:pointer"><span class="s-num">1</span>Ihr Betrieb</div>
+        <div class="step" id="step2" onclick="goToStep(2)" style="cursor:pointer"><span class="s-num">2</span>Bezahlung</div>
         <div class="step" id="step3"><span class="s-num">3</span>Ihre Strategie</div>
       </div>
 
@@ -650,15 +650,17 @@
           </div>
 
           <div class="field-group">
-            <label for="s_avg_salary">Welches Gehalt zahlen Sie durchschnittlich für Facharbeiter (brutto/Monat)? *</label>
+            <label for="s_avg_salary" id="s_avg_salary_label">Welches Gehalt zahlen Sie durchschnittlich für Ihre gesuchten Fachkräfte (brutto/Monat)? *</label>
             <select id="s_avg_salary" required>
               <option value="" disabled selected>Bitte wählen…</option>
               <option value="unter2500">Unter 2.500 €</option>
               <option value="2500-3000">2.500 – 3.000 €</option>
               <option value="3000-3500">3.000 – 3.500 €</option>
               <option value="3500-4000">3.500 – 4.000 €</option>
-              <option value="ueber4000">Über 4.000 €</option>
+              <option value="4000-5000">4.000 – 5.000 €</option>
+              <option value="ueber5000">Über 5.000 €</option>
             </select>
+            <p id="s_avg_salary_hint" style="font-size:0.78rem;color:var(--text-gray);margin-top:6px;line-height:1.45;display:none"></p>
           </div>
 
           <div class="field-group">
@@ -725,6 +727,9 @@
 
       <!-- ── STEP 2: Payment ── -->
       <div id="paymentSection">
+        <a href="#" onclick="goToStep(1); return false;" style="display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--text-gray);text-decoration:none;margin-bottom:14px;font-weight:600">
+          ← Zurück, um meine Angaben zu ändern
+        </a>
         <div class="payment-box">
           <h4>🔒 Sichere Zahlung über Stripe</h4>
           <p style="font-size:0.85rem;color:var(--text-gray);margin-bottom:16px;line-height:1.5">
@@ -959,7 +964,75 @@ function toggleCheck(el) {
   const cb = el.querySelector('input');
   cb.checked = !cb.checked;
   el.classList.toggle('active', cb.checked);
+
+  // Update Gehalts-Frage basierend auf gesuchten Berufen (wenn es die profCheckGrid ist)
+  if (el.parentElement && el.parentElement.id === 'profCheckGrid') {
+    updateSalaryLabel();
+  }
 }
+
+// Branchenbenchmark je Beruf (Medianwerte brutto/Monat, Basis: Entgeltatlas BA 2024, BGL-Tarifwerke)
+const PROF_SALARY_MEDIAN = {
+  facharbeiter: 3100,
+  vorarbeiter: 3600,
+  bauleiter: 4500,
+  strassenbauer: 3100,
+  tiefbauer: 3100
+};
+const PROF_LABELS_SG = {
+  facharbeiter: 'Facharbeiter',
+  vorarbeiter: 'Vorarbeiter',
+  bauleiter: 'Bauleiter',
+  strassenbauer: 'Straßenbauer',
+  tiefbauer: 'Tiefbauer'
+};
+const PROF_LABELS_PL = {
+  facharbeiter: 'Facharbeiter',
+  vorarbeiter: 'Vorarbeiter',
+  bauleiter: 'Bauleiter',
+  strassenbauer: 'Straßenbauer',
+  tiefbauer: 'Tiefbauer'
+};
+
+function getSelectedProfs() {
+  const grid = document.getElementById('profCheckGrid');
+  if (!grid) return [];
+  return [...grid.querySelectorAll('input:checked')].map(c => c.value);
+}
+
+function updateSalaryLabel() {
+  const labelEl = document.getElementById('s_avg_salary_label');
+  const hintEl = document.getElementById('s_avg_salary_hint');
+  if (!labelEl) return;
+  const sel = getSelectedProfs();
+
+  if (sel.length === 0) {
+    labelEl.textContent = 'Welches Gehalt zahlen Sie durchschnittlich für Ihre gesuchten Fachkräfte (brutto/Monat)? *';
+    if (hintEl) { hintEl.textContent = ''; hintEl.style.display = 'none'; }
+    return;
+  }
+  if (sel.length === 1) {
+    labelEl.textContent = 'Welches Gehalt zahlen Sie durchschnittlich Ihren ' + PROF_LABELS_PL[sel[0]] + 'n (brutto/Monat)? *';
+    const median = PROF_SALARY_MEDIAN[sel[0]];
+    if (hintEl && median) {
+      hintEl.textContent = 'Branchen-Median für ' + PROF_LABELS_PL[sel[0]] + ': ca. ' + median.toLocaleString('de-DE') + ' € brutto/Monat.';
+      hintEl.style.display = 'block';
+    }
+    return;
+  }
+  // Mehrere Berufe gewählt: Durchschnitts-Median
+  const medians = sel.map(p => PROF_SALARY_MEDIAN[p]).filter(Boolean);
+  const avgMedian = medians.length ? Math.round(medians.reduce((a,b)=>a+b,0) / medians.length / 100) * 100 : 0;
+  const profNames = sel.map(p => PROF_LABELS_SG[p]).join(' und ');
+  labelEl.textContent = 'Welches Gehalt zahlen Sie im Schnitt über Ihre gesuchten Stellen (' + profNames + ') hinweg (brutto/Monat)? *';
+  if (hintEl && avgMedian) {
+    hintEl.textContent = 'Gewichteter Branchen-Median für die ausgewählten Berufe: ca. ' + avgMedian.toLocaleString('de-DE') + ' € brutto/Monat.';
+    hintEl.style.display = 'block';
+  }
+}
+
+// Initial-Update beim Laden (falls Pre-fill die Profs schon markiert hat)
+window.addEventListener('DOMContentLoaded', () => setTimeout(updateSalaryLabel, 300));
 
 // ══════════════════════════════════════
 // STEP INDICATOR
@@ -972,6 +1045,27 @@ function setStep(n) {
     el.querySelector('.s-num').style.background = i <= n ? 'var(--green-main)' : '#ddd';
     el.querySelector('.s-num').style.color      = i <= n ? '#fff' : '#888';
   });
+}
+
+// Springt zwischen Step 1 (Formular) und Step 2 (Bezahlung) hin und her.
+// Von Step 3 (Strategy) kann man nicht zurück — die Zahlung ist erfolgt.
+function goToStep(n) {
+  // If strategy is already shown (paid), do not allow going back
+  if (document.getElementById('strategyResult') && document.getElementById('strategyResult').style.display === 'block') return;
+
+  if (n === 1) {
+    document.getElementById('strategyForm').style.display = 'block';
+    document.getElementById('paymentSection').style.display = 'none';
+    setStep(1);
+    document.querySelector('.upsell-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (n === 2) {
+    // only allow jumping to step 2 if _companyData has been filled
+    if (!_companyData || Object.keys(_companyData).length === 0) return;
+    document.getElementById('strategyForm').style.display = 'none';
+    document.getElementById('paymentSection').style.display = 'block';
+    setStep(2);
+    document.querySelector('.upsell-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 // ══════════════════════════════════════
@@ -1256,7 +1350,7 @@ function buildInsights(d) {
   const budgetMap = {low:'Unter 500 €/Monat', mid:'500–1.500 €/Monat', high:'1.500–3.000 €/Monat', premium:'Über 3.000 €/Monat'};
   const profNames = {facharbeiter:'Facharbeiter GaLaBau', vorarbeiter:'Vorarbeiter GaLaBau', bauleiter:'Bauleiter GaLaBau', strassenbauer:'Straßenbauer', tiefbauer:'Tiefbauer'};
   const radiusMap = {'15km':'Bis 15 km','30km':'Bis 30 km','50km':'Bis 50 km','bundesweit':'Bundesweit'};
-  const salaryMap = {'unter2500':'Unter 2.500 €','2500-3000':'2.500–3.000 €','3000-3500':'3.000–3.500 €','3500-4000':'3.500–4.000 €','ueber4000':'Über 4.000 €'};
+  const salaryMap = {'unter2500':'Unter 2.500 €','2500-3000':'2.500–3.000 €','3000-3500':'3.000–3.500 €','3500-4000':'3.500–4.000 €','4000-5000':'4.000–5.000 €','ueber5000':'Über 5.000 €','ueber4000':'Über 4.000 €'};
   const brandMap = {'stark':'Regional sehr bekannt','mittel':'Bekannt, nicht als Arbeitgeber','schwach':'Eher unbekannt','aufbau':'Im Aufbau'};
   const processMap = {'schnell':'Unter 1 Woche','mittel_proc':'2–4 Wochen','langsam':'Über 4 Wochen','kein':'Kein fester Prozess'};
   const socialMap = {'sehr_aktiv':'Sehr aktiv','gelegentlich':'Gelegentlich','selten':'Selten','kein_profil':'Kein Profil'};
@@ -1298,11 +1392,22 @@ function buildStrategySteps(d) {
     }
   });
 
-  // Based on salary
-  if (d.avgSalary === 'unter2500' || d.avgSalary === '2500-3000') {
+  // Based on salary — kontextuelle Prüfung gegen Median der gesuchten Berufe
+  const _medians2 = { facharbeiter:3100, vorarbeiter:3600, bauleiter:4500, strassenbauer:3100, tiefbauer:3100 };
+  const _userMids2 = { unter2500:2300, '2500-3000':2750, '3000-3500':3250, '3500-4000':3750, '4000-5000':4500, ueber5000:5500, ueber4000:4500 };
+  const _profs2 = d.profs || [];
+  let _targetMed = 3100;
+  if (_profs2.length) {
+    const _vv = _profs2.map(p => _medians2[p]).filter(Boolean);
+    if (_vv.length) _targetMed = Math.round(_vv.reduce((a,b)=>a+b,0) / _vv.length / 100) * 100;
+  }
+  const _um = _userMids2[d.avgSalary] || 0;
+  const _underpaid = _um && (_um / _targetMed) < 0.9;
+
+  if (_underpaid) {
     steps.push({
       h: 'Gehalt auf Branchenniveau bringen',
-      lead: 'Ihr Gehaltsniveau liegt unter dem Branchendurchschnitt von 3.000 bis 3.500 EUR für Facharbeiter im GaLaBau. Das ist einer der häufigsten Gründe, warum Bewerbungen ausbleiben. Gute Fachkräfte kennen den Markt und bewerben sich nur dort, wo das Gehalt am oberen Ende passt. Eine moderate Anpassung von 200 bis 300 EUR monatlich kann die Bewerbungsrate verdoppeln und kostet deutlich weniger als eine unbesetzte Stelle.',
+      lead: 'Ihr Gehaltsniveau liegt unter dem Branchen-Median von ca. ' + _targetMed.toLocaleString('de-DE') + ' € für die von Ihnen gesuchten Stellen. Das ist einer der häufigsten Gründe, warum Bewerbungen ausbleiben. Gute Fachkräfte kennen den Markt und bewerben sich nur dort, wo das Gehalt passt. Eine moderate Anpassung Richtung Median kann die Bewerbungsrate verdoppeln und kostet deutlich weniger als eine unbesetzte Stelle.',
       bullets: [
         'Recherchieren Sie 5-10 vergleichbare Stellenanzeigen in Ihrer Region auf Indeed, StepStone und lokalen Portalen',
         'Notieren Sie die Gehaltsangaben und berechnen Sie den Durchschnitt (Median)',
@@ -1961,8 +2066,34 @@ async function downloadPDF() {
   // Calculate scores per dimension (0-100)
   const scoreDims = [
     { label: 'Gehalt', score: (function(){
-      const m = {unter2500:20, '2500-3000':40, '3000-3500':60, '3500-4000':85, ueber4000:100};
-      return m[_companyData.avgSalary] || 50;
+      // Kontextuelle Bewertung: Vergleich mit Branchen-Median der gesuchten Berufe
+      // Median brutto/Monat je Beruf (Quelle: Entgeltatlas BA 2024, BGL-Tarifwerke)
+      const medians = {
+        facharbeiter: 3100, vorarbeiter: 3600, bauleiter: 4500,
+        strassenbauer: 3100, tiefbauer: 3100
+      };
+      const profs = _companyData.profs || [];
+      let targetMedian = 3100;
+      if (profs.length > 0) {
+        const vals = profs.map(p => medians[p]).filter(Boolean);
+        if (vals.length) targetMedian = vals.reduce((a,b)=>a+b,0) / vals.length;
+      }
+      // Mittelwert der User-Gehaltsspanne
+      const userMids = {
+        unter2500: 2300, '2500-3000': 2750, '3000-3500': 3250,
+        '3500-4000': 3750, '4000-5000': 4500, ueber5000: 5500,
+        // Legacy value from older form
+        ueber4000: 4500
+      };
+      const userMid = userMids[_companyData.avgSalary] || targetMedian;
+      // Score auf Basis des Verhältnisses zum erwarteten Median
+      const ratio = userMid / targetMedian;
+      if (ratio >= 1.15) return 100;
+      if (ratio >= 1.05) return 90;
+      if (ratio >= 0.95) return 75;
+      if (ratio >= 0.88) return 55;
+      if (ratio >= 0.80) return 35;
+      return 20;
     })()},
     { label: 'Bewerbungsprozess', score: (function(){
       const m = {schnell:95, mittel_proc:65, langsam:30, kein:15};
@@ -2080,12 +2211,24 @@ async function downloadPDF() {
   doc.text(swIntroLines, margin, y);
   y += swIntroLines.length * 5 + 8;
 
+  // Gehalt kontextuell bewerten (Abweichung vom erwarteten Median je Beruf)
+  const _medians = { facharbeiter:3100, vorarbeiter:3600, bauleiter:4500, strassenbauer:3100, tiefbauer:3100 };
+  const _userMids = { unter2500:2300, '2500-3000':2750, '3000-3500':3250, '3500-4000':3750, '4000-5000':4500, ueber5000:5500, ueber4000:4500 };
+  const _profs = _companyData.profs || [];
+  let _target = 3100;
+  if (_profs.length) {
+    const _v = _profs.map(p => _medians[p]).filter(Boolean);
+    if (_v.length) _target = _v.reduce((a,b)=>a+b,0) / _v.length;
+  }
+  const _userMid = _userMids[_companyData.avgSalary] || 0;
+  const _salaryRatio = _userMid ? _userMid / _target : 1;
+
   const strengths = [];
   if (_companyData.benefits && _companyData.benefits.length > 0) strengths.push('Sie bieten ' + _companyData.benefits.length + ' konkrete Benefits an');
   if (_companyData.hiringProcess === 'schnell') strengths.push('Ihr Bewerbungsprozess ist schneller als bei den meisten Wettbewerbern');
   if (_companyData.socialPresence === 'sehr_aktiv') strengths.push('Aktive Social-Media-Präsenz macht Sie sichtbar für wechselbereite Fachkräfte');
   if (_companyData.employerBrand === 'stark') strengths.push('Starke regionale Arbeitgebermarke ist ein klarer Wettbewerbsvorteil');
-  if (_companyData.avgSalary === '3500-4000' || _companyData.avgSalary === 'ueber4000') strengths.push('Ihr Gehaltsniveau liegt im oberen Bereich der Branche');
+  if (_salaryRatio >= 1.05) strengths.push('Ihr Gehaltsniveau liegt über dem Branchen-Median für Ihre gesuchten Stellen');
   if (_companyData.websiteCareers === 'ja_gut') strengths.push('Aktuelle Karriereseite erleichtert Kandidaten die Orientierung');
   if (strengths.length === 0) strengths.push('Ihre aktive Auseinandersetzung mit dem Thema Recruiting ist die wichtigste Grundlage');
 
@@ -2093,7 +2236,7 @@ async function downloadPDF() {
   if (_companyData.hiringProcess === 'langsam' || _companyData.hiringProcess === 'kein') weaknesses.push('Zu langsamer Bewerbungsprozess verliert gute Kandidaten an die Konkurrenz');
   if (_companyData.socialPresence === 'selten' || _companyData.socialPresence === 'kein_profil') weaknesses.push('Fehlende Social-Media-Präsenz macht Sie für viele Fachkräfte unsichtbar');
   if (_companyData.websiteCareers === 'nein_web' || _companyData.websiteCareers === 'keine_website') weaknesses.push('Ohne Karriereseite springen viele Interessenten bereits beim Googeln ab');
-  if (_companyData.avgSalary === 'unter2500' || _companyData.avgSalary === '2500-3000') weaknesses.push('Gehaltsniveau unter Branchendurchschnitt erschwert die Kandidatengewinnung');
+  if (_userMid && _salaryRatio < 0.9) weaknesses.push('Gehaltsniveau unter dem Branchen-Median für Ihre gesuchten Stellen erschwert die Kandidatengewinnung');
   if (_companyData.employerBrand === 'schwach' || _companyData.employerBrand === 'aufbau') weaknesses.push('Geringe Arbeitgeberbekanntheit erhöht den Aufwand bei der Kandidatensuche');
   if (!_companyData.benefits || _companyData.benefits.length === 0) weaknesses.push('Keine explizit kommunizierten Benefits reduzieren die Attraktivität der Anzeigen');
 
