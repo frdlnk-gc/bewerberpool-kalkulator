@@ -1160,6 +1160,15 @@ async function notifyMake(event, payload) {
     console.log('[Make Webhook] Noch nicht konfiguriert — überspringe Event:', event);
     return;
   }
+  // Pre-serialize nested arrays/objects as JSON strings so Make.com can pass
+  // them straight into the Supabase HTTP body (Make's Raw-JSON renderer mangles
+  // arrays/objects into comma-separated values otherwise).
+  if (payload.lead && Array.isArray(payload.lead.selIds)) {
+    payload.lead.gesuchte_berufe_json = JSON.stringify(payload.lead.selIds);
+  }
+  if (payload.analysis) {
+    payload.qualifizierung_json = JSON.stringify(payload.analysis);
+  }
   const body = JSON.stringify({
     event: event,
     timestamp: new Date().toISOString(),
