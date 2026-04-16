@@ -1113,6 +1113,41 @@ function goToPayment(e) {
 // ══════════════════════════════════════
 
 // ══════════════════════════════════════
+// ATTRIBUTION / UTM CAPTURE
+// ══════════════════════════════════════
+// Identisch zur index.html — liest UTMs aus URL (falls vorhanden) und fällt
+// sonst auf localStorage zurück (das von der LP gesetzt wurde vor Stripe-Redirect).
+const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','fbclid','ttclid','msclkid'];
+const ATTR_STORAGE_KEY = 'gc_attribution';
+
+function captureAttribution() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const attr = {};
+    let hasNewParams = false;
+    UTM_KEYS.forEach(k => {
+      const v = params.get(k);
+      if (v) { attr[k] = v; hasNewParams = true; }
+    });
+    if (hasNewParams) {
+      attr.landing_url = window.location.href;
+      attr.referrer = document.referrer || null;
+      attr.captured_at = new Date().toISOString();
+      localStorage.setItem(ATTR_STORAGE_KEY, JSON.stringify(attr));
+    }
+  } catch(e) { console.log('[Attribution] capture error:', e); }
+}
+
+function getAttribution() {
+  try {
+    const stored = localStorage.getItem(ATTR_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch(e) { return {}; }
+}
+
+captureAttribution();
+
+// ══════════════════════════════════════
 // MAKE.COM WEBHOOK (zentraler Integrations-Hub)
 // ══════════════════════════════════════
 // Ein einziger Webhook für alle Events: lead, booking, purchase.
@@ -1129,6 +1164,7 @@ async function notifyMake(event, payload) {
     event: event,
     timestamp: new Date().toISOString(),
     source: 'kalkulator.green-careers.de',
+    attribution: getAttribution(),
     ...payload
   });
   try {
@@ -1203,7 +1239,13 @@ async function sendSlackNotification(type) {
     // Aktuell kein separates Event, wird durch payment_completed abgedeckt.
     return;
   } else if (type === 'payment_started') {
-    notifyMake('payment_started', { lead: leadData, analysis: analysisPayload });
+    notifyMake('payment_started', {
+      lead: leadData,
+      analysis: analysisPayload,
+      amount: 7.00,
+      currency: 'EUR',
+      product: 'GreenCareers Recruiting-Strategie 2026'
+    });
   } else if (type === 'payment_completed') {
     const downloadUrl = buildDownloadUrl();
     notifyMake('purchase', {
