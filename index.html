@@ -1635,6 +1635,71 @@ function buildReport(data, animate) {
 // QUIZ-FUNNEL ENGINE (ersetzt das alte 7-Felder-Form)
 // ═══════════════════════════════════════
 
+// ═══════════════════════════════════════
+// FUNNEL-TRACKING ans GC-Dashboard (1st-Party, analog beratung-galabau)
+// ═══════════════════════════════════════
+const FUNNEL_LANDINGPAGE_ID = 'bewerberpool-kalkulator';
+const FUNNEL_EVENT_ENDPOINT = 'https://gc-tracking-dashboard.vercel.app/api/recruiting/funnel-event';
+
+// Session-ID für Korrelation Lead ↔ Funnel-Steps (UUID, persistiert in localStorage)
+function _uuidv4() {
+  if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+let _funnelSessionId;
+try {
+  _funnelSessionId = localStorage.getItem('gc_quiz_session_' + FUNNEL_LANDINGPAGE_ID);
+  if (!_funnelSessionId) {
+    _funnelSessionId = _uuidv4();
+    localStorage.setItem('gc_quiz_session_' + FUNNEL_LANDINGPAGE_ID, _funnelSessionId);
+  }
+} catch(e) { _funnelSessionId = _uuidv4(); }
+
+// URL-Tracking für UTM/Click-IDs (zusätzlich zu existing captureAttribution)
+const _funnelUrlParams = new URLSearchParams(window.location.search);
+const _funnelTrackingParams = {
+  utm_source:   _funnelUrlParams.get('utm_source')   || '',
+  utm_medium:   _funnelUrlParams.get('utm_medium')   || '',
+  utm_campaign: _funnelUrlParams.get('utm_campaign') || '',
+  utm_content:  _funnelUrlParams.get('utm_content')  || '',
+  utm_term:     _funnelUrlParams.get('utm_term')     || '',
+  fbclid:       _funnelUrlParams.get('fbclid')       || '',
+  gclid:        _funnelUrlParams.get('gclid')        || ''
+};
+
+const _funnelTrackedSlides = new Set();
+function trackFunnelEvent(eventType, slideId) {
+  // Slide-Views nur einmal pro Session feuern (Drop-off-Analytics sauber)
+  const trackKey = eventType + ':' + (slideId || '');
+  if (eventType === 'slide_view' && _funnelTrackedSlides.has(trackKey)) return;
+  _funnelTrackedSlides.add(trackKey);
+  const body = {
+    session_id: _funnelSessionId,
+    event_type: eventType,
+    slide_id: slideId || null,
+    landingpage_id: FUNNEL_LANDINGPAGE_ID,
+    ..._funnelTrackingParams,
+    page_url: window.location.href,
+    referrer: document.referrer || '',
+    user_agent: navigator.userAgent
+  };
+  try {
+    fetch(FUNNEL_EVENT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true,
+      credentials: 'omit'
+    }).catch(() => { /* tracking darf den Funnel nie brechen */ });
+  } catch(e) { /* silent */ }
+}
+// LP-View beim allerersten Page-Load tracken
+trackFunnelEvent('lp_view', null);
+
 const _quizAnswers = {
   anrede: '',
   mitarbeiter: '',
@@ -1658,6 +1723,8 @@ function openQuiz() {
   }, 80);
   // Pixel: Quiz gestartet (= Engagement-Lead)
   if (typeof fbq !== 'undefined') fbq('trackCustom', 'Quiz_Started', { landingpage: 'bewerberpool-kalkulator' });
+  // Funnel-Tracking: Step 1 Slide-View (initialer Zustand)
+  trackFunnelEvent('slide_view', '1');
 }
 
 let _quizListenersInitialized = false;
@@ -1679,6 +1746,8 @@ function initQuizListeners() {
     document.getElementById('quizContainer').scrollIntoView({ behavior:'smooth', block:'start' });
     // Pixel-Tracking pro Step
     if (typeof fbq !== 'undefined') fbq('trackCustom', 'Quiz_Step_' + n + '_Viewed', { landingpage: 'bewerberpool-kalkulator' });
+    // Funnel-Tracking ans GC-Dashboard
+    trackFunnelEvent('slide_view', String(n));
   }
 
   // Tap-Buttons (Step 1 + Step 2): Auto-Advance
@@ -1828,7 +1897,9 @@ async function finalQuizSubmit() {
     selIds: _data ? _data.selIds : [],
     overall_score: _data ? _data.overall : '',
     total_fachkraefte: _data ? _data.total : 0,
-    besetzungsdauer: _data ? _data.dauer : 0
+    besetzungsdauer: _data ? _data.dauer : 0,
+    // Funnel-Korrelation: gleiche session_id wie in quiz_funnel_events
+    session_id: _funnelSessionId
   };
 
   try {
@@ -1841,7 +1912,10 @@ async function finalQuizSubmit() {
     if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration', { content_name: 'Kalkulator-Quiz fertig' });
   } catch(e) {}
 
-  // Slack
+  // Funnel-Tracking: Submit erfolgreich
+  trackFunnelEvent('submit_success', null);
+
+  // Slack + Make-Webhook (sendet leadData inkl. session_id)
   try { sendSlackNotification('lead', leadData); } catch(e) {}
 
   // Quiz-Container ausblenden, Lock-Peek + Unlock-Hero ausblenden, Full Report zeigen
