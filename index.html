@@ -379,6 +379,33 @@ src="https://www.facebook.com/tr?id=634469765867935&ev=PageView&noscript=1"
     .ib-label { font-size: 0.72rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
     .ib-value { font-size: 1rem; font-weight: 800; color: var(--green-dark); }
 
+    /* Cost-per-Hire Card (im Vollreport) */
+    .cph-card {
+      background: linear-gradient(135deg, #f0f7f1 0%, #e0efe2 100%);
+      border-radius: 14px;
+      padding: 22px 20px;
+      text-align: center;
+      border: 1px solid rgba(45,122,45,0.15);
+    }
+    .cph-range {
+      font-size: 2rem; font-weight: 900;
+      color: var(--green-dark);
+      line-height: 1.1; margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .cph-sep { font-weight: 400; color: var(--text-gray); margin: 0 4px; }
+    .cph-label {
+      font-size: 0.84rem; font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 14px;
+    }
+    .cph-note {
+      font-size: 0.78rem; line-height: 1.55;
+      color: var(--text-gray);
+      max-width: 480px; margin: 0 auto;
+      padding-top: 12px; border-top: 1px solid rgba(45,122,45,0.12);
+    }
+
     /* Strategy */
     .strategy-grid { display: flex; flex-direction: column; gap: 10px; }
     .strategy-item {
@@ -629,6 +656,97 @@ src="https://www.facebook.com/tr?id=634469765867935&ev=PageView&noscript=1"
     /* =====================================================
        PHASE 3: LOCK-SCREEN + UNLOCK-CTA (statt scroll-to-form)
        ===================================================== */
+    /* =====================================================
+       OPEN SECTIONS (vorne ohne Gate sichtbar – Marktanalyse + Insight)
+       ===================================================== */
+    .open-section {
+      margin-top: 16px;
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 20px 18px 18px;
+      box-shadow: var(--shadow);
+    }
+    .os-title {
+      font-size: 0.92rem; font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .os-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 520px) { .os-grid { grid-template-columns: repeat(4, 1fr); } }
+    .os-box {
+      background: var(--warm-gray);
+      border-radius: 10px;
+      padding: 12px 12px;
+      text-align: center;
+      border: 1px solid rgba(40, 80, 40, 0.06);
+    }
+    .os-label {
+      font-size: 0.66rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--text-gray);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .os-value {
+      font-size: 0.95rem; font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.25;
+    }
+    .insight-card {
+      margin-top: 14px;
+      background: linear-gradient(135deg, #f5fbf6 0%, #e6f5ea 100%);
+      border-left: 4px solid var(--score-gut);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .ic-header {
+      font-size: 0.78rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--score-gut);
+      margin-bottom: 8px;
+    }
+    .ic-body {
+      font-size: 0.92rem; line-height: 1.55;
+      color: var(--text-dark);
+    }
+    .ic-body strong { color: var(--score-gut); }
+
+    /* Unlock-Liste statt Fließtext */
+    .unlock-list {
+      list-style: none; padding: 0; margin: 0 auto 18px;
+      max-width: 420px;
+      text-align: left;
+    }
+    .unlock-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0;
+      font-size: 0.88rem; line-height: 1.5;
+      color: rgba(255,255,255,0.78);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .unlock-list li:last-child { border-bottom: none; }
+    .unlock-list li > div { flex: 1; }
+    .unlock-list li strong {
+      display: block;
+      color: #fff; font-weight: 700;
+      margin-bottom: 1px;
+    }
+    .ul-check {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      background: rgba(0,210,97,0.18);
+      color: var(--poison-glow);
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700;
+      margin-top: 1px;
+    }
+
     .unlock-hero {
       margin-top: 18px;
       padding: 28px 22px;
@@ -1349,7 +1467,24 @@ async function calculate() {
 
   const oc = OVERALL_COPY[overall];
 
-  // Quick blurred mini-cards for the peek strip
+  // Personalisierte Region-Insight (1 starker Satz, je nach Score + Region-Typ)
+  const regionInsight = (() => {
+    if (overall === 'gut' && region.type === 'urban') {
+      return `In <strong>${region.displayName}</strong> ist der Pool überdurchschnittlich gut bestückt – allerdings ist auch der Wettbewerb um Talente hoch. Wer schnell und gezielt anspricht, hat klare Vorteile.`;
+    }
+    if (overall === 'gut') {
+      return `<strong>${region.displayName}</strong> gehört zu den Regionen mit überdurchschnittlich vielen erreichbaren Fachkräften. Die Kandidaten sind da – sie müssen nur richtig angesprochen werden.`;
+    }
+    if (overall === 'mittel' && region.type === 'rural') {
+      return `In ländlichen Regionen wie <strong>${region.displayName}</strong> sind Fachkräfte oft schon gebunden. Mit aktiver Ansprache und überregionaler Sichtbarkeit lassen sich Wechselbereite trotzdem erschließen.`;
+    }
+    if (overall === 'mittel') {
+      return `<strong>${region.displayName}</strong> ist ein durchschnittlicher Markt – kein Selbstläufer, aber mit der richtigen Strategie absolut gut besetzbar.`;
+    }
+    return `In <strong>${region.displayName}</strong> ist der Markt aktuell angespannt. Eine rein lokale Suche reicht meist nicht – überregionale Kampagnen erschließen den verdeckten Markt.`;
+  })();
+
+  // Blurred mini-cards für lock-peek (zeigt was hinter Gate ist)
   const peekCards = results.map(r => `
     <div style="background:#fff;border-radius:12px;padding:14px 16px;border-top:4px solid ${SCORE_COLOR[r.score]};margin-bottom:10px">
       <div style="font-size:1.4rem;margin-bottom:4px">${r.p.icon}</div>
@@ -1388,12 +1523,47 @@ async function calculate() {
       <div class="th-unit">Fachkräfte aus unserem Pool – exklusiv für Sie als Arbeitgeber verfügbar</div>
     </div>
 
-    <!-- Unlock-CTA: prominent, klickbar (öffnet Quiz inline) -->
+    <!-- NEU: Regionale Marktanalyse (vorher hidden, jetzt vorne als Wert) -->
+    <div class="open-section">
+      <div class="os-title">📊 Regionale Marktanalyse</div>
+      <div class="os-grid">
+        <div class="os-box">
+          <div class="os-label">Einwohner PLZ-Gebiet</div>
+          <div class="os-value">${region.pop.toLocaleString('de-DE')}</div>
+        </div>
+        <div class="os-box">
+          <div class="os-label">Regionstyp</div>
+          <div class="os-value">${TYPE_LABELS[region.type]}</div>
+        </div>
+        <div class="os-box">
+          <div class="os-label">Wettbewerb um Talente</div>
+          <div class="os-value">${COMP_LABELS[region.type]}</div>
+        </div>
+        <div class="os-box">
+          <div class="os-label">Marktlage Recruiting</div>
+          <div class="os-value">${overall==='gut' ? '🟢 Günstig' : overall==='mittel' ? '🟡 Moderat' : '🔴 Anspruchsvoll'}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEU: Personalisierte Region-Insight (1 starker Satz) -->
+    <div class="insight-card">
+      <div class="ic-header">💡 Unsere Einschätzung für ${region.displayName}</div>
+      <div class="ic-body">${regionInsight}</div>
+    </div>
+
+    <!-- Unlock-CTA: was kommt im Report -->
     <div class="unlock-hero" id="unlockHero">
-      <div class="unlock-hero-eyebrow">🔓 Vollanalyse freischalten</div>
-      <h3>Sehen Sie genau, welche Fachkräfte in ${region.displayName} verfügbar sind</h3>
-      <p>4 Fragen, dann ist Ihr persönlicher Report mit Detailanalyse, Strategie & Besetzungsdauer freigeschaltet.</p>
-      <button type="button" class="btn-unlock" id="btnOpenQuiz" onclick="openQuiz()">Vollen Report freischalten — kostenlos in 30 Sek. →</button>
+      <div class="unlock-hero-eyebrow">🔓 Vollanalyse mit Strategie freischalten</div>
+      <h3>Was gibt's im Vollreport zusätzlich?</h3>
+      <ul class="unlock-list">
+        <li><span class="ul-check">✓</span><div><strong>Detail-Aufschlüsselung pro Berufsgruppe</strong>Vergleich zum Bundesdurchschnitt</div></li>
+        <li><span class="ul-check">✓</span><div><strong>Besetzungsdauer in Wochen</strong>Konkrete Zeitleiste für ${region.displayName}</div></li>
+        <li><span class="ul-check">✓</span><div><strong>Cost-per-Hire Schätzung</strong>Realistischer Aufwand pro Einstellung</div></li>
+        <li><span class="ul-check">✓</span><div><strong>3–5 Recruiting-Strategien</strong>Speziell auf Ihre Region zugeschnitten</div></li>
+        <li><span class="ul-check">✓</span><div><strong>Standort-Tipps</strong>Konkrete Handlungsempfehlungen</div></li>
+      </ul>
+      <button type="button" class="btn-unlock" id="btnOpenQuiz" onclick="openQuiz()">Vollreport freischalten – 3 Felder, 20 Sek.</button>
       <div class="unlock-hero-trust">
         <span>🔒 Kein Spam</span>
         <span>· DSGVO-konform</span>
@@ -1401,69 +1571,43 @@ async function calculate() {
       </div>
     </div>
 
-    <!-- Lock peek: blurred mini-cards (visualisiert was im Report drin ist) -->
+    <!-- Lock peek: blurred mini-cards -->
     <div class="lock-peek">
       <div class="lock-peek-inner">${peekCards}${peekCards}</div>
       <div class="lock-peek-fade"></div>
       <div class="lock-badge-wrap">
-        <div class="lock-badge">🎁 Detailanalyse + Besetzungsstrategie</div>
-        <div class="lock-badge-sub">↑ Oben freischalten – wir senden Ihnen Ihre Vollanalyse direkt zu.</div>
+        <div class="lock-badge">🎁 Detailanalyse + Strategie + Cost-per-Hire</div>
+        <div class="lock-badge-sub">↑ Oben freischalten – nur 3 Felder.</div>
       </div>
     </div>
 
     <!-- Quiz-Container (initial geschlossen, öffnet bei Klick auf Unlock-CTA) -->
     <div class="quiz-container" id="quizContainer">
       <div class="quiz-progress">
-        <div class="quiz-progress-label" id="quizProgressLabel">Schritt 1 von 5</div>
-        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:20%"></div></div>
+        <div class="quiz-progress-label" id="quizProgressLabel">Schritt 1 von 3</div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:33%"></div></div>
       </div>
 
       <form id="leadForm" novalidate onsubmit="return false;">
 
-        <!-- ===== STEP 1 / 5 — Anrede ===== -->
+        <!-- ===== STEP 1 / 3 — E-Mail-Gate (mit Personalisierung aus PLZ) ===== -->
         <div class="quiz-slide is-active" data-slide="1">
-          <h3 class="quiz-question">Wie dürfen wir Sie ansprechen?</h3>
-          <p class="quiz-subtext">Damit Ihr Report persönlich auf Sie zugeschnitten ist.</p>
-          <div class="quiz-options">
-            <button type="button" class="quiz-option" data-field="anrede" data-value="Herr">Herr</button>
-            <button type="button" class="quiz-option" data-field="anrede" data-value="Frau">Frau</button>
-          </div>
-        </div>
-
-        <!-- ===== STEP 2 / 5 — Mitarbeiterzahl ===== -->
-        <div class="quiz-slide" data-slide="2">
-          <h3 class="quiz-question">Wie viele Mitarbeiter beschäftigt Ihr Betrieb?</h3>
-          <p class="quiz-subtext">So passen wir die Recruiting-Strategie an Ihre Betriebsgröße an.</p>
-          <div class="quiz-options">
-            <button type="button" class="quiz-option" data-field="mitarbeiter" data-value="1–5 Mitarbeiter">1–5 Mitarbeiter</button>
-            <button type="button" class="quiz-option" data-field="mitarbeiter" data-value="6–15 Mitarbeiter">6–15 Mitarbeiter</button>
-            <button type="button" class="quiz-option" data-field="mitarbeiter" data-value="16–30 Mitarbeiter">16–30 Mitarbeiter</button>
-            <button type="button" class="quiz-option" data-field="mitarbeiter" data-value="31–50 Mitarbeiter">31–50 Mitarbeiter</button>
-            <button type="button" class="quiz-option" data-field="mitarbeiter" data-value="51–100 Mitarbeiter">51–100 Mitarbeiter</button>
-            <button type="button" class="quiz-option" data-field="mitarbeiter" data-value="Mehr als 100">Mehr als 100</button>
-          </div>
-          <button type="button" class="quiz-back" data-back="1">← Zurück</button>
-        </div>
-
-        <!-- ===== STEP 3 / 5 — E-Mail-Gate ===== -->
-        <div class="quiz-slide" data-slide="3">
-          <h3 class="quiz-question" id="quizStep3Headline">Sehr gut. Wir bereiten Ihren Report vor.</h3>
-          <p class="quiz-subtext" id="quizStep3Sub">Tragen Sie kurz Ihre geschäftliche E-Mail-Adresse ein — wir schalten Ihre Vollanalyse sofort frei.</p>
+          <h3 class="quiz-question" id="quizStep1Headline">Wohin senden wir Ihren Vollreport?</h3>
+          <p class="quiz-subtext" id="quizStep1Sub">Tragen Sie Ihre geschäftliche E-Mail-Adresse ein — wir schalten Ihre Vollanalyse sofort frei.</p>
           <div class="quiz-input-group">
             <div class="quiz-input-wrap">
               <svg class="quiz-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               <input type="email" class="quiz-input" id="qzEmail" placeholder="ihre@firma.de" autocomplete="email" autocapitalize="none" spellcheck="false" inputmode="email">
             </div>
           </div>
-          <button type="button" class="quiz-cta" id="qzStep3Cta">Report freischalten →</button>
-          <div class="quiz-error-msg" id="qzStep3Error">Bitte tragen Sie eine gültige E-Mail-Adresse ein.</div>
-          <button type="button" class="quiz-back" data-back="2">← Zurück</button>
+          <button type="button" class="quiz-cta" id="qzStep1Cta">Weiter →</button>
+          <div class="quiz-error-msg" id="qzStep1Error">Bitte tragen Sie eine gültige E-Mail-Adresse ein.</div>
         </div>
 
-        <!-- ===== STEP 4 / 5 — Name + (progressive) Firma ===== -->
-        <div class="quiz-slide" data-slide="4">
+        <!-- ===== STEP 2 / 3 — Name + (progressive) Firma ===== -->
+        <div class="quiz-slide" data-slide="2">
           <h3 class="quiz-question">Für welchen Betrieb erstellen wir den Report?</h3>
-          <p class="quiz-subtext">Letzte Schritte — danach ist Ihr Report sofort sichtbar.</p>
+          <p class="quiz-subtext">Damit der Report persönlich auf Sie zugeschnitten ist.</p>
 
           <div class="quiz-input-group" data-substep="name">
             <div class="quiz-input-wrap">
@@ -1479,15 +1623,15 @@ async function calculate() {
             </div>
           </div>
 
-          <button type="button" class="quiz-cta" id="qzStep4Cta" disabled>Weiter →</button>
-          <div class="quiz-error-msg" id="qzStep4Error">Bitte Vor- und Nachname sowie Firma eingeben.</div>
-          <button type="button" class="quiz-back" data-back="3">← Zurück</button>
+          <button type="button" class="quiz-cta" id="qzStep2Cta" disabled>Weiter →</button>
+          <div class="quiz-error-msg" id="qzStep2Error">Bitte Vor- und Nachname sowie Firma eingeben.</div>
+          <button type="button" class="quiz-back" data-back="1">← Zurück</button>
         </div>
 
-        <!-- ===== STEP 5 / 5 — WhatsApp + DSGVO + Submit ===== -->
-        <div class="quiz-slide" data-slide="5">
-          <h3 class="quiz-question">Wie können wir Sie schnell erreichen?</h3>
-          <p class="quiz-subtext">Wir melden uns innerhalb 24 h mit Ihrer individuellen Recruiting-Strategie.</p>
+        <!-- ===== STEP 3 / 3 — Telefon + DSGVO + Submit ===== -->
+        <div class="quiz-slide" data-slide="3">
+          <h3 class="quiz-question">Letzter Schritt — wie erreichen wir Sie?</h3>
+          <p class="quiz-subtext">Damit wir bei Rückfragen direkt anrufen können. Kein Verkaufsanruf — nur falls Sie inhaltliche Fragen zum Report haben.</p>
 
           <div class="quiz-input-group">
             <div class="quiz-phone-wrap">
@@ -1502,14 +1646,14 @@ async function calculate() {
           </div>
 
           <button type="button" class="quiz-cta" id="qzFinalSubmit" disabled>🔓 Report jetzt freischalten</button>
-          <div class="quiz-error-msg" id="qzStep5Error">Bitte Telefonnummer und Datenschutz-Zustimmung ausfüllen.</div>
+          <div class="quiz-error-msg" id="qzStep3Error">Bitte Telefonnummer und Datenschutz-Zustimmung ausfüllen.</div>
 
           <div class="quiz-trust-row">
             <span><span class="quiz-trust-dot"></span> SSL-verschlüsselt</span>
             <span><span class="quiz-trust-dot"></span> DSGVO-konform</span>
             <span><span class="quiz-trust-dot"></span> Keine Weitergabe</span>
           </div>
-          <button type="button" class="quiz-back" data-back="4">← Zurück</button>
+          <button type="button" class="quiz-back" data-back="2">← Zurück</button>
         </div>
 
       </form>
@@ -1564,15 +1708,21 @@ function buildReport(data, animate) {
   });
   html += `</div>`;
 
-  // Regional analysis
+  // (Regionale Marktanalyse ist jetzt vorne im Lock-Screen sichtbar – nicht hier wiederholen)
+
+  // Cost-per-Hire Schätzung (NEU: greift Region-Typ + Score auf)
+  const cphBase = region.type === 'urban' ? 2400 : region.type === 'mixed' ? 1900 : 1500;
+  const cphFactor = overall === 'gut' ? 0.85 : overall === 'mittel' ? 1.0 : 1.35;
+  const cphLow  = Math.round((cphBase * cphFactor) / 100) * 100;
+  const cphHigh = Math.round((cphBase * cphFactor * 1.6) / 100) * 100;
+
   html += `
     <div class="report-section">
-      <div class="rs-title">📊 Regionale Marktanalyse</div>
-      <div class="insights-grid">
-        <div class="insight-box"><div class="ib-label">Einwohner PLZ-Gebiet</div><div class="ib-value">${region.pop.toLocaleString('de-DE')}</div></div>
-        <div class="insight-box"><div class="ib-label">Regionstyp</div><div class="ib-value">${TYPE_LABELS[region.type]}</div></div>
-        <div class="insight-box"><div class="ib-label">Wettbewerb um Talente</div><div class="ib-value">${COMP_LABELS[region.type]}</div></div>
-        <div class="insight-box"><div class="ib-label">Marktlage Recruiting</div><div class="ib-value">${besetz}</div></div>
+      <div class="rs-title">💰 Cost-per-Hire Schätzung für ${region.displayName}</div>
+      <div class="cph-card">
+        <div class="cph-range">€${cphLow.toLocaleString('de-DE')}<span class="cph-sep">–</span>€${cphHigh.toLocaleString('de-DE')}</div>
+        <div class="cph-label">Geschätzter Aufwand pro erfolgreich besetzter Stelle</div>
+        <div class="cph-note">Basierend auf Regionstyp (${TYPE_LABELS[region.type]}) und Marktlage (${besetz}). Klassische Stellenanzeigen liegen je nach Plattform bei €1.200–€3.500 ohne Erfolgsgarantie. Vergleichswerte über Personalvermittlungen meist 25–30 % des Jahresgehalts.</div>
       </div>
     </div>`;
 
@@ -1716,7 +1866,8 @@ function openQuiz() {
   if (!container) return;
   container.classList.add('is-open');
   if (cta) cta.disabled = true;
-  // Personalisierungs-Headline aus den schon bekannten Daten setzen
+  // Personalisierungs-Headline für Step 1 setzen (PLZ + Region)
+  personalizeStep1();
   initQuizListeners();
   setTimeout(() => {
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1725,6 +1876,11 @@ function openQuiz() {
   if (typeof fbq !== 'undefined') fbq('trackCustom', 'Quiz_Started', { landingpage: 'bewerberpool-kalkulator' });
   // Funnel-Tracking: Step 1 Slide-View (initialer Zustand)
   trackFunnelEvent('slide_view', '1');
+  // Step 1 Email auto-focus für sofortigen Tipp-Start
+  setTimeout(() => {
+    const emailEl = document.getElementById('qzEmail');
+    if (emailEl) emailEl.focus();
+  }, 350);
 }
 
 let _quizListenersInitialized = false;
@@ -1733,7 +1889,7 @@ function initQuizListeners() {
   _quizListenersInitialized = true;
 
   const slides = Array.from(document.querySelectorAll('.quiz-slide'));
-  const TOTAL = 5;
+  const TOTAL = 3;
   const fill   = document.getElementById('quizProgressFill');
   const label  = document.getElementById('quizProgressLabel');
 
@@ -1750,26 +1906,6 @@ function initQuizListeners() {
     trackFunnelEvent('slide_view', String(n));
   }
 
-  // Tap-Buttons (Step 1 + Step 2): Auto-Advance
-  document.querySelectorAll('.quiz-option').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const f = btn.dataset.field;
-      const v = btn.dataset.value;
-      if (!f || !v) return;
-      btn.parentElement.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('is-selected'));
-      btn.classList.add('is-selected');
-      _quizAnswers[f] = v;
-      setTimeout(() => {
-        const cur = parseInt(btn.closest('.quiz-slide').dataset.slide, 10);
-        if (cur >= 1 && cur <= 2) {
-          const next = cur + 1;
-          if (next === 3) personalizeStep3();
-          showSlide(next);
-        }
-      }, 220);
-    });
-  });
-
   // Back-Buttons
   document.querySelectorAll('.quiz-back').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1778,33 +1914,33 @@ function initQuizListeners() {
     });
   });
 
-  // Step 3: Email-Validation + Pixel-Lead
+  // Step 1: E-Mail → Step 2
   const emailEl = document.getElementById('qzEmail');
-  const step3Cta = document.getElementById('qzStep3Cta');
-  const step3Err = document.getElementById('qzStep3Error');
-  step3Cta.addEventListener('click', () => {
+  const step1Cta = document.getElementById('qzStep1Cta');
+  const step1Err = document.getElementById('qzStep1Error');
+  step1Cta.addEventListener('click', () => {
     const v = emailEl.value.trim();
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-    if (!ok) { emailEl.classList.add('is-error'); step3Err.classList.add('active'); return; }
-    emailEl.classList.remove('is-error'); step3Err.classList.remove('active');
+    if (!ok) { emailEl.classList.add('is-error'); step1Err.classList.add('active'); return; }
+    emailEl.classList.remove('is-error'); step1Err.classList.remove('active');
     _quizAnswers.email = v;
     if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Kalkulator-Quiz E-Mail erhalten' });
-    showSlide(4);
+    showSlide(2);
   });
-  emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); step3Cta.click(); }});
+  emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); step1Cta.click(); }});
   emailEl.addEventListener('input', () => emailEl.classList.remove('is-error'));
 
-  // Step 4: Name → reveal Firma → Step4-Submit
+  // Step 2: Name → reveal Firma → Step 3
   const nameEl = document.getElementById('qzFullname');
   const firmaSubstep = document.querySelector('[data-substep="firma"]');
   const firmaEl = document.getElementById('qzFirma');
-  const step4Cta = document.getElementById('qzStep4Cta');
-  const step4Err = document.getElementById('qzStep4Error');
+  const step2Cta = document.getElementById('qzStep2Cta');
+  const step2Err = document.getElementById('qzStep2Error');
 
-  function eval4() {
+  function eval2() {
     const parts = nameEl.value.trim().split(/\s+/).filter(Boolean);
     const ok = parts.length >= 2 && firmaEl.value.trim().length >= 2;
-    step4Cta.disabled = !ok;
+    step2Cta.disabled = !ok;
   }
   function revealFirma() {
     const parts = nameEl.value.trim().split(/\s+/).filter(Boolean);
@@ -1815,59 +1951,52 @@ function initQuizListeners() {
   }
   nameEl.addEventListener('blur', revealFirma);
   nameEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); revealFirma(); }});
-  nameEl.addEventListener('input', () => { eval4(); nameEl.classList.remove('is-error'); });
-  firmaEl.addEventListener('input', () => { eval4(); firmaEl.classList.remove('is-error'); });
+  nameEl.addEventListener('input', () => { eval2(); nameEl.classList.remove('is-error'); });
+  firmaEl.addEventListener('input', () => { eval2(); firmaEl.classList.remove('is-error'); });
 
-  step4Cta.addEventListener('click', () => {
+  step2Cta.addEventListener('click', () => {
     const parts = nameEl.value.trim().split(/\s+/).filter(Boolean);
-    if (parts.length < 2) { nameEl.classList.add('is-error'); step4Err.classList.add('active'); return; }
-    if (firmaEl.value.trim().length < 2) { firmaEl.classList.add('is-error'); step4Err.classList.add('active'); return; }
-    step4Err.classList.remove('active');
+    if (parts.length < 2) { nameEl.classList.add('is-error'); step2Err.classList.add('active'); return; }
+    if (firmaEl.value.trim().length < 2) { firmaEl.classList.add('is-error'); step2Err.classList.add('active'); return; }
+    step2Err.classList.remove('active');
     _quizAnswers.vorname = parts[0];
     _quizAnswers.nachname = parts.slice(1).join(' ');
     _quizAnswers.firma = firmaEl.value.trim();
-    showSlide(5);
+    showSlide(3);
   });
 
-  // Step 5: Phone + Privacy + Final Submit
+  // Step 3: Phone + Privacy + Final Submit
   const phoneEl = document.getElementById('qzPhone');
   const privacyEl = document.getElementById('qzPrivacy');
   const finalBtn = document.getElementById('qzFinalSubmit');
-  const step5Err = document.getElementById('qzStep5Error');
+  const step3Err = document.getElementById('qzStep3Error');
 
-  function eval5() {
+  function eval3() {
     const ok = phoneEl.value.trim().length >= 6 && privacyEl.checked;
     finalBtn.disabled = !ok;
   }
-  phoneEl.addEventListener('input', () => { eval5(); phoneEl.classList.remove('is-error'); });
-  privacyEl.addEventListener('change', eval5);
+  phoneEl.addEventListener('input', () => { eval3(); phoneEl.classList.remove('is-error'); });
+  privacyEl.addEventListener('change', eval3);
   finalBtn.addEventListener('click', finalQuizSubmit);
 }
 
-function personalizeStep3() {
-  const h = document.getElementById('quizStep3Headline');
-  const sizeMap = {
-    '1–5 Mitarbeiter': '1–5 Mitarbeitern',
-    '6–15 Mitarbeiter': '6–15 Mitarbeitern',
-    '16–30 Mitarbeiter': '16–30 Mitarbeitern',
-    '31–50 Mitarbeiter': '31–50 Mitarbeitern',
-    '51–100 Mitarbeiter': '51–100 Mitarbeitern',
-    'Mehr als 100': 'mehr als 100 Mitarbeitern'
-  };
-  const size = sizeMap[_quizAnswers.mitarbeiter] || _quizAnswers.mitarbeiter;
-  const ort = (_data && _data.region && _data.region.displayName) ? _data.region.displayName : 'Ihrer Region';
-  h.innerHTML = `Sehr gut. Wir bereiten Ihren Report f&uuml;r Betriebe mit <span class="quiz-perso">${size}</span> in <span class="quiz-perso">${ort}</span> vor.`;
+function personalizeStep1() {
+  const h = document.getElementById('quizStep1Headline');
+  const sub = document.getElementById('quizStep1Sub');
+  const ort = (_data && _data.region && _data.region.displayName) ? _data.region.displayName : 'Ihre Region';
+  h.innerHTML = `Wohin senden wir Ihren Vollreport f&uuml;r <span class="quiz-perso">${ort}</span>?`;
+  if (sub) sub.innerHTML = `Tragen Sie Ihre gesch&auml;ftliche E-Mail-Adresse ein &mdash; Detailanalyse, Strategie und Cost-per-Hire werden sofort freigeschaltet.`;
 }
 
 async function finalQuizSubmit() {
   const phoneEl = document.getElementById('qzPhone');
   const privacyEl = document.getElementById('qzPrivacy');
   const finalBtn = document.getElementById('qzFinalSubmit');
-  const step5Err = document.getElementById('qzStep5Error');
+  const step3Err = document.getElementById('qzStep3Error');
 
-  if (phoneEl.value.trim().length < 6) { phoneEl.classList.add('is-error'); step5Err.classList.add('active'); return; }
-  if (!privacyEl.checked) { step5Err.classList.add('active'); return; }
-  step5Err.classList.remove('active');
+  if (phoneEl.value.trim().length < 6) { phoneEl.classList.add('is-error'); step3Err.classList.add('active'); return; }
+  if (!privacyEl.checked) { step3Err.classList.add('active'); return; }
+  step3Err.classList.remove('active');
 
   // Phone normalisieren: + prefix wenn fehlt
   let phone = phoneEl.value.trim();
@@ -1880,11 +2009,11 @@ async function finalQuizSubmit() {
 
   // Lead-Data für Storage + Webhook
   const leadData = {
-    anrede: _quizAnswers.anrede,
+    anrede: '',  // wird im Quiz nicht mehr abgefragt
     vorname: _quizAnswers.vorname,
     nachname: _quizAnswers.nachname,
     firma: _quizAnswers.firma,
-    mitarbeiter: _quizAnswers.mitarbeiter,
+    mitarbeiter: '',  // wird im Quiz nicht mehr abgefragt — Sales fragt im Call
     whatsapp: _quizAnswers.whatsapp,
     email: _quizAnswers.email,
     plz: _data ? _data.plzRaw : '',
