@@ -1442,6 +1442,17 @@ async function calculate() {
   if (!selIds.length) { errEl.textContent='Bitte mindestens eine Berufsgruppe wählen.'; errEl.style.display='block'; return; }
   errEl.style.display='none';
 
+  // Meta Pixel: Kalkulator wurde tatsaechlich benutzt (PLZ + Berufsgruppe valide)
+  try {
+    if (typeof fbq !== 'undefined') {
+      fbq('trackCustom', 'Kalkulator_Berechnet', {
+        plz_prefix: prefix,
+        professions_count: selIds.length,
+        landingpage: 'bewerberpool-kalkulator'
+      });
+    }
+  } catch(e) { /* silent */ }
+
   // PLZ-Lookup parallel zur Berechnung (Result wird in _data übernommen)
   const originalBtnText = btnEl ? btnEl.textContent : '';
   if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Region wird ermittelt…'; }
